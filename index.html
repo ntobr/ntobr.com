@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NTO Brasil - Em Construção</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      padding: 20px;
+      border: 3px dashed #ff9800;
+      border-radius: 15px;
+      background: #fff8e1;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      font-size: 2.5em;
+      color: #ff9800;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 1.1em;
+      line-height: 1.6;
+    }
+    .emoji {
+      font-size: 3em;
+      margin: 10px 0;
+    }
+    .bar {
+      margin: 20px 0;
+      height: 20px;
+      background: #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+    .bar-fill {
+      width: 60%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        -45deg,
+        #ff9800,
+        #ff9800 10px,
+        #f57c00 10px,
+        #f57c00 20px
+      );
+      animation: progress 2s infinite linear;
+    }
+    @keyframes progress {
+      from { background-position: 0 0; }
+      to { background-position: 40px 0; }
+    }
+    footer {
+      margin-top: 15px;
+      font-size: 0.9em;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="emoji">🏗️🚧</div>
+    <h1>NTO Brasil</h1>
+    <p>
+      Bem-vindo à <strong>NTO Brasil</strong>!<br>
+      Nossa empresa está em construção para se tornar uma referência em saúde mental e inovação.
+    </p>
+    <div class="bar">
+      <div class="bar-fill"></div>
+    </div>
+    <p>Estamos preparando algo incrível para você.</p>
+    <footer>© 2025 NTO Brasil</footer>
+  </div>
+</body>
+</html>

@@ -17,2115 +17,687 @@
 <link rel="icon" href="./logo.png" />
 
 <style>
-/* (The full CSS from the first large build would be here; we ensure it's present now.) */
+/* =========================================================
+   NTO V7 — Dark Psy Continuum
+   - Preserva 100% do conteúdo/rotas do V6 + amplia seções
+   - Correções P0 (Home; Guia rápido sem cobrir texto no mobile)
+   - Visual psicodélico elegante + acessibilidade AA
+========================================================= */
+
+/* ========== Design tokens (dark) ========== */
 :root{
-  --ink: #e5e7eb; --muted: #9aa4b2; --bg: #070a12; --card: #0f1420;
-  --line: #1c2433; --brand: #10b981; --ok:#10b981; --danger:#ef4444;
-  --ring:#22d3ee; --focus:#8b5cf6;
-  --grad: conic-gradient(from 0deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);
+  --ink: #e5e7eb;          /* texto principal */
+  --muted: #9aa4b2;        /* texto secundário */
+  --bg: #090b12;           /* fundo base escuro */
+  --card: #0f1420;         /* fundos de cartões */
+  --line: #1c2433;         /* linhas/bordas */
+  --brand: #10b981;        /* verde NTO */
+  --ok: #10b981;
+  --danger: #ef4444;
+  --ring: #22d3ee;
+  --grad: conic-gradient(from 0deg at 50% 50%,
+      #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);
+  --haloA: radial-gradient(1200px 650px at 10% -10%, rgba(88,101,242,.28) 0%, transparent 60%);
+  --haloB: radial-gradient(900px 520px at 120% 30%, rgba(16,185,129,.25) 0%, transparent 55%);
+  --haloC: radial-gradient(650px 420px at 50% 120%, rgba(56,189,248,.20) 0%, transparent 60%);
+  --haloD: radial-gradient(1000px 1000px at 50% 50%, rgba(0,0,0,.6) 0%, transparent 60%);
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;font-family:system-ui,Inter,Roboto,Arial,sans-serif;background:#070a12;color:var(--ink);line-height:1.6}
-/* (Rest of style identical to cell 1; omitted in this comment) */
+*{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+  .reveal, .toast{ transition: none !important; }
+  .halo, .fancy{ animation: none !important; }
+}
+body{
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, sans-serif;
+  background:
+    radial-gradient(1200px 800px at 20% -10%, #0d1220 0%, transparent 55%),
+    radial-gradient(1000px 700px at 120% 30%, #0b1020 0%, transparent 50%),
+    var(--bg);
+  color: var(--ink);
+}
+a{ color: inherit; }
+img{ max-width: 100%; display: block; }
+:focus-visible{ outline: 3px solid var(--ring); outline-offset: 2px; border-radius: 6px; }
+.visually-hidden{
+  position: absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+.visually-hidden:focus{
+  position: static; width:auto; height:auto; margin:0; clip:auto; white-space:normal; background:#1e293b; padding:8px; border-radius:4px;
+}
 
-/* Utilities (massive): */
-.u-mt-1{margin-top:2px}
-.u-mb-1{margin-bottom:2px}
-.u-ml-1{margin-left:2px}
-.u-mr-1{margin-right:2px}
-.u-pt-1{padding-top:2px}
-.u-pb-1{padding-bottom:2px}
-.u-pl-1{padding-left:2px}
-.u-pr-1{padding-right:2px}
-.u-mt-2{margin-top:4px}
-.u-mb-2{margin-bottom:4px}
-.u-ml-2{margin-left:4px}
-.u-mr-2{margin-right:4px}
-.u-pt-2{padding-top:4px}
-.u-pb-2{padding-bottom:4px}
-.u-pl-2{padding-left:4px}
-.u-pr-2{padding-right:4px}
-.u-mt-3{margin-top:6px}
-.u-mb-3{margin-bottom:6px}
-.u-ml-3{margin-left:6px}
-.u-mr-3{margin-right:6px}
-.u-pt-3{padding-top:6px}
-.u-pb-3{padding-bottom:6px}
-.u-pl-3{padding-left:6px}
-.u-pr-3{padding-right:6px}
-.u-mt-4{margin-top:8px}
-.u-mb-4{margin-bottom:8px}
-.u-ml-4{margin-left:8px}
-.u-mr-4{margin-right:8px}
-.u-pt-4{padding-top:8px}
-.u-pb-4{padding-bottom:8px}
-.u-pl-4{padding-left:8px}
-.u-pr-4{padding-right:8px}
-.u-mt-5{margin-top:10px}
-.u-mb-5{margin-bottom:10px}
-.u-ml-5{margin-left:10px}
-.u-mr-5{margin-right:10px}
-.u-pt-5{padding-top:10px}
-.u-pb-5{padding-bottom:10px}
-.u-pl-5{padding-left:10px}
-.u-pr-5{padding-right:10px}
-.u-mt-6{margin-top:12px}
-.u-mb-6{margin-bottom:12px}
-.u-ml-6{margin-left:12px}
-.u-mr-6{margin-right:12px}
-.u-pt-6{padding-top:12px}
-.u-pb-6{padding-bottom:12px}
-.u-pl-6{padding-left:12px}
-.u-pr-6{padding-right:12px}
-.u-mt-7{margin-top:14px}
-.u-mb-7{margin-bottom:14px}
-.u-ml-7{margin-left:14px}
-.u-mr-7{margin-right:14px}
-.u-pt-7{padding-top:14px}
-.u-pb-7{padding-bottom:14px}
-.u-pl-7{padding-left:14px}
-.u-pr-7{padding-right:14px}
-.u-mt-8{margin-top:16px}
-.u-mb-8{margin-bottom:16px}
-.u-ml-8{margin-left:16px}
-.u-mr-8{margin-right:16px}
-.u-pt-8{padding-top:16px}
-.u-pb-8{padding-bottom:16px}
-.u-pl-8{padding-left:16px}
-.u-pr-8{padding-right:16px}
-.u-mt-9{margin-top:18px}
-.u-mb-9{margin-bottom:18px}
-.u-ml-9{margin-left:18px}
-.u-mr-9{margin-right:18px}
-.u-pt-9{padding-top:18px}
-.u-pb-9{padding-bottom:18px}
-.u-pl-9{padding-left:18px}
-.u-pr-9{padding-right:18px}
-.u-mt-10{margin-top:20px}
-.u-mb-10{margin-bottom:20px}
-.u-ml-10{margin-left:20px}
-.u-mr-10{margin-right:20px}
-.u-pt-10{padding-top:20px}
-.u-pb-10{padding-bottom:20px}
-.u-pl-10{padding-left:20px}
-.u-pr-10{padding-right:20px}
-.u-mt-11{margin-top:22px}
-.u-mb-11{margin-bottom:22px}
-.u-ml-11{margin-left:22px}
-.u-mr-11{margin-right:22px}
-.u-pt-11{padding-top:22px}
-.u-pb-11{padding-bottom:22px}
-.u-pl-11{padding-left:22px}
-.u-pr-11{padding-right:22px}
-.u-mt-12{margin-top:24px}
-.u-mb-12{margin-bottom:24px}
-.u-ml-12{margin-left:24px}
-.u-mr-12{margin-right:24px}
-.u-pt-12{padding-top:24px}
-.u-pb-12{padding-bottom:24px}
-.u-pl-12{padding-left:24px}
-.u-pr-12{padding-right:24px}
-.u-mt-13{margin-top:26px}
-.u-mb-13{margin-bottom:26px}
-.u-ml-13{margin-left:26px}
-.u-mr-13{margin-right:26px}
-.u-pt-13{padding-top:26px}
-.u-pb-13{padding-bottom:26px}
-.u-pl-13{padding-left:26px}
-.u-pr-13{padding-right:26px}
-.u-mt-14{margin-top:28px}
-.u-mb-14{margin-bottom:28px}
-.u-ml-14{margin-left:28px}
-.u-mr-14{margin-right:28px}
-.u-pt-14{padding-top:28px}
-.u-pb-14{padding-bottom:28px}
-.u-pl-14{padding-left:28px}
-.u-pr-14{padding-right:28px}
-.u-mt-15{margin-top:30px}
-.u-mb-15{margin-bottom:30px}
-.u-ml-15{margin-left:30px}
-.u-mr-15{margin-right:30px}
-.u-pt-15{padding-top:30px}
-.u-pb-15{padding-bottom:30px}
-.u-pl-15{padding-left:30px}
-.u-pr-15{padding-right:30px}
-.u-mt-16{margin-top:32px}
-.u-mb-16{margin-bottom:32px}
-.u-ml-16{margin-left:32px}
-.u-mr-16{margin-right:32px}
-.u-pt-16{padding-top:32px}
-.u-pb-16{padding-bottom:32px}
-.u-pl-16{padding-left:32px}
-.u-pr-16{padding-right:32px}
-.u-mt-17{margin-top:34px}
-.u-mb-17{margin-bottom:34px}
-.u-ml-17{margin-left:34px}
-.u-mr-17{margin-right:34px}
-.u-pt-17{padding-top:34px}
-.u-pb-17{padding-bottom:34px}
-.u-pl-17{padding-left:34px}
-.u-pr-17{padding-right:34px}
-.u-mt-18{margin-top:36px}
-.u-mb-18{margin-bottom:36px}
-.u-ml-18{margin-left:36px}
-.u-mr-18{margin-right:36px}
-.u-pt-18{padding-top:36px}
-.u-pb-18{padding-bottom:36px}
-.u-pl-18{padding-left:36px}
-.u-pr-18{padding-right:36px}
-.u-mt-19{margin-top:38px}
-.u-mb-19{margin-bottom:38px}
-.u-ml-19{margin-left:38px}
-.u-mr-19{margin-right:38px}
-.u-pt-19{padding-top:38px}
-.u-pb-19{padding-bottom:38px}
-.u-pl-19{padding-left:38px}
-.u-pr-19{padding-right:38px}
-.u-mt-20{margin-top:40px}
-.u-mb-20{margin-bottom:40px}
-.u-ml-20{margin-left:40px}
-.u-mr-20{margin-right:40px}
-.u-pt-20{padding-top:40px}
-.u-pb-20{padding-bottom:40px}
-.u-pl-20{padding-left:40px}
-.u-pr-20{padding-right:40px}
-.u-mt-21{margin-top:42px}
-.u-mb-21{margin-bottom:42px}
-.u-ml-21{margin-left:42px}
-.u-mr-21{margin-right:42px}
-.u-pt-21{padding-top:42px}
-.u-pb-21{padding-bottom:42px}
-.u-pl-21{padding-left:42px}
-.u-pr-21{padding-right:42px}
-.u-mt-22{margin-top:44px}
-.u-mb-22{margin-bottom:44px}
-.u-ml-22{margin-left:44px}
-.u-mr-22{margin-right:44px}
-.u-pt-22{padding-top:44px}
-.u-pb-22{padding-bottom:44px}
-.u-pl-22{padding-left:44px}
-.u-pr-22{padding-right:44px}
-.u-mt-23{margin-top:46px}
-.u-mb-23{margin-bottom:46px}
-.u-ml-23{margin-left:46px}
-.u-mr-23{margin-right:46px}
-.u-pt-23{padding-top:46px}
-.u-pb-23{padding-bottom:46px}
-.u-pl-23{padding-left:46px}
-.u-pr-23{padding-right:46px}
-.u-mt-24{margin-top:48px}
-.u-mb-24{margin-bottom:48px}
-.u-ml-24{margin-left:48px}
-.u-mr-24{margin-right:48px}
-.u-pt-24{padding-top:48px}
-.u-pb-24{padding-bottom:48px}
-.u-pl-24{padding-left:48px}
-.u-pr-24{padding-right:48px}
-.u-mt-25{margin-top:50px}
-.u-mb-25{margin-bottom:50px}
-.u-ml-25{margin-left:50px}
-.u-mr-25{margin-right:50px}
-.u-pt-25{padding-top:50px}
-.u-pb-25{padding-bottom:50px}
-.u-pl-25{padding-left:50px}
-.u-pr-25{padding-right:50px}
-.u-mt-26{margin-top:52px}
-.u-mb-26{margin-bottom:52px}
-.u-ml-26{margin-left:52px}
-.u-mr-26{margin-right:52px}
-.u-pt-26{padding-top:52px}
-.u-pb-26{padding-bottom:52px}
-.u-pl-26{padding-left:52px}
-.u-pr-26{padding-right:52px}
-.u-mt-27{margin-top:54px}
-.u-mb-27{margin-bottom:54px}
-.u-ml-27{margin-left:54px}
-.u-mr-27{margin-right:54px}
-.u-pt-27{padding-top:54px}
-.u-pb-27{padding-bottom:54px}
-.u-pl-27{padding-left:54px}
-.u-pr-27{padding-right:54px}
-.u-mt-28{margin-top:56px}
-.u-mb-28{margin-bottom:56px}
-.u-ml-28{margin-left:56px}
-.u-mr-28{margin-right:56px}
-.u-pt-28{padding-top:56px}
-.u-pb-28{padding-bottom:56px}
-.u-pl-28{padding-left:56px}
-.u-pr-28{padding-right:56px}
-.u-mt-29{margin-top:58px}
-.u-mb-29{margin-bottom:58px}
-.u-ml-29{margin-left:58px}
-.u-mr-29{margin-right:58px}
-.u-pt-29{padding-top:58px}
-.u-pb-29{padding-bottom:58px}
-.u-pl-29{padding-left:58px}
-.u-pr-29{padding-right:58px}
-.u-mt-30{margin-top:60px}
-.u-mb-30{margin-bottom:60px}
-.u-ml-30{margin-left:60px}
-.u-mr-30{margin-right:60px}
-.u-pt-30{padding-top:60px}
-.u-pb-30{padding-bottom:60px}
-.u-pl-30{padding-left:60px}
-.u-pr-30{padding-right:60px}
-.u-mt-31{margin-top:62px}
-.u-mb-31{margin-bottom:62px}
-.u-ml-31{margin-left:62px}
-.u-mr-31{margin-right:62px}
-.u-pt-31{padding-top:62px}
-.u-pb-31{padding-bottom:62px}
-.u-pl-31{padding-left:62px}
-.u-pr-31{padding-right:62px}
-.u-mt-32{margin-top:64px}
-.u-mb-32{margin-bottom:64px}
-.u-ml-32{margin-left:64px}
-.u-mr-32{margin-right:64px}
-.u-pt-32{padding-top:64px}
-.u-pb-32{padding-bottom:64px}
-.u-pl-32{padding-left:64px}
-.u-pr-32{padding-right:64px}
-.u-mt-33{margin-top:66px}
-.u-mb-33{margin-bottom:66px}
-.u-ml-33{margin-left:66px}
-.u-mr-33{margin-right:66px}
-.u-pt-33{padding-top:66px}
-.u-pb-33{padding-bottom:66px}
-.u-pl-33{padding-left:66px}
-.u-pr-33{padding-right:66px}
-.u-mt-34{margin-top:68px}
-.u-mb-34{margin-bottom:68px}
-.u-ml-34{margin-left:68px}
-.u-mr-34{margin-right:68px}
-.u-pt-34{padding-top:68px}
-.u-pb-34{padding-bottom:68px}
-.u-pl-34{padding-left:68px}
-.u-pr-34{padding-right:68px}
-.u-mt-35{margin-top:70px}
-.u-mb-35{margin-bottom:70px}
-.u-ml-35{margin-left:70px}
-.u-mr-35{margin-right:70px}
-.u-pt-35{padding-top:70px}
-.u-pb-35{padding-bottom:70px}
-.u-pl-35{padding-left:70px}
-.u-pr-35{padding-right:70px}
-.u-mt-36{margin-top:72px}
-.u-mb-36{margin-bottom:72px}
-.u-ml-36{margin-left:72px}
-.u-mr-36{margin-right:72px}
-.u-pt-36{padding-top:72px}
-.u-pb-36{padding-bottom:72px}
-.u-pl-36{padding-left:72px}
-.u-pr-36{padding-right:72px}
-.u-mt-37{margin-top:74px}
-.u-mb-37{margin-bottom:74px}
-.u-ml-37{margin-left:74px}
-.u-mr-37{margin-right:74px}
-.u-pt-37{padding-top:74px}
-.u-pb-37{padding-bottom:74px}
-.u-pl-37{padding-left:74px}
-.u-pr-37{padding-right:74px}
-.u-mt-38{margin-top:76px}
-.u-mb-38{margin-bottom:76px}
-.u-ml-38{margin-left:76px}
-.u-mr-38{margin-right:76px}
-.u-pt-38{padding-top:76px}
-.u-pb-38{padding-bottom:76px}
-.u-pl-38{padding-left:76px}
-.u-pr-38{padding-right:76px}
-.u-mt-39{margin-top:78px}
-.u-mb-39{margin-bottom:78px}
-.u-ml-39{margin-left:78px}
-.u-mr-39{margin-right:78px}
-.u-pt-39{padding-top:78px}
-.u-pb-39{padding-bottom:78px}
-.u-pl-39{padding-left:78px}
-.u-pr-39{padding-right:78px}
-.u-mt-40{margin-top:80px}
-.u-mb-40{margin-bottom:80px}
-.u-ml-40{margin-left:80px}
-.u-mr-40{margin-right:80px}
-.u-pt-40{padding-top:80px}
-.u-pb-40{padding-bottom:80px}
-.u-pl-40{padding-left:80px}
-.u-pr-40{padding-right:80px}
-.u-mt-41{margin-top:82px}
-.u-mb-41{margin-bottom:82px}
-.u-ml-41{margin-left:82px}
-.u-mr-41{margin-right:82px}
-.u-pt-41{padding-top:82px}
-.u-pb-41{padding-bottom:82px}
-.u-pl-41{padding-left:82px}
-.u-pr-41{padding-right:82px}
-.u-mt-42{margin-top:84px}
-.u-mb-42{margin-bottom:84px}
-.u-ml-42{margin-left:84px}
-.u-mr-42{margin-right:84px}
-.u-pt-42{padding-top:84px}
-.u-pb-42{padding-bottom:84px}
-.u-pl-42{padding-left:84px}
-.u-pr-42{padding-right:84px}
-.u-mt-43{margin-top:86px}
-.u-mb-43{margin-bottom:86px}
-.u-ml-43{margin-left:86px}
-.u-mr-43{margin-right:86px}
-.u-pt-43{padding-top:86px}
-.u-pb-43{padding-bottom:86px}
-.u-pl-43{padding-left:86px}
-.u-pr-43{padding-right:86px}
-.u-mt-44{margin-top:88px}
-.u-mb-44{margin-bottom:88px}
-.u-ml-44{margin-left:88px}
-.u-mr-44{margin-right:88px}
-.u-pt-44{padding-top:88px}
-.u-pb-44{padding-bottom:88px}
-.u-pl-44{padding-left:88px}
-.u-pr-44{padding-right:88px}
-.u-mt-45{margin-top:90px}
-.u-mb-45{margin-bottom:90px}
-.u-ml-45{margin-left:90px}
-.u-mr-45{margin-right:90px}
-.u-pt-45{padding-top:90px}
-.u-pb-45{padding-bottom:90px}
-.u-pl-45{padding-left:90px}
-.u-pr-45{padding-right:90px}
-.u-mt-46{margin-top:92px}
-.u-mb-46{margin-bottom:92px}
-.u-ml-46{margin-left:92px}
-.u-mr-46{margin-right:92px}
-.u-pt-46{padding-top:92px}
-.u-pb-46{padding-bottom:92px}
-.u-pl-46{padding-left:92px}
-.u-pr-46{padding-right:92px}
-.u-mt-47{margin-top:94px}
-.u-mb-47{margin-bottom:94px}
-.u-ml-47{margin-left:94px}
-.u-mr-47{margin-right:94px}
-.u-pt-47{padding-top:94px}
-.u-pb-47{padding-bottom:94px}
-.u-pl-47{padding-left:94px}
-.u-pr-47{padding-right:94px}
-.u-mt-48{margin-top:96px}
-.u-mb-48{margin-bottom:96px}
-.u-ml-48{margin-left:96px}
-.u-mr-48{margin-right:96px}
-.u-pt-48{padding-top:96px}
-.u-pb-48{padding-bottom:96px}
-.u-pl-48{padding-left:96px}
-.u-pr-48{padding-right:96px}
-.u-mt-49{margin-top:98px}
-.u-mb-49{margin-bottom:98px}
-.u-ml-49{margin-left:98px}
-.u-mr-49{margin-right:98px}
-.u-pt-49{padding-top:98px}
-.u-pb-49{padding-bottom:98px}
-.u-pl-49{padding-left:98px}
-.u-pr-49{padding-right:98px}
-.u-mt-50{margin-top:100px}
-.u-mb-50{margin-bottom:100px}
-.u-ml-50{margin-left:100px}
-.u-mr-50{margin-right:100px}
-.u-pt-50{padding-top:100px}
-.u-pb-50{padding-bottom:100px}
-.u-pl-50{padding-left:100px}
-.u-pr-50{padding-right:100px}
-.u-mt-51{margin-top:102px}
-.u-mb-51{margin-bottom:102px}
-.u-ml-51{margin-left:102px}
-.u-mr-51{margin-right:102px}
-.u-pt-51{padding-top:102px}
-.u-pb-51{padding-bottom:102px}
-.u-pl-51{padding-left:102px}
-.u-pr-51{padding-right:102px}
-.u-mt-52{margin-top:104px}
-.u-mb-52{margin-bottom:104px}
-.u-ml-52{margin-left:104px}
-.u-mr-52{margin-right:104px}
-.u-pt-52{padding-top:104px}
-.u-pb-52{padding-bottom:104px}
-.u-pl-52{padding-left:104px}
-.u-pr-52{padding-right:104px}
-.u-mt-53{margin-top:106px}
-.u-mb-53{margin-bottom:106px}
-.u-ml-53{margin-left:106px}
-.u-mr-53{margin-right:106px}
-.u-pt-53{padding-top:106px}
-.u-pb-53{padding-bottom:106px}
-.u-pl-53{padding-left:106px}
-.u-pr-53{padding-right:106px}
-.u-mt-54{margin-top:108px}
-.u-mb-54{margin-bottom:108px}
-.u-ml-54{margin-left:108px}
-.u-mr-54{margin-right:108px}
-.u-pt-54{padding-top:108px}
-.u-pb-54{padding-bottom:108px}
-.u-pl-54{padding-left:108px}
-.u-pr-54{padding-right:108px}
-.u-mt-55{margin-top:110px}
-.u-mb-55{margin-bottom:110px}
-.u-ml-55{margin-left:110px}
-.u-mr-55{margin-right:110px}
-.u-pt-55{padding-top:110px}
-.u-pb-55{padding-bottom:110px}
-.u-pl-55{padding-left:110px}
-.u-pr-55{padding-right:110px}
-.u-mt-56{margin-top:112px}
-.u-mb-56{margin-bottom:112px}
-.u-ml-56{margin-left:112px}
-.u-mr-56{margin-right:112px}
-.u-pt-56{padding-top:112px}
-.u-pb-56{padding-bottom:112px}
-.u-pl-56{padding-left:112px}
-.u-pr-56{padding-right:112px}
-.u-mt-57{margin-top:114px}
-.u-mb-57{margin-bottom:114px}
-.u-ml-57{margin-left:114px}
-.u-mr-57{margin-right:114px}
-.u-pt-57{padding-top:114px}
-.u-pb-57{padding-bottom:114px}
-.u-pl-57{padding-left:114px}
-.u-pr-57{padding-right:114px}
-.u-mt-58{margin-top:116px}
-.u-mb-58{margin-bottom:116px}
-.u-ml-58{margin-left:116px}
-.u-mr-58{margin-right:116px}
-.u-pt-58{padding-top:116px}
-.u-pb-58{padding-bottom:116px}
-.u-pl-58{padding-left:116px}
-.u-pr-58{padding-right:116px}
-.u-mt-59{margin-top:118px}
-.u-mb-59{margin-bottom:118px}
-.u-ml-59{margin-left:118px}
-.u-mr-59{margin-right:118px}
-.u-pt-59{padding-top:118px}
-.u-pb-59{padding-bottom:118px}
-.u-pl-59{padding-left:118px}
-.u-pr-59{padding-right:118px}
-.u-mt-60{margin-top:120px}
-.u-mb-60{margin-bottom:120px}
-.u-ml-60{margin-left:120px}
-.u-mr-60{margin-right:120px}
-.u-pt-60{padding-top:120px}
-.u-pb-60{padding-bottom:120px}
-.u-pl-60{padding-left:120px}
-.u-pr-60{padding-right:120px}
-.u-mt-61{margin-top:122px}
-.u-mb-61{margin-bottom:122px}
-.u-ml-61{margin-left:122px}
-.u-mr-61{margin-right:122px}
-.u-pt-61{padding-top:122px}
-.u-pb-61{padding-bottom:122px}
-.u-pl-61{padding-left:122px}
-.u-pr-61{padding-right:122px}
-.u-mt-62{margin-top:124px}
-.u-mb-62{margin-bottom:124px}
-.u-ml-62{margin-left:124px}
-.u-mr-62{margin-right:124px}
-.u-pt-62{padding-top:124px}
-.u-pb-62{padding-bottom:124px}
-.u-pl-62{padding-left:124px}
-.u-pr-62{padding-right:124px}
-.u-mt-63{margin-top:126px}
-.u-mb-63{margin-bottom:126px}
-.u-ml-63{margin-left:126px}
-.u-mr-63{margin-right:126px}
-.u-pt-63{padding-top:126px}
-.u-pb-63{padding-bottom:126px}
-.u-pl-63{padding-left:126px}
-.u-pr-63{padding-right:126px}
-.u-mt-64{margin-top:128px}
-.u-mb-64{margin-bottom:128px}
-.u-ml-64{margin-left:128px}
-.u-mr-64{margin-right:128px}
-.u-pt-64{padding-top:128px}
-.u-pb-64{padding-bottom:128px}
-.u-pl-64{padding-left:128px}
-.u-pr-64{padding-right:128px}
-.u-mt-65{margin-top:130px}
-.u-mb-65{margin-bottom:130px}
-.u-ml-65{margin-left:130px}
-.u-mr-65{margin-right:130px}
-.u-pt-65{padding-top:130px}
-.u-pb-65{padding-bottom:130px}
-.u-pl-65{padding-left:130px}
-.u-pr-65{padding-right:130px}
-.u-mt-66{margin-top:132px}
-.u-mb-66{margin-bottom:132px}
-.u-ml-66{margin-left:132px}
-.u-mr-66{margin-right:132px}
-.u-pt-66{padding-top:132px}
-.u-pb-66{padding-bottom:132px}
-.u-pl-66{padding-left:132px}
-.u-pr-66{padding-right:132px}
-.u-mt-67{margin-top:134px}
-.u-mb-67{margin-bottom:134px}
-.u-ml-67{margin-left:134px}
-.u-mr-67{margin-right:134px}
-.u-pt-67{padding-top:134px}
-.u-pb-67{padding-bottom:134px}
-.u-pl-67{padding-left:134px}
-.u-pr-67{padding-right:134px}
-.u-mt-68{margin-top:136px}
-.u-mb-68{margin-bottom:136px}
-.u-ml-68{margin-left:136px}
-.u-mr-68{margin-right:136px}
-.u-pt-68{padding-top:136px}
-.u-pb-68{padding-bottom:136px}
-.u-pl-68{padding-left:136px}
-.u-pr-68{padding-right:136px}
-.u-mt-69{margin-top:138px}
-.u-mb-69{margin-bottom:138px}
-.u-ml-69{margin-left:138px}
-.u-mr-69{margin-right:138px}
-.u-pt-69{padding-top:138px}
-.u-pb-69{padding-bottom:138px}
-.u-pl-69{padding-left:138px}
-.u-pr-69{padding-right:138px}
-.u-mt-70{margin-top:140px}
-.u-mb-70{margin-bottom:140px}
-.u-ml-70{margin-left:140px}
-.u-mr-70{margin-right:140px}
-.u-pt-70{padding-top:140px}
-.u-pb-70{padding-bottom:140px}
-.u-pl-70{padding-left:140px}
-.u-pr-70{padding-right:140px}
-.u-mt-71{margin-top:142px}
-.u-mb-71{margin-bottom:142px}
-.u-ml-71{margin-left:142px}
-.u-mr-71{margin-right:142px}
-.u-pt-71{padding-top:142px}
-.u-pb-71{padding-bottom:142px}
-.u-pl-71{padding-left:142px}
-.u-pr-71{padding-right:142px}
-.u-mt-72{margin-top:144px}
-.u-mb-72{margin-bottom:144px}
-.u-ml-72{margin-left:144px}
-.u-mr-72{margin-right:144px}
-.u-pt-72{padding-top:144px}
-.u-pb-72{padding-bottom:144px}
-.u-pl-72{padding-left:144px}
-.u-pr-72{padding-right:144px}
-.u-mt-73{margin-top:146px}
-.u-mb-73{margin-bottom:146px}
-.u-ml-73{margin-left:146px}
-.u-mr-73{margin-right:146px}
-.u-pt-73{padding-top:146px}
-.u-pb-73{padding-bottom:146px}
-.u-pl-73{padding-left:146px}
-.u-pr-73{padding-right:146px}
-.u-mt-74{margin-top:148px}
-.u-mb-74{margin-bottom:148px}
-.u-ml-74{margin-left:148px}
-.u-mr-74{margin-right:148px}
-.u-pt-74{padding-top:148px}
-.u-pb-74{padding-bottom:148px}
-.u-pl-74{padding-left:148px}
-.u-pr-74{padding-right:148px}
-.u-mt-75{margin-top:150px}
-.u-mb-75{margin-bottom:150px}
-.u-ml-75{margin-left:150px}
-.u-mr-75{margin-right:150px}
-.u-pt-75{padding-top:150px}
-.u-pb-75{padding-bottom:150px}
-.u-pl-75{padding-left:150px}
-.u-pr-75{padding-right:150px}
-.u-mt-76{margin-top:152px}
-.u-mb-76{margin-bottom:152px}
-.u-ml-76{margin-left:152px}
-.u-mr-76{margin-right:152px}
-.u-pt-76{padding-top:152px}
-.u-pb-76{padding-bottom:152px}
-.u-pl-76{padding-left:152px}
-.u-pr-76{padding-right:152px}
-.u-mt-77{margin-top:154px}
-.u-mb-77{margin-bottom:154px}
-.u-ml-77{margin-left:154px}
-.u-mr-77{margin-right:154px}
-.u-pt-77{padding-top:154px}
-.u-pb-77{padding-bottom:154px}
-.u-pl-77{padding-left:154px}
-.u-pr-77{padding-right:154px}
-.u-mt-78{margin-top:156px}
-.u-mb-78{margin-bottom:156px}
-.u-ml-78{margin-left:156px}
-.u-mr-78{margin-right:156px}
-.u-pt-78{padding-top:156px}
-.u-pb-78{padding-bottom:156px}
-.u-pl-78{padding-left:156px}
-.u-pr-78{padding-right:156px}
-.u-mt-79{margin-top:158px}
-.u-mb-79{margin-bottom:158px}
-.u-ml-79{margin-left:158px}
-.u-mr-79{margin-right:158px}
-.u-pt-79{padding-top:158px}
-.u-pb-79{padding-bottom:158px}
-.u-pl-79{padding-left:158px}
-.u-pr-79{padding-right:158px}
-.u-mt-80{margin-top:160px}
-.u-mb-80{margin-bottom:160px}
-.u-ml-80{margin-left:160px}
-.u-mr-80{margin-right:160px}
-.u-pt-80{padding-top:160px}
-.u-pb-80{padding-bottom:160px}
-.u-pl-80{padding-left:160px}
-.u-pr-80{padding-right:160px}
-.u-mt-81{margin-top:162px}
-.u-mb-81{margin-bottom:162px}
-.u-ml-81{margin-left:162px}
-.u-mr-81{margin-right:162px}
-.u-pt-81{padding-top:162px}
-.u-pb-81{padding-bottom:162px}
-.u-pl-81{padding-left:162px}
-.u-pr-81{padding-right:162px}
-.u-mt-82{margin-top:164px}
-.u-mb-82{margin-bottom:164px}
-.u-ml-82{margin-left:164px}
-.u-mr-82{margin-right:164px}
-.u-pt-82{padding-top:164px}
-.u-pb-82{padding-bottom:164px}
-.u-pl-82{padding-left:164px}
-.u-pr-82{padding-right:164px}
-.u-mt-83{margin-top:166px}
-.u-mb-83{margin-bottom:166px}
-.u-ml-83{margin-left:166px}
-.u-mr-83{margin-right:166px}
-.u-pt-83{padding-top:166px}
-.u-pb-83{padding-bottom:166px}
-.u-pl-83{padding-left:166px}
-.u-pr-83{padding-right:166px}
-.u-mt-84{margin-top:168px}
-.u-mb-84{margin-bottom:168px}
-.u-ml-84{margin-left:168px}
-.u-mr-84{margin-right:168px}
-.u-pt-84{padding-top:168px}
-.u-pb-84{padding-bottom:168px}
-.u-pl-84{padding-left:168px}
-.u-pr-84{padding-right:168px}
-.u-mt-85{margin-top:170px}
-.u-mb-85{margin-bottom:170px}
-.u-ml-85{margin-left:170px}
-.u-mr-85{margin-right:170px}
-.u-pt-85{padding-top:170px}
-.u-pb-85{padding-bottom:170px}
-.u-pl-85{padding-left:170px}
-.u-pr-85{padding-right:170px}
-.u-mt-86{margin-top:172px}
-.u-mb-86{margin-bottom:172px}
-.u-ml-86{margin-left:172px}
-.u-mr-86{margin-right:172px}
-.u-pt-86{padding-top:172px}
-.u-pb-86{padding-bottom:172px}
-.u-pl-86{padding-left:172px}
-.u-pr-86{padding-right:172px}
-.u-mt-87{margin-top:174px}
-.u-mb-87{margin-bottom:174px}
-.u-ml-87{margin-left:174px}
-.u-mr-87{margin-right:174px}
-.u-pt-87{padding-top:174px}
-.u-pb-87{padding-bottom:174px}
-.u-pl-87{padding-left:174px}
-.u-pr-87{padding-right:174px}
-.u-mt-88{margin-top:176px}
-.u-mb-88{margin-bottom:176px}
-.u-ml-88{margin-left:176px}
-.u-mr-88{margin-right:176px}
-.u-pt-88{padding-top:176px}
-.u-pb-88{padding-bottom:176px}
-.u-pl-88{padding-left:176px}
-.u-pr-88{padding-right:176px}
-.u-mt-89{margin-top:178px}
-.u-mb-89{margin-bottom:178px}
-.u-ml-89{margin-left:178px}
-.u-mr-89{margin-right:178px}
-.u-pt-89{padding-top:178px}
-.u-pb-89{padding-bottom:178px}
-.u-pl-89{padding-left:178px}
-.u-pr-89{padding-right:178px}
-.u-mt-90{margin-top:180px}
-.u-mb-90{margin-bottom:180px}
-.u-ml-90{margin-left:180px}
-.u-mr-90{margin-right:180px}
-.u-pt-90{padding-top:180px}
-.u-pb-90{padding-bottom:180px}
-.u-pl-90{padding-left:180px}
-.u-pr-90{padding-right:180px}
-.u-mt-91{margin-top:182px}
-.u-mb-91{margin-bottom:182px}
-.u-ml-91{margin-left:182px}
-.u-mr-91{margin-right:182px}
-.u-pt-91{padding-top:182px}
-.u-pb-91{padding-bottom:182px}
-.u-pl-91{padding-left:182px}
-.u-pr-91{padding-right:182px}
-.u-mt-92{margin-top:184px}
-.u-mb-92{margin-bottom:184px}
-.u-ml-92{margin-left:184px}
-.u-mr-92{margin-right:184px}
-.u-pt-92{padding-top:184px}
-.u-pb-92{padding-bottom:184px}
-.u-pl-92{padding-left:184px}
-.u-pr-92{padding-right:184px}
-.u-mt-93{margin-top:186px}
-.u-mb-93{margin-bottom:186px}
-.u-ml-93{margin-left:186px}
-.u-mr-93{margin-right:186px}
-.u-pt-93{padding-top:186px}
-.u-pb-93{padding-bottom:186px}
-.u-pl-93{padding-left:186px}
-.u-pr-93{padding-right:186px}
-.u-mt-94{margin-top:188px}
-.u-mb-94{margin-bottom:188px}
-.u-ml-94{margin-left:188px}
-.u-mr-94{margin-right:188px}
-.u-pt-94{padding-top:188px}
-.u-pb-94{padding-bottom:188px}
-.u-pl-94{padding-left:188px}
-.u-pr-94{padding-right:188px}
-.u-mt-95{margin-top:190px}
-.u-mb-95{margin-bottom:190px}
-.u-ml-95{margin-left:190px}
-.u-mr-95{margin-right:190px}
-.u-pt-95{padding-top:190px}
-.u-pb-95{padding-bottom:190px}
-.u-pl-95{padding-left:190px}
-.u-pr-95{padding-right:190px}
-.u-mt-96{margin-top:192px}
-.u-mb-96{margin-bottom:192px}
-.u-ml-96{margin-left:192px}
-.u-mr-96{margin-right:192px}
-.u-pt-96{padding-top:192px}
-.u-pb-96{padding-bottom:192px}
-.u-pl-96{padding-left:192px}
-.u-pr-96{padding-right:192px}
-.u-mt-97{margin-top:194px}
-.u-mb-97{margin-bottom:194px}
-.u-ml-97{margin-left:194px}
-.u-mr-97{margin-right:194px}
-.u-pt-97{padding-top:194px}
-.u-pb-97{padding-bottom:194px}
-.u-pl-97{padding-left:194px}
-.u-pr-97{padding-right:194px}
-.u-mt-98{margin-top:196px}
-.u-mb-98{margin-bottom:196px}
-.u-ml-98{margin-left:196px}
-.u-mr-98{margin-right:196px}
-.u-pt-98{padding-top:196px}
-.u-pb-98{padding-bottom:196px}
-.u-pl-98{padding-left:196px}
-.u-pr-98{padding-right:196px}
-.u-mt-99{margin-top:198px}
-.u-mb-99{margin-bottom:198px}
-.u-ml-99{margin-left:198px}
-.u-mr-99{margin-right:198px}
-.u-pt-99{padding-top:198px}
-.u-pb-99{padding-bottom:198px}
-.u-pl-99{padding-left:198px}
-.u-pr-99{padding-right:198px}
-.u-mt-100{margin-top:200px}
-.u-mb-100{margin-bottom:200px}
-.u-ml-100{margin-left:200px}
-.u-mr-100{margin-right:200px}
-.u-pt-100{padding-top:200px}
-.u-pb-100{padding-bottom:200px}
-.u-pl-100{padding-left:200px}
-.u-pr-100{padding-right:200px}
-.u-mt-101{margin-top:202px}
-.u-mb-101{margin-bottom:202px}
-.u-ml-101{margin-left:202px}
-.u-mr-101{margin-right:202px}
-.u-pt-101{padding-top:202px}
-.u-pb-101{padding-bottom:202px}
-.u-pl-101{padding-left:202px}
-.u-pr-101{padding-right:202px}
-.u-mt-102{margin-top:204px}
-.u-mb-102{margin-bottom:204px}
-.u-ml-102{margin-left:204px}
-.u-mr-102{margin-right:204px}
-.u-pt-102{padding-top:204px}
-.u-pb-102{padding-bottom:204px}
-.u-pl-102{padding-left:204px}
-.u-pr-102{padding-right:204px}
-.u-mt-103{margin-top:206px}
-.u-mb-103{margin-bottom:206px}
-.u-ml-103{margin-left:206px}
-.u-mr-103{margin-right:206px}
-.u-pt-103{padding-top:206px}
-.u-pb-103{padding-bottom:206px}
-.u-pl-103{padding-left:206px}
-.u-pr-103{padding-right:206px}
-.u-mt-104{margin-top:208px}
-.u-mb-104{margin-bottom:208px}
-.u-ml-104{margin-left:208px}
-.u-mr-104{margin-right:208px}
-.u-pt-104{padding-top:208px}
-.u-pb-104{padding-bottom:208px}
-.u-pl-104{padding-left:208px}
-.u-pr-104{padding-right:208px}
-.u-mt-105{margin-top:210px}
-.u-mb-105{margin-bottom:210px}
-.u-ml-105{margin-left:210px}
-.u-mr-105{margin-right:210px}
-.u-pt-105{padding-top:210px}
-.u-pb-105{padding-bottom:210px}
-.u-pl-105{padding-left:210px}
-.u-pr-105{padding-right:210px}
-.u-mt-106{margin-top:212px}
-.u-mb-106{margin-bottom:212px}
-.u-ml-106{margin-left:212px}
-.u-mr-106{margin-right:212px}
-.u-pt-106{padding-top:212px}
-.u-pb-106{padding-bottom:212px}
-.u-pl-106{padding-left:212px}
-.u-pr-106{padding-right:212px}
-.u-mt-107{margin-top:214px}
-.u-mb-107{margin-bottom:214px}
-.u-ml-107{margin-left:214px}
-.u-mr-107{margin-right:214px}
-.u-pt-107{padding-top:214px}
-.u-pb-107{padding-bottom:214px}
-.u-pl-107{padding-left:214px}
-.u-pr-107{padding-right:214px}
-.u-mt-108{margin-top:216px}
-.u-mb-108{margin-bottom:216px}
-.u-ml-108{margin-left:216px}
-.u-mr-108{margin-right:216px}
-.u-pt-108{padding-top:216px}
-.u-pb-108{padding-bottom:216px}
-.u-pl-108{padding-left:216px}
-.u-pr-108{padding-right:216px}
-.u-mt-109{margin-top:218px}
-.u-mb-109{margin-bottom:218px}
-.u-ml-109{margin-left:218px}
-.u-mr-109{margin-right:218px}
-.u-pt-109{padding-top:218px}
-.u-pb-109{padding-bottom:218px}
-.u-pl-109{padding-left:218px}
-.u-pr-109{padding-right:218px}
-.u-mt-110{margin-top:220px}
-.u-mb-110{margin-bottom:220px}
-.u-ml-110{margin-left:220px}
-.u-mr-110{margin-right:220px}
-.u-pt-110{padding-top:220px}
-.u-pb-110{padding-bottom:220px}
-.u-pl-110{padding-left:220px}
-.u-pr-110{padding-right:220px}
-.u-mt-111{margin-top:222px}
-.u-mb-111{margin-bottom:222px}
-.u-ml-111{margin-left:222px}
-.u-mr-111{margin-right:222px}
-.u-pt-111{padding-top:222px}
-.u-pb-111{padding-bottom:222px}
-.u-pl-111{padding-left:222px}
-.u-pr-111{padding-right:222px}
-.u-mt-112{margin-top:224px}
-.u-mb-112{margin-bottom:224px}
-.u-ml-112{margin-left:224px}
-.u-mr-112{margin-right:224px}
-.u-pt-112{padding-top:224px}
-.u-pb-112{padding-bottom:224px}
-.u-pl-112{padding-left:224px}
-.u-pr-112{padding-right:224px}
-.u-mt-113{margin-top:226px}
-.u-mb-113{margin-bottom:226px}
-.u-ml-113{margin-left:226px}
-.u-mr-113{margin-right:226px}
-.u-pt-113{padding-top:226px}
-.u-pb-113{padding-bottom:226px}
-.u-pl-113{padding-left:226px}
-.u-pr-113{padding-right:226px}
-.u-mt-114{margin-top:228px}
-.u-mb-114{margin-bottom:228px}
-.u-ml-114{margin-left:228px}
-.u-mr-114{margin-right:228px}
-.u-pt-114{padding-top:228px}
-.u-pb-114{padding-bottom:228px}
-.u-pl-114{padding-left:228px}
-.u-pr-114{padding-right:228px}
-.u-mt-115{margin-top:230px}
-.u-mb-115{margin-bottom:230px}
-.u-ml-115{margin-left:230px}
-.u-mr-115{margin-right:230px}
-.u-pt-115{padding-top:230px}
-.u-pb-115{padding-bottom:230px}
-.u-pl-115{padding-left:230px}
-.u-pr-115{padding-right:230px}
-.u-mt-116{margin-top:232px}
-.u-mb-116{margin-bottom:232px}
-.u-ml-116{margin-left:232px}
-.u-mr-116{margin-right:232px}
-.u-pt-116{padding-top:232px}
-.u-pb-116{padding-bottom:232px}
-.u-pl-116{padding-left:232px}
-.u-pr-116{padding-right:232px}
-.u-mt-117{margin-top:234px}
-.u-mb-117{margin-bottom:234px}
-.u-ml-117{margin-left:234px}
-.u-mr-117{margin-right:234px}
-.u-pt-117{padding-top:234px}
-.u-pb-117{padding-bottom:234px}
-.u-pl-117{padding-left:234px}
-.u-pr-117{padding-right:234px}
-.u-mt-118{margin-top:236px}
-.u-mb-118{margin-bottom:236px}
-.u-ml-118{margin-left:236px}
-.u-mr-118{margin-right:236px}
-.u-pt-118{padding-top:236px}
-.u-pb-118{padding-bottom:236px}
-.u-pl-118{padding-left:236px}
-.u-pr-118{padding-right:236px}
-.u-mt-119{margin-top:238px}
-.u-mb-119{margin-bottom:238px}
-.u-ml-119{margin-left:238px}
-.u-mr-119{margin-right:238px}
-.u-pt-119{padding-top:238px}
-.u-pb-119{padding-bottom:238px}
-.u-pl-119{padding-left:238px}
-.u-pr-119{padding-right:238px}
-.u-mt-120{margin-top:240px}
-.u-mb-120{margin-bottom:240px}
-.u-ml-120{margin-left:240px}
-.u-mr-120{margin-right:240px}
-.u-pt-120{padding-top:240px}
-.u-pb-120{padding-bottom:240px}
-.u-pl-120{padding-left:240px}
-.u-pr-120{padding-right:240px}
-.u-mt-121{margin-top:242px}
-.u-mb-121{margin-bottom:242px}
-.u-ml-121{margin-left:242px}
-.u-mr-121{margin-right:242px}
-.u-pt-121{padding-top:242px}
-.u-pb-121{padding-bottom:242px}
-.u-pl-121{padding-left:242px}
-.u-pr-121{padding-right:242px}
-.u-mt-122{margin-top:244px}
-.u-mb-122{margin-bottom:244px}
-.u-ml-122{margin-left:244px}
-.u-mr-122{margin-right:244px}
-.u-pt-122{padding-top:244px}
-.u-pb-122{padding-bottom:244px}
-.u-pl-122{padding-left:244px}
-.u-pr-122{padding-right:244px}
-.u-mt-123{margin-top:246px}
-.u-mb-123{margin-bottom:246px}
-.u-ml-123{margin-left:246px}
-.u-mr-123{margin-right:246px}
-.u-pt-123{padding-top:246px}
-.u-pb-123{padding-bottom:246px}
-.u-pl-123{padding-left:246px}
-.u-pr-123{padding-right:246px}
-.u-mt-124{margin-top:248px}
-.u-mb-124{margin-bottom:248px}
-.u-ml-124{margin-left:248px}
-.u-mr-124{margin-right:248px}
-.u-pt-124{padding-top:248px}
-.u-pb-124{padding-bottom:248px}
-.u-pl-124{padding-left:248px}
-.u-pr-124{padding-right:248px}
-.u-mt-125{margin-top:250px}
-.u-mb-125{margin-bottom:250px}
-.u-ml-125{margin-left:250px}
-.u-mr-125{margin-right:250px}
-.u-pt-125{padding-top:250px}
-.u-pb-125{padding-bottom:250px}
-.u-pl-125{padding-left:250px}
-.u-pr-125{padding-right:250px}
-.u-mt-126{margin-top:252px}
-.u-mb-126{margin-bottom:252px}
-.u-ml-126{margin-left:252px}
-.u-mr-126{margin-right:252px}
-.u-pt-126{padding-top:252px}
-.u-pb-126{padding-bottom:252px}
-.u-pl-126{padding-left:252px}
-.u-pr-126{padding-right:252px}
-.u-mt-127{margin-top:254px}
-.u-mb-127{margin-bottom:254px}
-.u-ml-127{margin-left:254px}
-.u-mr-127{margin-right:254px}
-.u-pt-127{padding-top:254px}
-.u-pb-127{padding-bottom:254px}
-.u-pl-127{padding-left:254px}
-.u-pr-127{padding-right:254px}
-.u-mt-128{margin-top:256px}
-.u-mb-128{margin-bottom:256px}
-.u-ml-128{margin-left:256px}
-.u-mr-128{margin-right:256px}
-.u-pt-128{padding-top:256px}
-.u-pb-128{padding-bottom:256px}
-.u-pl-128{padding-left:256px}
-.u-pr-128{padding-right:256px}
-.u-mt-129{margin-top:258px}
-.u-mb-129{margin-bottom:258px}
-.u-ml-129{margin-left:258px}
-.u-mr-129{margin-right:258px}
-.u-pt-129{padding-top:258px}
-.u-pb-129{padding-bottom:258px}
-.u-pl-129{padding-left:258px}
-.u-pr-129{padding-right:258px}
-.u-mt-130{margin-top:260px}
-.u-mb-130{margin-bottom:260px}
-.u-ml-130{margin-left:260px}
-.u-mr-130{margin-right:260px}
-.u-pt-130{padding-top:260px}
-.u-pb-130{padding-bottom:260px}
-.u-pl-130{padding-left:260px}
-.u-pr-130{padding-right:260px}
-.u-mt-131{margin-top:262px}
-.u-mb-131{margin-bottom:262px}
-.u-ml-131{margin-left:262px}
-.u-mr-131{margin-right:262px}
-.u-pt-131{padding-top:262px}
-.u-pb-131{padding-bottom:262px}
-.u-pl-131{padding-left:262px}
-.u-pr-131{padding-right:262px}
-.u-mt-132{margin-top:264px}
-.u-mb-132{margin-bottom:264px}
-.u-ml-132{margin-left:264px}
-.u-mr-132{margin-right:264px}
-.u-pt-132{padding-top:264px}
-.u-pb-132{padding-bottom:264px}
-.u-pl-132{padding-left:264px}
-.u-pr-132{padding-right:264px}
-.u-mt-133{margin-top:266px}
-.u-mb-133{margin-bottom:266px}
-.u-ml-133{margin-left:266px}
-.u-mr-133{margin-right:266px}
-.u-pt-133{padding-top:266px}
-.u-pb-133{padding-bottom:266px}
-.u-pl-133{padding-left:266px}
-.u-pr-133{padding-right:266px}
-.u-mt-134{margin-top:268px}
-.u-mb-134{margin-bottom:268px}
-.u-ml-134{margin-left:268px}
-.u-mr-134{margin-right:268px}
-.u-pt-134{padding-top:268px}
-.u-pb-134{padding-bottom:268px}
-.u-pl-134{padding-left:268px}
-.u-pr-134{padding-right:268px}
-.u-mt-135{margin-top:270px}
-.u-mb-135{margin-bottom:270px}
-.u-ml-135{margin-left:270px}
-.u-mr-135{margin-right:270px}
-.u-pt-135{padding-top:270px}
-.u-pb-135{padding-bottom:270px}
-.u-pl-135{padding-left:270px}
-.u-pr-135{padding-right:270px}
-.u-mt-136{margin-top:272px}
-.u-mb-136{margin-bottom:272px}
-.u-ml-136{margin-left:272px}
-.u-mr-136{margin-right:272px}
-.u-pt-136{padding-top:272px}
-.u-pb-136{padding-bottom:272px}
-.u-pl-136{padding-left:272px}
-.u-pr-136{padding-right:272px}
-.u-mt-137{margin-top:274px}
-.u-mb-137{margin-bottom:274px}
-.u-ml-137{margin-left:274px}
-.u-mr-137{margin-right:274px}
-.u-pt-137{padding-top:274px}
-.u-pb-137{padding-bottom:274px}
-.u-pl-137{padding-left:274px}
-.u-pr-137{padding-right:274px}
-.u-mt-138{margin-top:276px}
-.u-mb-138{margin-bottom:276px}
-.u-ml-138{margin-left:276px}
-.u-mr-138{margin-right:276px}
-.u-pt-138{padding-top:276px}
-.u-pb-138{padding-bottom:276px}
-.u-pl-138{padding-left:276px}
-.u-pr-138{padding-right:276px}
-.u-mt-139{margin-top:278px}
-.u-mb-139{margin-bottom:278px}
-.u-ml-139{margin-left:278px}
-.u-mr-139{margin-right:278px}
-.u-pt-139{padding-top:278px}
-.u-pb-139{padding-bottom:278px}
-.u-pl-139{padding-left:278px}
-.u-pr-139{padding-right:278px}
-.u-mt-140{margin-top:280px}
-.u-mb-140{margin-bottom:280px}
-.u-ml-140{margin-left:280px}
-.u-mr-140{margin-right:280px}
-.u-pt-140{padding-top:280px}
-.u-pb-140{padding-bottom:280px}
-.u-pl-140{padding-left:280px}
-.u-pr-140{padding-right:280px}
-.u-mt-141{margin-top:282px}
-.u-mb-141{margin-bottom:282px}
-.u-ml-141{margin-left:282px}
-.u-mr-141{margin-right:282px}
-.u-pt-141{padding-top:282px}
-.u-pb-141{padding-bottom:282px}
-.u-pl-141{padding-left:282px}
-.u-pr-141{padding-right:282px}
-.u-mt-142{margin-top:284px}
-.u-mb-142{margin-bottom:284px}
-.u-ml-142{margin-left:284px}
-.u-mr-142{margin-right:284px}
-.u-pt-142{padding-top:284px}
-.u-pb-142{padding-bottom:284px}
-.u-pl-142{padding-left:284px}
-.u-pr-142{padding-right:284px}
-.u-mt-143{margin-top:286px}
-.u-mb-143{margin-bottom:286px}
-.u-ml-143{margin-left:286px}
-.u-mr-143{margin-right:286px}
-.u-pt-143{padding-top:286px}
-.u-pb-143{padding-bottom:286px}
-.u-pl-143{padding-left:286px}
-.u-pr-143{padding-right:286px}
-.u-mt-144{margin-top:288px}
-.u-mb-144{margin-bottom:288px}
-.u-ml-144{margin-left:288px}
-.u-mr-144{margin-right:288px}
-.u-pt-144{padding-top:288px}
-.u-pb-144{padding-bottom:288px}
-.u-pl-144{padding-left:288px}
-.u-pr-144{padding-right:288px}
-.u-mt-145{margin-top:290px}
-.u-mb-145{margin-bottom:290px}
-.u-ml-145{margin-left:290px}
-.u-mr-145{margin-right:290px}
-.u-pt-145{padding-top:290px}
-.u-pb-145{padding-bottom:290px}
-.u-pl-145{padding-left:290px}
-.u-pr-145{padding-right:290px}
-.u-mt-146{margin-top:292px}
-.u-mb-146{margin-bottom:292px}
-.u-ml-146{margin-left:292px}
-.u-mr-146{margin-right:292px}
-.u-pt-146{padding-top:292px}
-.u-pb-146{padding-bottom:292px}
-.u-pl-146{padding-left:292px}
-.u-pr-146{padding-right:292px}
-.u-mt-147{margin-top:294px}
-.u-mb-147{margin-bottom:294px}
-.u-ml-147{margin-left:294px}
-.u-mr-147{margin-right:294px}
-.u-pt-147{padding-top:294px}
-.u-pb-147{padding-bottom:294px}
-.u-pl-147{padding-left:294px}
-.u-pr-147{padding-right:294px}
-.u-mt-148{margin-top:296px}
-.u-mb-148{margin-bottom:296px}
-.u-ml-148{margin-left:296px}
-.u-mr-148{margin-right:296px}
-.u-pt-148{padding-top:296px}
-.u-pb-148{padding-bottom:296px}
-.u-pl-148{padding-left:296px}
-.u-pr-148{padding-right:296px}
-.u-mt-149{margin-top:298px}
-.u-mb-149{margin-bottom:298px}
-.u-ml-149{margin-left:298px}
-.u-mr-149{margin-right:298px}
-.u-pt-149{padding-top:298px}
-.u-pb-149{padding-bottom:298px}
-.u-pl-149{padding-left:298px}
-.u-pr-149{padding-right:298px}
-.u-mt-150{margin-top:300px}
-.u-mb-150{margin-bottom:300px}
-.u-ml-150{margin-left:300px}
-.u-mr-150{margin-right:300px}
-.u-pt-150{padding-top:300px}
-.u-pb-150{padding-bottom:300px}
-.u-pl-150{padding-left:300px}
-.u-pr-150{padding-right:300px}
-.u-mt-151{margin-top:302px}
-.u-mb-151{margin-bottom:302px}
-.u-ml-151{margin-left:302px}
-.u-mr-151{margin-right:302px}
-.u-pt-151{padding-top:302px}
-.u-pb-151{padding-bottom:302px}
-.u-pl-151{padding-left:302px}
-.u-pr-151{padding-right:302px}
-.u-mt-152{margin-top:304px}
-.u-mb-152{margin-bottom:304px}
-.u-ml-152{margin-left:304px}
-.u-mr-152{margin-right:304px}
-.u-pt-152{padding-top:304px}
-.u-pb-152{padding-bottom:304px}
-.u-pl-152{padding-left:304px}
-.u-pr-152{padding-right:304px}
-.u-mt-153{margin-top:306px}
-.u-mb-153{margin-bottom:306px}
-.u-ml-153{margin-left:306px}
-.u-mr-153{margin-right:306px}
-.u-pt-153{padding-top:306px}
-.u-pb-153{padding-bottom:306px}
-.u-pl-153{padding-left:306px}
-.u-pr-153{padding-right:306px}
-.u-mt-154{margin-top:308px}
-.u-mb-154{margin-bottom:308px}
-.u-ml-154{margin-left:308px}
-.u-mr-154{margin-right:308px}
-.u-pt-154{padding-top:308px}
-.u-pb-154{padding-bottom:308px}
-.u-pl-154{padding-left:308px}
-.u-pr-154{padding-right:308px}
-.u-mt-155{margin-top:310px}
-.u-mb-155{margin-bottom:310px}
-.u-ml-155{margin-left:310px}
-.u-mr-155{margin-right:310px}
-.u-pt-155{padding-top:310px}
-.u-pb-155{padding-bottom:310px}
-.u-pl-155{padding-left:310px}
-.u-pr-155{padding-right:310px}
-.u-mt-156{margin-top:312px}
-.u-mb-156{margin-bottom:312px}
-.u-ml-156{margin-left:312px}
-.u-mr-156{margin-right:312px}
-.u-pt-156{padding-top:312px}
-.u-pb-156{padding-bottom:312px}
-.u-pl-156{padding-left:312px}
-.u-pr-156{padding-right:312px}
-.u-mt-157{margin-top:314px}
-.u-mb-157{margin-bottom:314px}
-.u-ml-157{margin-left:314px}
-.u-mr-157{margin-right:314px}
-.u-pt-157{padding-top:314px}
-.u-pb-157{padding-bottom:314px}
-.u-pl-157{padding-left:314px}
-.u-pr-157{padding-right:314px}
-.u-mt-158{margin-top:316px}
-.u-mb-158{margin-bottom:316px}
-.u-ml-158{margin-left:316px}
-.u-mr-158{margin-right:316px}
-.u-pt-158{padding-top:316px}
-.u-pb-158{padding-bottom:316px}
-.u-pl-158{padding-left:316px}
-.u-pr-158{padding-right:316px}
-.u-mt-159{margin-top:318px}
-.u-mb-159{margin-bottom:318px}
-.u-ml-159{margin-left:318px}
-.u-mr-159{margin-right:318px}
-.u-pt-159{padding-top:318px}
-.u-pb-159{padding-bottom:318px}
-.u-pl-159{padding-left:318px}
-.u-pr-159{padding-right:318px}
-.u-mt-160{margin-top:320px}
-.u-mb-160{margin-bottom:320px}
-.u-ml-160{margin-left:320px}
-.u-mr-160{margin-right:320px}
-.u-pt-160{padding-top:320px}
-.u-pb-160{padding-bottom:320px}
-.u-pl-160{padding-left:320px}
-.u-pr-160{padding-right:320px}
-.u-mt-161{margin-top:322px}
-.u-mb-161{margin-bottom:322px}
-.u-ml-161{margin-left:322px}
-.u-mr-161{margin-right:322px}
-.u-pt-161{padding-top:322px}
-.u-pb-161{padding-bottom:322px}
-.u-pl-161{padding-left:322px}
-.u-pr-161{padding-right:322px}
-.u-mt-162{margin-top:324px}
-.u-mb-162{margin-bottom:324px}
-.u-ml-162{margin-left:324px}
-.u-mr-162{margin-right:324px}
-.u-pt-162{padding-top:324px}
-.u-pb-162{padding-bottom:324px}
-.u-pl-162{padding-left:324px}
-.u-pr-162{padding-right:324px}
-.u-mt-163{margin-top:326px}
-.u-mb-163{margin-bottom:326px}
-.u-ml-163{margin-left:326px}
-.u-mr-163{margin-right:326px}
-.u-pt-163{padding-top:326px}
-.u-pb-163{padding-bottom:326px}
-.u-pl-163{padding-left:326px}
-.u-pr-163{padding-right:326px}
-.u-mt-164{margin-top:328px}
-.u-mb-164{margin-bottom:328px}
-.u-ml-164{margin-left:328px}
-.u-mr-164{margin-right:328px}
-.u-pt-164{padding-top:328px}
-.u-pb-164{padding-bottom:328px}
-.u-pl-164{padding-left:328px}
-.u-pr-164{padding-right:328px}
-.u-mt-165{margin-top:330px}
-.u-mb-165{margin-bottom:330px}
-.u-ml-165{margin-left:330px}
-.u-mr-165{margin-right:330px}
-.u-pt-165{padding-top:330px}
-.u-pb-165{padding-bottom:330px}
-.u-pl-165{padding-left:330px}
-.u-pr-165{padding-right:330px}
-.u-mt-166{margin-top:332px}
-.u-mb-166{margin-bottom:332px}
-.u-ml-166{margin-left:332px}
-.u-mr-166{margin-right:332px}
-.u-pt-166{padding-top:332px}
-.u-pb-166{padding-bottom:332px}
-.u-pl-166{padding-left:332px}
-.u-pr-166{padding-right:332px}
-.u-mt-167{margin-top:334px}
-.u-mb-167{margin-bottom:334px}
-.u-ml-167{margin-left:334px}
-.u-mr-167{margin-right:334px}
-.u-pt-167{padding-top:334px}
-.u-pb-167{padding-bottom:334px}
-.u-pl-167{padding-left:334px}
-.u-pr-167{padding-right:334px}
-.u-mt-168{margin-top:336px}
-.u-mb-168{margin-bottom:336px}
-.u-ml-168{margin-left:336px}
-.u-mr-168{margin-right:336px}
-.u-pt-168{padding-top:336px}
-.u-pb-168{padding-bottom:336px}
-.u-pl-168{padding-left:336px}
-.u-pr-168{padding-right:336px}
-.u-mt-169{margin-top:338px}
-.u-mb-169{margin-bottom:338px}
-.u-ml-169{margin-left:338px}
-.u-mr-169{margin-right:338px}
-.u-pt-169{padding-top:338px}
-.u-pb-169{padding-bottom:338px}
-.u-pl-169{padding-left:338px}
-.u-pr-169{padding-right:338px}
-.u-mt-170{margin-top:340px}
-.u-mb-170{margin-bottom:340px}
-.u-ml-170{margin-left:340px}
-.u-mr-170{margin-right:340px}
-.u-pt-170{padding-top:340px}
-.u-pb-170{padding-bottom:340px}
-.u-pl-170{padding-left:340px}
-.u-pr-170{padding-right:340px}
-.u-mt-171{margin-top:342px}
-.u-mb-171{margin-bottom:342px}
-.u-ml-171{margin-left:342px}
-.u-mr-171{margin-right:342px}
-.u-pt-171{padding-top:342px}
-.u-pb-171{padding-bottom:342px}
-.u-pl-171{padding-left:342px}
-.u-pr-171{padding-right:342px}
-.u-mt-172{margin-top:344px}
-.u-mb-172{margin-bottom:344px}
-.u-ml-172{margin-left:344px}
-.u-mr-172{margin-right:344px}
-.u-pt-172{padding-top:344px}
-.u-pb-172{padding-bottom:344px}
-.u-pl-172{padding-left:344px}
-.u-pr-172{padding-right:344px}
-.u-mt-173{margin-top:346px}
-.u-mb-173{margin-bottom:346px}
-.u-ml-173{margin-left:346px}
-.u-mr-173{margin-right:346px}
-.u-pt-173{padding-top:346px}
-.u-pb-173{padding-bottom:346px}
-.u-pl-173{padding-left:346px}
-.u-pr-173{padding-right:346px}
-.u-mt-174{margin-top:348px}
-.u-mb-174{margin-bottom:348px}
-.u-ml-174{margin-left:348px}
-.u-mr-174{margin-right:348px}
-.u-pt-174{padding-top:348px}
-.u-pb-174{padding-bottom:348px}
-.u-pl-174{padding-left:348px}
-.u-pr-174{padding-right:348px}
-.u-mt-175{margin-top:350px}
-.u-mb-175{margin-bottom:350px}
-.u-ml-175{margin-left:350px}
-.u-mr-175{margin-right:350px}
-.u-pt-175{padding-top:350px}
-.u-pb-175{padding-bottom:350px}
-.u-pl-175{padding-left:350px}
-.u-pr-175{padding-right:350px}
-.u-mt-176{margin-top:352px}
-.u-mb-176{margin-bottom:352px}
-.u-ml-176{margin-left:352px}
-.u-mr-176{margin-right:352px}
-.u-pt-176{padding-top:352px}
-.u-pb-176{padding-bottom:352px}
-.u-pl-176{padding-left:352px}
-.u-pr-176{padding-right:352px}
-.u-mt-177{margin-top:354px}
-.u-mb-177{margin-bottom:354px}
-.u-ml-177{margin-left:354px}
-.u-mr-177{margin-right:354px}
-.u-pt-177{padding-top:354px}
-.u-pb-177{padding-bottom:354px}
-.u-pl-177{padding-left:354px}
-.u-pr-177{padding-right:354px}
-.u-mt-178{margin-top:356px}
-.u-mb-178{margin-bottom:356px}
-.u-ml-178{margin-left:356px}
-.u-mr-178{margin-right:356px}
-.u-pt-178{padding-top:356px}
-.u-pb-178{padding-bottom:356px}
-.u-pl-178{padding-left:356px}
-.u-pr-178{padding-right:356px}
-.u-mt-179{margin-top:358px}
-.u-mb-179{margin-bottom:358px}
-.u-ml-179{margin-left:358px}
-.u-mr-179{margin-right:358px}
-.u-pt-179{padding-top:358px}
-.u-pb-179{padding-bottom:358px}
-.u-pl-179{padding-left:358px}
-.u-pr-179{padding-right:358px}
-.u-mt-180{margin-top:360px}
-.u-mb-180{margin-bottom:360px}
-.u-ml-180{margin-left:360px}
-.u-mr-180{margin-right:360px}
-.u-pt-180{padding-top:360px}
-.u-pb-180{padding-bottom:360px}
-.u-pl-180{padding-left:360px}
-.u-pr-180{padding-right:360px}
-.u-mt-181{margin-top:362px}
-.u-mb-181{margin-bottom:362px}
-.u-ml-181{margin-left:362px}
-.u-mr-181{margin-right:362px}
-.u-pt-181{padding-top:362px}
-.u-pb-181{padding-bottom:362px}
-.u-pl-181{padding-left:362px}
-.u-pr-181{padding-right:362px}
-.u-mt-182{margin-top:364px}
-.u-mb-182{margin-bottom:364px}
-.u-ml-182{margin-left:364px}
-.u-mr-182{margin-right:364px}
-.u-pt-182{padding-top:364px}
-.u-pb-182{padding-bottom:364px}
-.u-pl-182{padding-left:364px}
-.u-pr-182{padding-right:364px}
-.u-mt-183{margin-top:366px}
-.u-mb-183{margin-bottom:366px}
-.u-ml-183{margin-left:366px}
-.u-mr-183{margin-right:366px}
-.u-pt-183{padding-top:366px}
-.u-pb-183{padding-bottom:366px}
-.u-pl-183{padding-left:366px}
-.u-pr-183{padding-right:366px}
-.u-mt-184{margin-top:368px}
-.u-mb-184{margin-bottom:368px}
-.u-ml-184{margin-left:368px}
-.u-mr-184{margin-right:368px}
-.u-pt-184{padding-top:368px}
-.u-pb-184{padding-bottom:368px}
-.u-pl-184{padding-left:368px}
-.u-pr-184{padding-right:368px}
-.u-mt-185{margin-top:370px}
-.u-mb-185{margin-bottom:370px}
-.u-ml-185{margin-left:370px}
-.u-mr-185{margin-right:370px}
-.u-pt-185{padding-top:370px}
-.u-pb-185{padding-bottom:370px}
-.u-pl-185{padding-left:370px}
-.u-pr-185{padding-right:370px}
-.u-mt-186{margin-top:372px}
-.u-mb-186{margin-bottom:372px}
-.u-ml-186{margin-left:372px}
-.u-mr-186{margin-right:372px}
-.u-pt-186{padding-top:372px}
-.u-pb-186{padding-bottom:372px}
-.u-pl-186{padding-left:372px}
-.u-pr-186{padding-right:372px}
-.u-mt-187{margin-top:374px}
-.u-mb-187{margin-bottom:374px}
-.u-ml-187{margin-left:374px}
-.u-mr-187{margin-right:374px}
-.u-pt-187{padding-top:374px}
-.u-pb-187{padding-bottom:374px}
-.u-pl-187{padding-left:374px}
-.u-pr-187{padding-right:374px}
-.u-mt-188{margin-top:376px}
-.u-mb-188{margin-bottom:376px}
-.u-ml-188{margin-left:376px}
-.u-mr-188{margin-right:376px}
-.u-pt-188{padding-top:376px}
-.u-pb-188{padding-bottom:376px}
-.u-pl-188{padding-left:376px}
-.u-pr-188{padding-right:376px}
-.u-mt-189{margin-top:378px}
-.u-mb-189{margin-bottom:378px}
-.u-ml-189{margin-left:378px}
-.u-mr-189{margin-right:378px}
-.u-pt-189{padding-top:378px}
-.u-pb-189{padding-bottom:378px}
-.u-pl-189{padding-left:378px}
-.u-pr-189{padding-right:378px}
-.u-mt-190{margin-top:380px}
-.u-mb-190{margin-bottom:380px}
-.u-ml-190{margin-left:380px}
-.u-mr-190{margin-right:380px}
-.u-pt-190{padding-top:380px}
-.u-pb-190{padding-bottom:380px}
-.u-pl-190{padding-left:380px}
-.u-pr-190{padding-right:380px}
-.u-mt-191{margin-top:382px}
-.u-mb-191{margin-bottom:382px}
-.u-ml-191{margin-left:382px}
-.u-mr-191{margin-right:382px}
-.u-pt-191{padding-top:382px}
-.u-pb-191{padding-bottom:382px}
-.u-pl-191{padding-left:382px}
-.u-pr-191{padding-right:382px}
-.u-mt-192{margin-top:384px}
-.u-mb-192{margin-bottom:384px}
-.u-ml-192{margin-left:384px}
-.u-mr-192{margin-right:384px}
-.u-pt-192{padding-top:384px}
-.u-pb-192{padding-bottom:384px}
-.u-pl-192{padding-left:384px}
-.u-pr-192{padding-right:384px}
-.u-mt-193{margin-top:386px}
-.u-mb-193{margin-bottom:386px}
-.u-ml-193{margin-left:386px}
-.u-mr-193{margin-right:386px}
-.u-pt-193{padding-top:386px}
-.u-pb-193{padding-bottom:386px}
-.u-pl-193{padding-left:386px}
-.u-pr-193{padding-right:386px}
-.u-mt-194{margin-top:388px}
-.u-mb-194{margin-bottom:388px}
-.u-ml-194{margin-left:388px}
-.u-mr-194{margin-right:388px}
-.u-pt-194{padding-top:388px}
-.u-pb-194{padding-bottom:388px}
-.u-pl-194{padding-left:388px}
-.u-pr-194{padding-right:388px}
-.u-mt-195{margin-top:390px}
-.u-mb-195{margin-bottom:390px}
-.u-ml-195{margin-left:390px}
-.u-mr-195{margin-right:390px}
-.u-pt-195{padding-top:390px}
-.u-pb-195{padding-bottom:390px}
-.u-pl-195{padding-left:390px}
-.u-pr-195{padding-right:390px}
-.u-mt-196{margin-top:392px}
-.u-mb-196{margin-bottom:392px}
-.u-ml-196{margin-left:392px}
-.u-mr-196{margin-right:392px}
-.u-pt-196{padding-top:392px}
-.u-pb-196{padding-bottom:392px}
-.u-pl-196{padding-left:392px}
-.u-pr-196{padding-right:392px}
-.u-mt-197{margin-top:394px}
-.u-mb-197{margin-bottom:394px}
-.u-ml-197{margin-left:394px}
-.u-mr-197{margin-right:394px}
-.u-pt-197{padding-top:394px}
-.u-pb-197{padding-bottom:394px}
-.u-pl-197{padding-left:394px}
-.u-pr-197{padding-right:394px}
-.u-mt-198{margin-top:396px}
-.u-mb-198{margin-bottom:396px}
-.u-ml-198{margin-left:396px}
-.u-mr-198{margin-right:396px}
-.u-pt-198{padding-top:396px}
-.u-pb-198{padding-bottom:396px}
-.u-pl-198{padding-left:396px}
-.u-pr-198{padding-right:396px}
-.u-mt-199{margin-top:398px}
-.u-mb-199{margin-bottom:398px}
-.u-ml-199{margin-left:398px}
-.u-mr-199{margin-right:398px}
-.u-pt-199{padding-top:398px}
-.u-pb-199{padding-bottom:398px}
-.u-pl-199{padding-left:398px}
-.u-pr-199{padding-right:398px}
-.u-mt-200{margin-top:400px}
-.u-mb-200{margin-bottom:400px}
-.u-ml-200{margin-left:400px}
-.u-mr-200{margin-right:400px}
-.u-pt-200{padding-top:400px}
-.u-pb-200{padding-bottom:400px}
-.u-pl-200{padding-left:400px}
-.u-pr-200{padding-right:400px}
-.u-w-10{width:10%;}
-.u-w-12{width:12%;}
-.u-w-14{width:14%;}
-.u-w-16{width:16%;}
-.u-w-18{width:18%;}
-.u-w-20{width:20%;}
-.u-w-22{width:22%;}
-.u-w-24{width:24%;}
-.u-w-26{width:26%;}
-.u-w-28{width:28%;}
-.u-w-30{width:30%;}
-.u-w-32{width:32%;}
-.u-w-34{width:34%;}
-.u-w-36{width:36%;}
-.u-w-38{width:38%;}
-.u-w-40{width:40%;}
-.u-w-42{width:42%;}
-.u-w-44{width:44%;}
-.u-w-46{width:46%;}
-.u-w-48{width:48%;}
-.u-w-50{width:50%;}
-.u-w-52{width:52%;}
-.u-w-54{width:54%;}
-.u-w-56{width:56%;}
-.u-w-58{width:58%;}
-.u-w-60{width:60%;}
-.u-w-62{width:62%;}
-.u-w-64{width:64%;}
-.u-w-66{width:66%;}
-.u-w-68{width:68%;}
-.u-w-70{width:70%;}
-.u-w-72{width:72%;}
-.u-w-74{width:74%;}
-.u-w-76{width:76%;}
-.u-w-78{width:78%;}
-.u-w-80{width:80%;}
-.u-w-82{width:82%;}
-.u-w-84{width:84%;}
-.u-w-86{width:86%;}
-.u-w-88{width:88%;}
-.u-w-90{width:90%;}
-.u-w-92{width:92%;}
-.u-w-94{width:94%;}
-.u-w-96{width:96%;}
-.u-w-98{width:98%;}
-.u-w-100{width:100%;}
-.u-h-10{height:10vh;}
-.u-h-12{height:12vh;}
-.u-h-14{height:14vh;}
-.u-h-16{height:16vh;}
-.u-h-18{height:18vh;}
-.u-h-20{height:20vh;}
-.u-h-22{height:22vh;}
-.u-h-24{height:24vh;}
-.u-h-26{height:26vh;}
-.u-h-28{height:28vh;}
-.u-h-30{height:30vh;}
-.u-h-32{height:32vh;}
-.u-h-34{height:34vh;}
-.u-h-36{height:36vh;}
-.u-h-38{height:38vh;}
-.u-h-40{height:40vh;}
-.u-h-42{height:42vh;}
-.u-h-44{height:44vh;}
-.u-h-46{height:46vh;}
-.u-h-48{height:48vh;}
-.u-h-50{height:50vh;}
-.u-h-52{height:52vh;}
-.u-h-54{height:54vh;}
-.u-h-56{height:56vh;}
-.u-h-58{height:58vh;}
-.u-h-60{height:60vh;}
-.u-h-62{height:62vh;}
-.u-h-64{height:64vh;}
-.u-h-66{height:66vh;}
-.u-h-68{height:68vh;}
-.u-h-70{height:70vh;}
-.u-h-72{height:72vh;}
-.u-h-74{height:74vh;}
-.u-h-76{height:76vh;}
-.u-h-78{height:78vh;}
-.u-h-80{height:80vh;}
-.u-h-82{height:82vh;}
-.u-h-84{height:84vh;}
-.u-h-86{height:86vh;}
-.u-h-88{height:88vh;}
-.u-h-90{height:90vh;}
-.u-h-92{height:92vh;}
-.u-h-94{height:94vh;}
-.u-h-96{height:96vh;}
-.u-h-98{height:98vh;}
-.u-h-100{height:100vh;}
-.u-radius-2{border-radius:2px}
-.u-radius-4{border-radius:4px}
-.u-radius-6{border-radius:6px}
-.u-radius-8{border-radius:8px}
-.u-radius-10{border-radius:10px}
-.u-radius-12{border-radius:12px}
-.u-radius-14{border-radius:14px}
-.u-radius-16{border-radius:16px}
-.u-radius-18{border-radius:18px}
-.u-radius-20{border-radius:20px}
-.u-radius-22{border-radius:22px}
-.u-radius-24{border-radius:24px}
-.u-radius-26{border-radius:26px}
-.u-radius-28{border-radius:28px}
-.u-radius-30{border-radius:30px}
-.u-radius-32{border-radius:32px}
-.u-radius-34{border-radius:34px}
-.u-radius-36{border-radius:36px}
-.u-radius-38{border-radius:38px}
-.u-radius-40{border-radius:40px}
-.u-radius-42{border-radius:42px}
-.u-radius-44{border-radius:44px}
-.u-radius-46{border-radius:46px}
-.u-radius-48{border-radius:48px}
-.u-radius-50{border-radius:50px}
-.u-radius-52{border-radius:52px}
-.u-radius-54{border-radius:54px}
-.u-radius-56{border-radius:56px}
-.u-radius-58{border-radius:58px}
-.u-radius-60{border-radius:60px}
-.u-radius-62{border-radius:62px}
-.u-radius-64{border-radius:64px}
-.u-shadow-1{box-shadow:0 1px 3px rgba(0,0,0,0.25)}
-.u-shadow-2{box-shadow:0 2px 6px rgba(0,0,0,0.25)}
-.u-shadow-3{box-shadow:0 3px 9px rgba(0,0,0,0.25)}
-.u-shadow-4{box-shadow:0 4px 12px rgba(0,0,0,0.25)}
-.u-shadow-5{box-shadow:0 5px 15px rgba(0,0,0,0.25)}
-.u-shadow-6{box-shadow:0 6px 18px rgba(0,0,0,0.25)}
-.u-shadow-7{box-shadow:0 7px 21px rgba(0,0,0,0.25)}
-.u-shadow-8{box-shadow:0 8px 24px rgba(0,0,0,0.25)}
-.u-shadow-9{box-shadow:0 9px 27px rgba(0,0,0,0.25)}
-.u-shadow-10{box-shadow:0 10px 30px rgba(0,0,0,0.25)}
-.u-shadow-11{box-shadow:0 11px 33px rgba(0,0,0,0.25)}
-.u-shadow-12{box-shadow:0 12px 36px rgba(0,0,0,0.25)}
-.u-shadow-13{box-shadow:0 13px 39px rgba(0,0,0,0.25)}
-.u-shadow-14{box-shadow:0 14px 42px rgba(0,0,0,0.25)}
-.u-shadow-15{box-shadow:0 15px 45px rgba(0,0,0,0.25)}
-.u-shadow-16{box-shadow:0 16px 48px rgba(0,0,0,0.25)}
-.u-shadow-17{box-shadow:0 17px 51px rgba(0,0,0,0.25)}
-.u-shadow-18{box-shadow:0 18px 54px rgba(0,0,0,0.25)}
-.u-shadow-19{box-shadow:0 19px 57px rgba(0,0,0,0.25)}
-.u-shadow-20{box-shadow:0 20px 60px rgba(0,0,0,0.25)}
-.u-shadow-21{box-shadow:0 21px 63px rgba(0,0,0,0.25)}
-.u-shadow-22{box-shadow:0 22px 66px rgba(0,0,0,0.25)}
-.u-shadow-23{box-shadow:0 23px 69px rgba(0,0,0,0.25)}
-.u-shadow-24{box-shadow:0 24px 72px rgba(0,0,0,0.25)}
-.u-shadow-25{box-shadow:0 25px 75px rgba(0,0,0,0.25)}
-.u-shadow-26{box-shadow:0 26px 78px rgba(0,0,0,0.25)}
-.u-shadow-27{box-shadow:0 27px 81px rgba(0,0,0,0.25)}
-.u-shadow-28{box-shadow:0 28px 84px rgba(0,0,0,0.25)}
-.u-shadow-29{box-shadow:0 29px 87px rgba(0,0,0,0.25)}
-.u-shadow-30{box-shadow:0 30px 90px rgba(0,0,0,0.25)}
-.u-shadow-31{box-shadow:0 31px 93px rgba(0,0,0,0.25)}
-.u-shadow-32{box-shadow:0 32px 96px rgba(0,0,0,0.25)}
-.u-grad-1{background:conic-gradient(from 6deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-2{background:conic-gradient(from 12deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-3{background:conic-gradient(from 18deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-4{background:conic-gradient(from 24deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-5{background:conic-gradient(from 30deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-6{background:conic-gradient(from 36deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-7{background:conic-gradient(from 42deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-8{background:conic-gradient(from 48deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-9{background:conic-gradient(from 54deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-10{background:conic-gradient(from 60deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-11{background:conic-gradient(from 66deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-12{background:conic-gradient(from 72deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-13{background:conic-gradient(from 78deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-14{background:conic-gradient(from 84deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-15{background:conic-gradient(from 90deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-16{background:conic-gradient(from 96deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-17{background:conic-gradient(from 102deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-18{background:conic-gradient(from 108deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-19{background:conic-gradient(from 114deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-20{background:conic-gradient(from 120deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-21{background:conic-gradient(from 126deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-22{background:conic-gradient(from 132deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-23{background:conic-gradient(from 138deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-24{background:conic-gradient(from 144deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-25{background:conic-gradient(from 150deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-26{background:conic-gradient(from 156deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-27{background:conic-gradient(from 162deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-28{background:conic-gradient(from 168deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-29{background:conic-gradient(from 174deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-30{background:conic-gradient(from 180deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-31{background:conic-gradient(from 186deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-32{background:conic-gradient(from 192deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-33{background:conic-gradient(from 198deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-34{background:conic-gradient(from 204deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-35{background:conic-gradient(from 210deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-36{background:conic-gradient(from 216deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-37{background:conic-gradient(from 222deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-38{background:conic-gradient(from 228deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-39{background:conic-gradient(from 234deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-40{background:conic-gradient(from 240deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-41{background:conic-gradient(from 246deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-42{background:conic-gradient(from 252deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-43{background:conic-gradient(from 258deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-44{background:conic-gradient(from 264deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-45{background:conic-gradient(from 270deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-46{background:conic-gradient(from 276deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-47{background:conic-gradient(from 282deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-48{background:conic-gradient(from 288deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-49{background:conic-gradient(from 294deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-50{background:conic-gradient(from 300deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-51{background:conic-gradient(from 306deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-52{background:conic-gradient(from 312deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-53{background:conic-gradient(from 318deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-54{background:conic-gradient(from 324deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-55{background:conic-gradient(from 330deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-56{background:conic-gradient(from 336deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-57{background:conic-gradient(from 342deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-58{background:conic-gradient(from 348deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-59{background:conic-gradient(from 354deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
-.u-grad-60{background:conic-gradient(from 360deg at 50% 50%, #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);}
+/* Layout base */
+.container{ max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.section{ padding: 72px 0; }
+.center{ text-align: center; }
+.muted{ color: var(--muted); }
 
-.starry{position:relative;overflow:hidden}
-.starry::before,.starry::after{content:"";position:absolute;inset:-10%;pointer-events:none}
-.starry::before{
-  background:radial-gradient(1px 1px at 10% 20%,rgba(255,255,255,.8) 0,transparent 60%),
-             radial-gradient(1px 1px at 20% 80%,rgba(255,255,255,.7) 0,transparent 60%),
-             radial-gradient(1px 1px at 80% 10%,rgba(255,255,255,.7) 0,transparent 60%),
-             radial-gradient(1px 1px at 70% 50%,rgba(255,255,255,.7) 0,transparent 60%);
-  animation: twinkle 6s linear infinite;
-  opacity:.35;
+/* Cards/Buttons */
+.card{
+  background: #0f1420e6;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.03);
 }
-.starry::after{
-  background:radial-gradient(1px 1px at 30% 30%,rgba(255,255,255,.8) 0,transparent 60%),
-             radial-gradient(1px 1px at 90% 60%,rgba(255,255,255,.7) 0,transparent 60%),
-             radial-gradient(1px 1px at 60% 80%,rgba(255,255,255,.7) 0,transparent 60%),
-             radial-gradient(1px 1px at 40% 20%,rgba(255,255,255,.7) 0,transparent 60%);
-  animation: drift 24s linear infinite;
-  opacity:.25;
+.btn{
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0.85rem 1.35rem; border-radius: 999px; font-weight: 700;
+  text-decoration: none; color: #0a0a0a; background: #fff;
+  border: 0; cursor: pointer;
 }
-@keyframes twinkle{0%,100%{opacity:.25}50%{opacity:.55}}
-@keyframes drift{to{transform:translateY(-2%) rotate(1deg)}}
-.u-sep-1{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 1%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-2{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 2%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-3{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 3%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-4{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 4%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-5{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 5%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-6{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 6%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-7{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 7%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-8{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 8%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-9{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 9%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-10{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 10%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-11{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 11%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-12{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 12%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-13{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 13%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-14{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 14%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-15{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 15%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-16{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 16%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-17{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 17%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-18{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 18%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-19{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 19%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-20{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 20%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-21{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 21%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-22{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 22%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-23{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 23%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-24{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 24%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-25{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 25%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-26{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 26%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-27{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 27%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-28{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 28%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-29{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 29%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-30{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 30%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-31{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 31%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-32{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 32%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-33{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 33%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-34{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 34%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-35{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 35%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-36{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 36%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-37{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 37%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-38{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 38%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-39{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 39%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-40{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 40%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-41{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 41%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-42{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 42%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-43{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 43%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-44{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 44%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-45{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 45%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-46{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 46%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-47{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 47%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-48{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 48%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-49{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 49%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-50{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 50%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-51{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 51%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-52{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 52%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-53{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 53%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-54{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 54%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-55{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 55%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-56{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 56%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-57{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 57%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-58{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 58%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-59{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 59%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-60{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 60%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-61{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 61%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-62{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 62%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-63{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 63%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-64{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 64%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-65{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 65%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-66{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 66%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-67{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 67%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-68{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 68%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-69{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 69%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-70{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 70%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-71{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 71%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-72{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 72%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-73{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 73%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-74{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 74%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-75{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 75%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-76{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 76%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-77{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 77%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-78{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 78%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-79{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 79%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-80{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 80%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-81{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 81%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-82{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 82%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-83{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 83%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-84{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 84%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-85{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 85%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-86{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 86%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-87{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 87%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-88{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 88%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-89{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 89%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-90{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 90%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-91{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 91%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-92{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 92%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-93{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 93%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-94{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 94%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-95{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 95%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-96{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 96%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-97{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 97%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-98{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 98%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-99{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 99%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-100{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 100%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-101{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 101%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-102{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 102%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-103{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 103%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-104{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 104%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-105{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 105%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-106{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 106%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-107{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 107%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-108{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 108%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-109{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 109%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-110{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 110%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-111{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 111%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-112{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 112%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-113{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 113%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-114{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 114%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-115{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 115%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-116{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 116%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-117{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 117%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-118{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 118%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-119{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 119%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-120{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 120%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-121{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 121%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-122{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 122%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-123{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 123%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-124{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 124%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-125{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 125%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-126{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 126%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-127{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 127%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-128{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 128%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-129{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 129%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-130{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 130%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-131{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 131%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-132{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 132%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-133{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 133%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-134{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 134%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-135{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 135%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-136{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 136%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-137{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 137%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-138{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 138%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-139{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 139%, rgba(255,255,255,.0));margin:12px 0}
-.u-sep-140{height:2px;background:linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.12) 140%, rgba(255,255,255,.0));margin:12px 0}
-.u-bg-rose{background:#fb718520}
-.u-fg-rose{color:#fb7185}
-.u-bd-rose{border-color:#fb718540}
-.u-bg-pink{background:#f472b620}
-.u-fg-pink{color:#f472b6}
-.u-bd-pink{border-color:#f472b640}
-.u-bg-fuchsia{background:#e879f920}
-.u-fg-fuchsia{color:#e879f9}
-.u-bd-fuchsia{border-color:#e879f940}
-.u-bg-purple{background:#c084fc20}
-.u-fg-purple{color:#c084fc}
-.u-bd-purple{border-color:#c084fc40}
-.u-bg-violet{background:#a78bfa20}
-.u-fg-violet{color:#a78bfa}
-.u-bd-violet{border-color:#a78bfa40}
-.u-bg-indigo{background:#818cf820}
-.u-fg-indigo{color:#818cf8}
-.u-bd-indigo{border-color:#818cf840}
-.u-bg-blue{background:#60a5fa20}
-.u-fg-blue{color:#60a5fa}
-.u-bd-blue{border-color:#60a5fa40}
-.u-bg-sky{background:#38bdf820}
-.u-fg-sky{color:#38bdf8}
-.u-bd-sky{border-color:#38bdf840}
-.u-bg-cyan{background:#22d3ee20}
-.u-fg-cyan{color:#22d3ee}
-.u-bd-cyan{border-color:#22d3ee40}
-.u-bg-teal{background:#2dd4bf20}
-.u-fg-teal{color:#2dd4bf}
-.u-bd-teal{border-color:#2dd4bf40}
-.u-bg-emerald{background:#34d39920}
-.u-fg-emerald{color:#34d399}
-.u-bd-emerald{border-color:#34d39940}
-.u-bg-green{background:#22c55e20}
-.u-fg-green{color:#22c55e}
-.u-bd-green{border-color:#22c55e40}
-.u-bg-lime{background:#84cc1620}
-.u-fg-lime{color:#84cc16}
-.u-bd-lime{border-color:#84cc1640}
-.u-bg-yellow{background:#eab30820}
-.u-fg-yellow{color:#eab308}
-.u-bd-yellow{border-color:#eab30840}
-.u-bg-amber{background:#f59e0b20}
-.u-fg-amber{color:#f59e0b}
-.u-bd-amber{border-color:#f59e0b40}
-.u-bg-orange{background:#f9731620}
-.u-fg-orange{color:#f97316}
-.u-bd-orange{border-color:#f9731640}
-.u-bg-red{background:#ef444420}
-.u-fg-red{color:#ef4444}
-.u-bd-red{border-color:#ef444440}
+.btn.primary{
+  color:#fff; background: linear-gradient(90deg, #34d399, #06b6d4, #3b82f6, #8b5cf6, #ec4899);
+  background-size: 200% 100%; animation: swipe 6s linear infinite;
+}
+@keyframes swipe{ 0%{background-position:0% 0} 100%{background-position:200% 0} }
+.btn.ghost{ background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.btn.small{ padding: 0.55rem 1rem; font-size: 0.95rem; }
+
+/* Chips/Tags */
+.chip, .pill{
+  display: inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
+  border:1px solid var(--line); background:#0b1020; font-size:12px; color:var(--muted);
+}
+.tag{
+  display:inline-flex; padding:4px 8px; border-radius:999px; border:1px solid var(--line);
+  background:#0b1020; color:#9ad0ff; font-size:12px;
+}
+.tag.research{ color:#ffd28a; border-color:#3a2a10; background:#1b1406; }
+
+/* Header sticky escuro */
+header{
+  position: sticky; top: 0; z-index: 70;
+  background: rgba(7,10,18,0.72);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: saturate(1.3) blur(10px);
+}
+.nav{
+  display: flex; align-items: center; justify-content: space-between; padding: 14px 0;
+}
+.brand{ display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit; }
+.brand span{ letter-spacing: .06em; font-weight:700; }
+.nav-links{ display:flex; gap:14px; font-size:14px; flex-wrap:wrap; }
+.nav-links a{
+  text-decoration:none; color:#cbd5e1; padding:6px 8px; border-radius:10px;
+}
+.nav-links a.active{ background:#182033; color:#fff; }
+.hamb{ display:none; }
+@media (max-width: 980px){
+  .nav-links{ display:none; }
+  .hamb{
+    display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line);
+    border-radius:10px; padding:8px 10px; background:#0f1420; color:#e5e7eb;
+  }
+  #mobile{ display:none; }
+  #mobile.open{ display:flex; flex-direction:column; gap:10px; padding:14px 0; }
+  #mobile a{ padding:10px; border-radius:10px; text-decoration:none; color:#cbd5e1; background:#0f1420; }
+}
+
+/* Hero psicodélico */
+.hero{
+  padding: 96px 0 24px; text-align:center; position:relative; overflow:hidden;
+}
+.hero::before{
+  content:""; position:absolute; inset:-20% -10%; z-index:-1;
+  background: var(--haloA), var(--haloB), var(--haloC), var(--haloD);
+  filter: saturate(1.2);
+}
+.hero .halo{
+  position:absolute; inset:-40% -10%; z-index:-2; opacity:.25;
+  background: var(--grad);
+  animation: spin 16s linear infinite;
+}
+@keyframes spin{ to{ transform: rotate(360deg);} }
+
+/* Grids utilitários */
+.grid{ display:grid; gap:16px; }
+@media(min-width:768px){ .cols-2{ grid-template-columns:repeat(2,1fr);} }
+@media(min-width:1024px){ .cols-3{ grid-template-columns:repeat(3,1fr);} }
+
+/* Reveal */
+.reveal{ opacity:0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.is-visible{ opacity:1; transform:none; }
+
+/* FAQ */
+.faq-item{ border-bottom:1px solid var(--line); }
+.faq-btn{
+  width:100%; text-align:left; padding:14px 0; display:flex; justify-content:space-between; align-items:center;
+  background:none; border:0; cursor:pointer; font-weight:700; color:#e2e8f0;
+}
+.faq-ans{ margin:0 0 14px; color:var(--muted); display:none; }
+.faq-ans.open{ display:block; }
+
+/* Inputs */
+.input{
+  display:block; width:100%; max-width:640px; margin:0 auto 16px; padding:12px 16px;
+  border:1px solid #22304a; border-radius:999px; color:#fff; background:#0b1020;
+}
+
+/* Skeleton */
+.skeleton{ position:relative; overflow:hidden; background:#0d1322; border-radius:16px; border:1px solid var(--line); }
+.skeleton::after{
+  content:""; position:absolute; inset:0; transform: translateX(-100%);
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100%);
+  animation: shimmer 1.6s infinite;
+}
+@keyframes shimmer{ 100%{ transform: translateX(100%);} }
+
+/* Toast */
+.toast{
+  position:fixed; left:50%; bottom:24px; transform: translateX(-50%) translateY(20px); opacity:0;
+  background:#0f1420; color:#fff; border:1px solid var(--line); border-radius:14px;
+  padding:10px 14px; z-index:90; box-shadow:0 16px 40px rgba(0,0,0,.45); transition:.35s;
+}
+.toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
+
+/* Back to top + help bar + float CTA */
+#toTop{ position:fixed; right:24px; bottom:88px; z-index:75; display:none; }
+#toTop.show{ display:inline-flex; }
+.help-bar{
+  display:none; position:fixed; left:24px; right:24px; bottom:24px; padding:10px; font-size:14px; text-align:center;
+  background:#3a0d0d; color:#fecaca; border:1px solid #7f1d1d; border-radius:8px; z-index:70;
+}
+.help-bar a{ color:#fecaca; font-weight:700; text-decoration:underline; }
+#ctaFloat{ position:fixed; right:24px; bottom:24px; z-index:74; }
+@media(max-width:600px){ .help-bar{ display:block; } #ctaFloat{ bottom:88px; }}
+
+/* Footer */
+footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
+
+/* Subpáginas & TOC */
+.page{ display:none; }
+.page.active{ display:block; }
+.subgrid{ display:grid; gap:20px; grid-template-columns: 280px 1fr; }
+@media(max-width:980px){ .subgrid{ grid-template-columns:1fr; } }
+.toc{ position: sticky; top: 84px; }
+@media(max-width:980px){ .toc{ position:static !important; } }
+.toc a, .toc button{
+  display:block; width:100%; text-align:left; padding:8px 10px; border-radius:10px;
+  text-decoration:none; color:#cbd5e1; background:transparent; border:0; cursor:pointer;
+}
+.toc a:hover, .toc button:hover{ background:#111a2b; }
+
+/* Conhecimento: layout com guia rápido lateral */
+#knowledgeLayout{ display:grid; gap:20px; grid-template-columns: 260px 1fr; align-items:start; }
+@media(max-width:980px){
+  #knowledgeLayout{ grid-template-columns:1fr; }
+  #quickGuide{ position:static; top:auto; }
+}
+
+/* Interlúdios full-bleed */
+.interlude{
+  position:relative; min-height:40vh; display:block; overflow:hidden;
+  background-size:cover; background-position:center center; background-attachment:fixed;
+  border-top:1px solid #0b0b0b; border-bottom:1px solid #0b0b0b;
+  box-shadow: inset 0 -80px 120px rgba(0,0,0,.45), inset 0 80px 120px rgba(0,0,0,.45);
+}
+.interlude .veil{
+  position:absolute; inset:0; background: radial-gradient(800px 400px at 10% 10%, rgba(0,0,0,.3), transparent 60%),
+                                 radial-gradient(800px 400px at 90% 80%, rgba(0,0,0,.25), transparent 60%);
+}
+
+/* Fancy gradient border */
+.fancy{
+  position:relative; border-radius:24px; padding:1px; background: var(--grad); background-size: 200% 200%;
+  animation: swipe 10s linear infinite;
+}
+.fancy > .inner{ background:#0f1420; border-radius:22px; padding:20px; }
+
+/* Header logo text hide on small */
+@media(max-width:520px){ .brand span{ display:none; } }
+
+/* Small utilities */
+.toolbar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.breadcrumb{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; font-size:14px; color:#a7b0bd; }
+
+/* Tables (glossário/recomendações) */
+.table{ width:100%; border-collapse: collapse; }
+.table th, .table td{ border-bottom:1px solid var(--line); padding:10px; text-align:left; }
+.table th{ color:#cbd5e1; }
 </style>
 </head>
-<body>
-<!-- For space, we omit re-commenting each block; this file includes the full content from cell 1: header, SPA, templates, scripts, JSON-LD, etc. -->
-<header><div class="container nav"><a href="#/" class="brand" data-link><img id="logo" alt="Logo NTO" width="56" height="56" /><span>NTO — Brasil</span></a><nav class="nav-links" id="navLinks"><a href="#/" data-link>Home</a><a href="#/mensagem" data-link>Mensagem</a><a href="#/mapa" data-link>Mapa</a><a href="#/posts" data-link>Posts</a><a href="#/conhecimento" data-link>Conhecimento</a><a href="#/galeria" data-link>Galeria</a><a href="#/projetos" data-link>Projetos</a><a href="#/observatorio" data-link>Observatório</a><a href="#/sobre" data-link>Sobre</a><a href="#/faq" data-link>FAQ</a><a href="#/recomendado" data-link>Recomendações</a><a href="#/glossario" data-link>Glossário</a><a href="#/novidades" data-link>Novidades V7</a><a href="#/legal" data-link>Legal</a><a href="#/contato" data-link>Contato</a></nav><button class="hamb" id="hamb">☰ Menu</button><a id="ctaHeader" class="btn small primary" href="#/mapa" data-link>QUERO ALÍVIO 🫶</a></div><div class="container" id="mobile"></div></header>
-<main id="app"></main>
-<a id="ctaFloat" class="btn small primary" href="#/mapa" data-link>🫶 Quero Alívio</a>
-<div class="help-bar" id="helpBar">Em crise suicida? <a href="tel:188">Ligue 188 (CVV)</a> ou <a href="tel:192">192 (SAMU)</a>.</div>
-<button id="toTop" class="btn small ghost">↑ Topo</button>
-<div id="toast" class="toast"></div>
 
-<!-- Home Template (condensed markup identical to earlier full version) -->
+<body>
+<a href="#hero" class="visually-hidden">Pular para conteúdo</a>
+
+<header>
+  <div class="container nav">
+    <a href="#/" class="brand" data-link data-event="nav_home_click">
+      <img id="logo" alt="Logo NTO" width="56" height="56" style="object-fit:contain" />
+      <span>NTO — Brasil</span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#/" data-link>Home</a>
+      <a href="#/mensagem" data-link>Mensagem</a>
+      <a href="#/mapa" data-link>Mapa</a>
+      <a href="#/posts" data-link>Posts</a>
+      <a href="#/conhecimento" data-link>Conhecimento</a>
+      <a href="#/galeria" data-link>Galeria</a>
+      <a href="#/projetos" data-link>Projetos</a>
+      <a href="#/observatorio" data-link>Observatório</a>
+      <a href="#/sobre" data-link>Sobre</a>
+      <a href="#/faq" data-link>FAQ</a>
+      <a href="#/recomendado" data-link>Recomendações</a>
+      <a href="#/glossario" data-link>Glossário</a>
+      <a href="#/novidades" data-link>Novidades V7</a>
+      <a href="#/legal" data-link>Legal</a>
+      <a href="#/contato" data-link>Contato</a>
+    </nav>
+    <button class="hamb" id="hamb" aria-controls="mobile" aria-expanded="false">☰ Menu</button>
+    <a id="ctaHeader" class="btn small primary" href="#/mapa" data-link data-event="cta_click">QUERO ALÍVIO 🫶</a>
+  </div>
+  <div class="container" id="mobile" aria-hidden="true"></div>
+</header>
+
+<main id="app" tabindex="-1" aria-live="polite"></main>
+
+<!-- CTA flutuante + topo + barra de ajuda -->
+<a id="ctaFloat" class="btn small primary" href="#/mapa" data-link data-event="cta_click">🫶 Quero Alívio</a>
+<div class="help-bar" id="helpBar">Em crise suicida ou perigo imediato? <a href="tel:188">Ligue 188 (CVV)</a> ou <a href="tel:192">192 (SAMU)</a>.</div>
+<button id="toTop" class="btn small ghost" aria-label="Voltar ao topo">↑ Topo</button>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<footer>
+  <div class="container footer-cols" style="display:grid;gap:16px;grid-template-columns:2fr 1fr 1fr">
+    <div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <img src="./logo.png" alt="" width="40" height="40" />
+        <strong>NTO — Brasil</strong>
+      </div>
+      <p class="muted" style="margin:8px 0 0">© <span id="year"></span> NTO. Todos os direitos reservados.</p>
+    </div>
+    <div>
+      <strong>Mapa do site</strong>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+        <a href="#/mensagem" data-link>Mensagem</a>
+        <a href="#/mapa" data-link>Mapa</a>
+        <a href="#/conhecimento" data-link>Conhecimento</a>
+        <a href="#/faq" data-link>FAQ</a>
+        <a href="#/recomendado" data-link>Recomendações</a>
+        <a href="#/contato" data-link>Contato</a>
+      </div>
+    </div>
+    <div>
+      <strong>Contato</strong>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+        <a id="footerMail" href="#">Email</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ========================= TEMPLATES ========================= -->
 <template id="tpl-home">
-  <section class="hero starry" id="hero">
+  <section class="hero" id="hero">
     <div class="halo"></div>
     <div class="container">
       <div class="reveal center">
-        <img id="heroLogo" alt="NTO Brasil" style="height:160px;width:auto;margin:0 auto 24px" />
-        <h1>Ciência, ética e cuidado</h1>
-        <p class="muted">Se você está carregando um peso que parece impossível, você não está só.</p>
-        <div class="toolbar">
-          <button id="ctaHero" class="btn primary">QUERO ALÍVIO 🫶</button>
+        <img id="heroLogo" alt="NTO Brasil" style="height:160px;width:auto;margin:0 auto 24px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.6))" />
+        <h1 style="font-size:36px;margin:0 0 12px">Ciência, ética e cuidado</h1>
+        <p class="muted" style="max-width:780px;margin:0 auto 20px;font-size:18px;line-height:1.7">
+          Se você está carregando um peso que parece impossível, <strong>você não está só</strong>. Aqui, acolhemos a sua dor
+          com respeito e ciência. Nosso compromisso é <strong>reduzir o sofrimento rapidamente</strong>, com segurança clínica e
+          responsabilidade, para que você recupere o fôlego e a esperança. Estamos com você — no seu ritmo, no seu tempo.
+        </p>
+        <div class="toolbar" style="gap:10px;justify-content:center">
+          <button id="ctaHero" class="btn primary" data-event="cta_click">QUERO ALÍVIO 🫶</button>
           <a class="btn ghost" href="#/conhecimento" data-link>Conhecimento</a>
           <a class="btn ghost" href="#/faq" data-link>FAQ</a>
         </div>
       </div>
-      <div class="grid cols-2">
-        <div class="card reveal fancy"><div class="inner"><div class="toolbar"><span class="chip">Triagem clínica</span><span class="chip">Ambiente seguro</span><span class="chip">Integração</span></div><h3>Como ajudamos</h3><p class="muted">A cetamina, quando indicada, pode oferecer redução de sintomas em horas/dias.</p></div></div>
-        <div class="card reveal"><h3>Primeiro passo</h3><ol class="muted"><li>Escreva um email curto.</li><li>Agendamos triagem.</li><li>Se indicado, sessões + integração.</li></ol><div class="toolbar"><a class="btn primary" id="ctaHomeStart" href="#">Começar agora</a><button class="btn ghost" id="copyEmail">Copiar email</button></div></div>
+      <div class="grid cols-2" style="margin-top:28px">
+        <div class="card reveal fancy"><div class="inner">
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <span class="chip">Triagem clínica séria</span>
+            <span class="chip">Ambiente seguro</span>
+            <span class="chip">Integração pós-sessão</span>
+            <span class="chip">Transparência</span>
+          </div>
+          <h3 style="margin:14px 0 6px">Como podemos ajudar agora</h3>
+          <p class="muted" style="margin:0 0 12px">
+            Em momentos de crise, <strong>esperar semanas</strong> é cruel. A cetamina, quando indicada, pode oferecer
+            redução de sintomas em horas/dias. Não prometemos milagres — prometemos <strong>cuidado responsável</strong>.
+          </p>
+          <div class="toolbar" style="margin-top:8px; flex-wrap:wrap">
+            <span class="pill">Depressão resistente</span>
+            <span class="pill">Urgência suicida</span>
+            <span class="pill">TEPT</span>
+            <span class="pill">Ansiedade grave</span>
+            <span class="pill">Uso problemático de substâncias</span>
+          </div>
+        </div></div>
+        <div class="card reveal">
+          <h3 style="margin:6px 0 6px">Primeiro passo</h3>
+          <ol class="muted" style="margin:0;padding-left:20px;line-height:1.7">
+            <li>Escreva um email curto com sua necessidade atual.</li>
+            <li>Agendamos triagem para entender histórico e segurança.</li>
+            <li>Se indicado, combinamos sessões + integração terapêutica.</li>
+          </ol>
+          <div class="toolbar" style="margin-top:12px">
+            <a class="btn primary" id="ctaHomeStart" href="#">Começar agora</a>
+            <button class="btn ghost" id="copyEmail">Copiar email</button>
+          </div>
+          <p class="muted" style="margin-top:8px;font-size:12px">Evite dados sensíveis fora de canais seguros.</p>
+        </div>
       </div>
     </div>
   </section>
-  <section class="interlude" style="background-image:url('https://images.unsplash.com/photo-1495427513693-3f80f06a46b1?q=80&w=1800&auto=format&fit=crop');"><span class="veil"></span></section>
-  <section id="mensagem" class="section page active"><div class="container"><div class="card reveal"><h3>Mensagem</h3><p>Nosso compromisso é reduzir sofrimento rápido, com segurança e responsabilidade clínica.</p><button id="ctaMensagem" class="btn primary">QUERO ALÍVIO 🫶</button></div></div></section>
-  <section id="mapa" class="section"><div class="container"><div class="card reveal"><div class="skeleton" style="height:420px"><iframe id="mapEmbed" style="width:100%;height:420px;border:0;border-radius:16px;opacity:0"></iframe></div></div></div></section>
-  <section class="interlude" style="background-image:url('https://images.unsplash.com/photo-1520975922284-9f786f2de3aa?q=80&w=1800&auto=format&fit=crop');"><span class="veil"></span></section>
-  <section id="posts" class="section"><div class="container"><div class="card reveal"><div class="grid cols-2"><div class="skeleton" style="height:360px"><iframe id="igEmbed" style="width:100%;height:360px;border:0;border-radius:12px;opacity:0"></iframe></div><div class="skeleton" style="height:360px"><iframe id="ytEmbed" style="width:100%;height:360px;border:0;border-radius:12px;opacity:0"></iframe></div></div></div></div></section>
-  <section id="conhecimento" class="section"><div class="container"><div id="knowledgeLayout"><aside id="quickGuide" class="toc card reveal"><strong>Filtrar</strong><button data-filter="all">Todas</button><button data-filter="clinico">Uso clínico</button><button data-filter="pesquisa">Em pesquisa</button><div style="margin-top:12px"><strong>Atalhos</strong><button data-jump="cetamina">Cetamina</button><button data-jump="ayahuasca">Ayahuasca</button><button data-jump="ibogaina">Ibogaína</button></div></aside><div><input id="searchInp" class="input" placeholder="Buscar psicodélico" /><div id="cards" class="grid cols-3"></div></div></div></div></section>
-  <section class="interlude" style="background-image:url('https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1800&auto=format&fit=crop');"><span class="veil"></span></section>
-  <section id="galeria" class="section"><div class="container"><div class="grid cols-3"><div class="card reveal fancy"><div class="inner" style="padding:0"><img loading="lazy" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1400&auto=format&fit=crop" alt=""></div></div><div class="card reveal fancy"><div class="inner" style="padding:0"><img loading="lazy" src="https://images.unsplash.com/photo-1520975922284-9f786f2de3aa?q=80&w=1400&auto=format&fit=crop" alt=""></div></div><div class="card reveal fancy"><div class="inner" style="padding:0"><img loading="lazy" src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1400&auto=format&fit=crop" alt=""></div></div></div></div></section>
-  <section id="projetos" class="section"><div class="container"><div class="grid cols-3"><article class="card reveal"><h3>Observatório</h3><p class="muted">Centro de dados, relatos e pesquisa de campo.</p><a class="btn small ghost" href="#/observatorio" data-link>Saiba mais</a></article><article class="card reveal"><h3>Cartilhas oficiais</h3><p class="muted">Materiais práticos em saúde mental.</p></article><article class="card reveal"><h3>Livros</h3><p class="muted">Coleções educativas. <em>(Em breve)</em></p></article></div></div></section>
-  <section id="observatorio" class="section"><div class="container"><div class="card reveal"><h3>Observatório dos Enteógenos</h3><p>Educação, Pesquisa e Cultura.</p><a class="btn primary" href="#/contato" data-link>Receber novidades</a></div></div></section>
-  <section id="sobre" class="section"><div class="container"><div class="card reveal"><h3>Sobre</h3><p>Instituto médico e multidisciplinar. Valores: Ciência, Espiritualidade, Sabedoria, Transcendência.</p></div></div></section>
-  <section id="faq" class="section"><div class="container"><div class="card reveal" id="faqWrap"></div></div></section>
-  <section id="recomendado" class="section"><div class="container"><div class="card reveal"><table class="table"><thead><tr><th>Título</th><th>Tipo</th><th>Sinopse</th></tr></thead><tbody id="recTable"></tbody></table></div></div></section>
-  <section id="glossario" class="section"><div class="container"><div class="card reveal"><table class="table"><thead><tr><th>Termo</th><th>Definição</th></tr></thead><tbody id="glossTable"></tbody></table></div></div></section>
-  <section id="novidades" class="section"><div class="container"><div class="card reveal"><ul><li>Navegação SPA melhor.</li><li>Guia rápido aprimorado.</li><li>Fichas clínicas ampliadas.</li></ul></div></div></section>
-  <section id="legal" class="section"><div class="container"><div class="card reveal"><p><strong>Educacional:</strong> Não substitui avaliação médica.</p><p><strong>LGPD:</strong> Dados usados apenas para triagem inicial.</p></div></div></section>
-  <section id="contato" class="section"><div class="container"><div class="card reveal center"><p>Email: <a id="emailLink" href="#">admn@ntobr.com</a></p></div></div></section>
+
+  <!-- Interlúdio visual (full-bleed) -->
+  <section class="interlude" style="background-image:url('https://images.unsplash.com/photo-1495427513693-3f80f06a46b1?q=80&w=1800&auto=format&fit=crop');">
+    <span class="veil" aria-hidden="true"></span>
+  </section>
+
+  <section id="mensagem" class="section page active">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Mensagem da NTO – Brasil</h2>
+        <p class="muted" style="margin:0">Carinho, ciência e responsabilidade</p>
+      </div>
+      <div class="card reveal" style="color:#cbd5e1;line-height:1.78">
+        <p>
+          A NTO acredita que psicodélicos, quando usados com ciência, ética e carinho, podem abrir uma janela real de alívio — especialmente para quem já tentou “de tudo” e continua carregando um peso insuportável.
+          <strong> Não é fuga. É cuidado.</strong>
+        </p>
+        <p>
+          Psicodélicos são ferramentas terapêuticas que, em ambiente clínico supervisionado, favorecem neuroplasticidade e flexibilizam padrões rígidos de pensamento ligados à depressão, à urgência suicida e a certos quadros de dependência. No Brasil, a cetamina (e o spray de esketamina) já está disponível legalmente em contexto médico e pode oferecer alívio em horas ou poucos dias, enquanto o tratamento de base continua a agir.
+        </p>
+        <h3>Por que considerar agora</h3>
+        <p>Quando a dor aperta, esperar semanas por resposta é cruel. A cetamina pode funcionar como “bote salva-vidas”: reduz a intensidade do sofrimento e devolve fôlego para retomar o plano terapêutico.</p>
+        <h3>Como cuidamos de você</h3>
+        <ul>
+          <li><strong>Avaliação médica rigorosa</strong> para entender história, riscos e objetivos.</li>
+          <li><strong>Sessões seguras (infusão/spray)</strong> com monitorização e conforto.</li>
+          <li><strong>Integração pós-sessão</strong> para transformar a experiência em mudança de vida.</li>
+          <li><strong>Plano personalizado</strong>, combinando psicoterapia e ajustes quando indicado.</li>
+        </ul>
+        <div class="toolbar">
+          <button id="ctaMensagem" class="btn primary" data-event="cta_click">QUERO ALÍVIO 🫶</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="mapa" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Mapa Psicodélico</h2>
+        <p class="muted" style="margin:0">Pontos públicos em Google My Maps</p>
+      </div>
+      <div class="card reveal">
+        <div class="skeleton" style="height:420px">
+          <iframe id="mapEmbed" loading="lazy" style="width:100%;height:420px;border:0;border-radius:16px;opacity:0"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interlúdio -->
+  <section class="interlude" style="background-image:url('https://images.unsplash.com/photo-1520975922284-9f786f2de3aa?q=80&w=1800&auto=format&fit=crop');">
+    <span class="veil" aria-hidden="true"></span>
+  </section>
+
+  <section id="posts" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Redes da NTO</h2>
+        <p class="muted" style="margin:0">Instagram e YouTube</p>
+      </div>
+      <div class="card reveal">
+        <div class="grid cols-2">
+          <div class="skeleton" style="height:360px">
+            <iframe id="igEmbed" title="Instagram" loading="lazy" style="width:100%;height:360px;border:0;border-radius:12px;opacity:0"></iframe>
+          </div>
+          <div class="skeleton" style="height:360px">
+            <iframe id="ytEmbed" title="YouTube" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;height:360px;border:0;border-radius:12px;opacity:0"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="conhecimento" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Conhecimento</h2>
+        <p class="muted" style="margin:0">Resumo responsável + links — escolha uma substância para saber mais</p>
+      </div>
+
+      <!-- Layout com guia rápido (sem redirecionamento de rota; mobile inline) -->
+      <div id="knowledgeLayout">
+        <aside id="quickGuide" class="toc card reveal" aria-label="Guia rápido de filtros">
+          <strong style="display:block;margin-bottom:8px">Filtrar</strong>
+          <button type="button" data-filter="all">Todas</button>
+          <button type="button" data-filter="clinico">Uso clínico</button>
+          <button type="button" data-filter="pesquisa">Em pesquisa</button>
+          <div style="margin-top:16px"><strong style="display:block;margin-bottom:6px">Atalhos</strong>
+            <button type="button" data-jump="cetamina">Cetamina</button>
+            <button type="button" data-jump="ayahuasca">Ayahuasca</button>
+            <button type="button" data-jump="ibogaina">Ibogaína</button>
+          </div>
+        </aside>
+
+        <div>
+          <input id="searchInp" class="input" placeholder="Buscar psicodélico (ex: Cetamina)" aria-label="Buscar psicodélico" data-event="knowledge_search" />
+          <div id="cards" class="grid cols-3"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interlúdio -->
+  <section class="interlude" style="background-image:url('https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1800&auto=format&fit=crop');">
+    <span class="veil" aria-hidden="true"></span>
+  </section>
+
+  <section id="galeria" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Imagens</h2>
+        <p class="muted" style="margin:0">Planos de fundo imersivos (sem moldura rígida)</p>
+      </div>
+      <div class="grid cols-3">
+        <div class="card reveal fancy"><div class="inner" style="padding:0;overflow:hidden">
+          <img loading="lazy" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1400&auto=format&fit=crop" alt="Montanhas" style="width:100%;height:256px;object-fit:cover" />
+        </div></div>
+        <div class="card reveal fancy"><div class="inner" style="padding:0;overflow:hidden">
+          <img loading="lazy" src="https://images.unsplash.com/photo-1520975922284-9f786f2de3aa?q=80&w=1400&auto=format&fit=crop" alt="Floresta amazônica" style="width:100%;height:256px;object-fit:cover" />
+        </div></div>
+        <div class="card reveal fancy"><div class="inner" style="padding:0;overflow:hidden">
+          <img loading="lazy" src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1400&auto=format&fit=crop" alt="Céu estrelado" style="width:100%;height:256px;object-fit:cover" />
+        </div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projetos" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Projetos NTO</h2>
+        <p class="muted" style="margin:0">Expansões e iniciativas</p>
+      </div>
+      <div class="grid cols-3">
+        <article class="card reveal">
+          <h3>Observatório dos Enteógenos</h3>
+          <p class="muted">NTO Brasil — Chapada dos Veadeiros, Alto Paraíso de Goiás. Centro de dados, relatos e pesquisa de campo.</p>
+          <a class="btn small ghost" href="#/observatorio" data-link>Saiba mais</a>
+        </article>
+        <article class="card reveal">
+          <h3>Cartilhas oficiais</h3>
+          <p class="muted">Materiais práticos em saúde mental, com linguagem clara e responsabilidade clínica.</p>
+        </article>
+        <article class="card reveal">
+          <h3>Livros e E-books</h3>
+          <p class="muted">Coleções educativas da NTO em saúde mental. <em>(Em breve)</em></p>
+        </article>
+        <article class="card reveal">
+          <h3>Pós-graduação</h3>
+          <p class="muted">Psicofarmacoterapia dos Psicodélicos para profissionais de saúde. <em>(Em breve)</em></p>
+        </article>
+        <article class="card reveal">
+          <h3>Centro de Pesquisas</h3>
+          <p class="muted">Serviços de pesquisa em enteógenos com rigor ético e metodológico.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="observatorio" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Observatório dos Enteógenos — NTO Brasil</h2>
+        <p class="muted" style="margin:0">Chapada dos Veadeiros — Educação, Pesquisa e Cultura</p>
+      </div>
+      <div class="card reveal" style="line-height:1.78;color:#cbd5e1">
+        <p><strong>Missão:</strong> produzir, sistematizar e divulgar conhecimento confiável sobre enteógenos no Brasil, com foco em redução de danos, proteção à vida e diálogo intercultural.</p>
+        <p><strong>Princípios éticos:</strong> respeito às tradições, consentimento informado, transparência metodológica, privacidade e segurança.</p>
+        <ul>
+          <li><strong>Educação:</strong> cartilhas, cursos breves e rodas de conversa.</li>
+          <li><strong>Pesquisa:</strong> registros de campo, observacionais e colaborativos.</li>
+          <li><strong>Cultura:</strong> acervo de relatos, canções, arte e memória.</li>
+        </ul>
+        <div class="toolbar">
+          <a class="btn primary" href="#/contato" data-link data-event="observatorio_interesse">Receber novidades</a>
+          <a class="btn ghost" href="#/projetos" data-link>Voltar a Projetos</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sobre" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Sobre</h2>
+      </div>
+      <div class="card reveal" style="color:#cbd5e1">
+        <p><strong>Somos Produtora, Editora, Tradutora.</strong> Instituto médico e multidisciplinar de pesquisa, estudo e promoção de enteógenos para fins de proteção à vida.</p>
+        <ul>
+          <li><strong>Valores</strong>: Ciência, Espiritualidade, Sabedoria, Transcendência.</li>
+          <li><strong>Missão</strong>: Aliviar o sofrimento humano através dos enteógenos.</li>
+          <li><strong>Visão</strong>: Ser peça fundamental para a revolução psicodélica do século XXI no Brasil.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Perguntas Frequentes</h2>
+      </div>
+      <div class="card reveal" style="max-width:880px;margin:0 auto" id="faqWrap">
+        <!-- FAQ global renderizada via JS (inclui deep-links) -->
+      </div>
+    </div>
+  </section>
+
+  <section id="recomendado" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Conteúdo Recomendado</h2>
+        <p class="muted" style="margin:0">Documentários, leituras e podcasts — com sinopse</p>
+      </div>
+      <div class="card reveal" style="max-width:980px;margin:0 auto">
+        <table class="table">
+          <thead><tr><th>Título</th><th>Tipo</th><th>Sinopse</th></tr></thead>
+          <tbody id="recTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="glossario" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Glossário Técnico</h2>
+        <p class="muted" style="margin:0">Termos essenciais (educacional)</p>
+      </div>
+      <div class="card reveal" style="max-width:980px;margin:0 auto">
+        <table class="table">
+          <thead><tr><th>Termo</th><th>Definição</th></tr></thead>
+          <tbody id="glossTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="novidades" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">O que há de novo na V7</h2>
+        <p class="muted" style="margin:0">Changelog resumido</p>
+      </div>
+      <div class="card reveal" style="line-height:1.78;color:#cbd5e1">
+        <ul>
+          <li>Home corrigida e navegação SPA mais suave.</li>
+          <li>Guia rápido em Conhecimento: <em>desktop</em> sem redirecionar; <em>mobile</em> não cobre o texto.</li>
+          <li>Fichas clínicas ampliadas (Cetamina, Ayahuasca, Ibogaína) com indicações, interações, monitorização e manejo.</li>
+          <li>FAQs expandidas por molécula (12+ entradas) com deep-link.</li>
+          <li>Observatório dos Enteógenos, Glossário 40+, Recomendações com sinopse.</li>
+          <li>Popup “Quero Alívio” com LGPD e redirecionamento ao mapa.</li>
+          <li>Transições psicodélicas mais suaves e acessíveis.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="legal" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Avisos legais</h2>
+      </div>
+      <div class="card reveal" style="line-height:1.78;color:#cbd5e1;max-width:980px;margin:0 auto">
+        <p><strong>Educacional</strong>: O conteúdo deste site é informativo e não substitui avaliação médica. Não recomendamos iniciar, suspender ou modificar tratamentos sem orientação profissional.</p>
+        <p><strong>LGPD</strong>: Dados fornecidos no formulário “Quero Alívio” são usados exclusivamente para contato e triagem inicial. Você pode solicitar exclusão a qualquer momento via <a href="mailto:admn@ntobr.com">admn@ntobr.com</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contato" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Contato</h2>
+      </div>
+      <div class="card reveal center">
+        <p style="font-size:18px">Email: <a id="emailLink" href="#">admn@ntobr.com</a></p>
+        <p class="muted" style="font-size:14px">Preferimos comunicação assíncrona, curta e objetiva. Para assuntos clínicos, evite dados sensíveis sem canal seguro.</p>
+      </div>
+    </div>
+  </section>
 </template>
 
 <template id="tpl-drug-page">
   <section class="section">
     <div class="container">
-      <nav class="breadcrumb"><a href="#/" data-link>Início</a> <span>›</span> <a href="#/conhecimento" data-link>Conhecimento</a> <span>›</span> <span id="crumbDrug"></span></nav>
-      <div class="subgrid">
-        <aside class="toc card reveal" id="drugToc"><strong>Conteúdo</strong><div id="tocLinks"></div><div style="margin-top:16px"><strong>Navegação</strong><div class="toolbar" id="neighborLinks"></div></div></aside>
+      <nav class="breadcrumb">
+        <a href="#/" data-link>Início</a> <span>›</span>
+        <a href="#/conhecimento" data-link>Conhecimento</a> <span>›</span>
+        <span id="crumbDrug"></span>
+      </nav>
+      <div class="subgrid" style="margin-top:16px">
+        <aside class="toc card reveal" id="drugToc">
+          <strong style="display:block;margin-bottom:8px">Conteúdo</strong>
+          <div id="tocLinks"></div>
+          <div style="margin-top:16px">
+            <strong style="display:block;margin-bottom:6px">Navegação</strong>
+            <div class="toolbar" id="neighborLinks"></div>
+          </div>
+        </aside>
         <article class="card reveal" id="drugArticle" style="line-height:1.78;color:#cbd5e1"></article>
       </div>
     </div>
   </section>
 </template>
 
+<!-- Popup “Quero Alívio” — V7 (LGPD + campos extras) -->
 <div id="leadModal" style="position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:95;">
   <div class="card" style="width:min(560px,92vw);position:relative">
     <button id="leadClose" class="btn ghost" style="position:absolute;right:12px;top:12px">×</button>
-    <h3>Antes de prosseguir</h3>
-    <p class="muted">Conte rapidamente quem é você e qual a sua necessidade.</p>
+    <h3 style="margin-top:0">Antes de prosseguir</h3>
+    <p class="muted" style="margin-top:-8px">Conte rapidamente quem é você e qual a sua necessidade. Vamos te responder.</p>
     <form id="leadForm" class="grid" style="gap:12px">
       <input class="input" id="leadNome" name="nome" placeholder="Nome completo (opcional)" />
       <input class="input" id="leadEmail" name="email" placeholder="Email" type="email" required />
@@ -2144,99 +716,874 @@ body{margin:0;font-family:system-ui,Inter,Roboto,Arial,sans-serif;background:#07
         <input type="checkbox" id="leadLGPD" required />
         <span class="muted" style="font-size:12px">Li e concordo com a <a href="#/legal" data-link>Política de Privacidade</a> (LGPD).</span>
       </label>
-      <button class="btn primary" type="submit">Enviar e abrir o mapa</button>
+      <button class="btn primary" type="submit" data-event="alivio_form_submit">Enviar e abrir o mapa</button>
     </form>
     <p class="muted" style="font-size:12px;margin-top:8px">Se estiver em perigo imediato, procure o serviço de emergência local.</p>
   </div>
 </div>
 
+<!-- ========================= SCRIPT ========================= -->
 <script>
-/* (SCRIPT identical to the first large build; trimmed comments for brevity) */
-const SITE_NAME="NTO – Brasil";
-const DEFAULT_DESC="NTO Brasil — Alívio com dignidade para quem carrega um peso insuportável: ciência, ética e cuidado incluindo cetamina em contexto clínico.";
-const LOGO_URL="./logo.png"; const CONTACT_EMAIL="admn@ntobr.com";
-const SOCIAL={instagramEmbedUrl:"https://www.instagram.com/p/Ck000000000/embed",youtubeEmbedUrl:"https://www.youtube.com/embed/dQw4w9WgXcQ"};
-const MAP_URL="https://www.google.com/maps/d/embed?mid=1KD5QHhxyVWlFX7BDM0aoNufixLILENU&usp=sharing";
+/* ===== CONFIG ===== */
+const SITE_NAME = "NTO – Brasil";
+const DEFAULT_DESC = "NTO Brasil — Alívio com dignidade para quem carrega um peso insuportável: ciência, ética e cuidado incluindo cetamina em contexto clínico.";
+const DEFAULT_OG_TITLE = SITE_NAME;
+const DEFAULT_OG_DESC = "Ciência, ética e cuidado.";
+const LOGO_URL = "./logo.png";
+const CONTACT_EMAIL = "admn@ntobr.com";
+const SOCIAL = {
+  instagramEmbedUrl: "https://www.instagram.com/p/Ck000000000/embed", // substitua pelo embed real
+  youtubeEmbedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"      // substitua por vídeo/playlist real
+};
+const MAP_URL = "https://www.google.com/maps/d/embed?mid=1KD5QHhxyVWlFX7BDM0aoNufixLILENU&usp=sharing";
 
-const RECOMENDADOS=[
- {t:"Como Mudar sua Mente",tipo:"Série",link:"#",sin:"Histórico e clínica."},
- {t:"Fantastic Fungi",tipo:"Documentário",link:"#",sin:"Ecologia e psilocibina."},
- {t:"MAPS",tipo:"Org.",link:"#",sin:"Pesquisa em MDMA-AT."}
+/* ===== Recomendados (com sinopse) ===== */
+const RECOMENDADOS = [
+  { t:"Como Mudar sua Mente", tipo:"Série (Netflix, 2022)", link:"https://www.netflix.com/title/80229847", sin:"Percurso histórico e clínico dos psicodélicos com foco em segurança, ciência e experiências transformadoras." },
+  { t:"Fantastic Fungi", tipo:"Documentário", link:"https://fantasticfungi.com/", sin:"O mundo dos fungos e a psilocibina: ecologia, neurociência e potencial terapêutico." },
+  { t:"MAPS", tipo:"Organização/recursos", link:"https://maps.org/", sin:"Pesquisas e materiais educativos sobre MDMA-AT e psicoterapia assistida por psicodélicos." },
+  { t:"OMS / ICD-11", tipo:"Padrão clínico", link:"https://www.who.int/standards/classifications/frequently-asked-questions/icd-11", sin:"Classificação internacional de doenças e referências clínicas para diagnósticos e protocolos." },
+  { t:"The Psychedelic Renaissance", tipo:"Livro", link:"#", sin:"Panorama contemporâneo da ciência psicodélica; debate ético e regulatório." },
+  { t:"How to Change Your Mind", tipo:"Livro", link:"#", sin:"Narrativa acessível sobre história, usos e cautelas, com relatos e entrevistas." }
 ];
-const GLOSS={"Neuroplasticidade":"Capacidade do cérebro de formar novas conexões.","BDNF":"Fator neurotrófico.","5-HT2A":"Receptor dos psicodélicos clássicos."};
 
-const KNOWLEDGE=[
-  {id:"cetamina",status:"clinico",order:1,title:"Cetamina",short:"Alívio rápido em depressão resistente.",aliases:["esketamina","ketamina"],
-   topics:{resumo:"Cetamina em subdoses tem efeito antidepressivo rápido.",mecanismo:"Antagonismo NMDA e plasticidade.",evidencia:"Boa evidência em TRD.",indicacoes:"TRD, urgência suicida.",contra:"Hipertensão grave, psicose/mania ativas.",doses:"IV titulada; esketamina nasal.",interacoes:"Benzos atenuam; evitar álcool.",monitorizacao:"PA/FC, SatO2 e estado mental.",manejo:"Náusea → antiemético; ansiedade → suporte.",sensacoes:"Dissociação, alteração temporal.",legal:"Uso médico no Brasil; esketamina aprovada.",riscos:"PA/FC ↑ transitórios; náusea.",preparacao:"Jejum leve; intenção e apoio.",integracao:"Sessões de integração.",referencias:["Diretrizes internacionais"],mitos:[{myth:"É só tranq. de cavalo",truth:"Em subdoses tem evidência antidepressiva."}],perguntas:["Efeitos e duração?","Monitorização?","Interage com ISRS?"],checkPrep:["Reveja medicações","Evite álcool no dia"],checkIntegracao:["Descanse","Anote sentimentos"],faqs:[{q:"Quanto tempo para agir?",a:"Horas/dias."}]} },
-  {id:"ayahuasca",status:"clinico",order:2,title:"Ayahuasca",short:"Uso religioso regulamentado.",aliases:["daime","vegetal"],
-   topics:{resumo:"Decocção amazônica; uso religioso protegido.",mecanismo:"Harmalinas (IMAO) + DMT.",evidencia:"Observacionais promissoras.",indicacoes:"Âmbito espiritual e comunitário.",contra:"Interações com ISRS/tricíclicos.",doses:"Variável por casa.",interacoes:"IMAO + serotoninérgicos = risco.",monitorizacao:"Hidratação e suporte.",manejo:"Purga é comum; cuidado.",sensacoes:"Visões, canções, ~4h.",legal:"Protegido em uso religioso.",riscos:"Interações e vulnerabilidade emocional.",preparacao:"Dieta da casa; abstinências.",integracao:"Rodas de conversa."} },
-  {id:"ibogaina",status:"clinico",order:3,title:"Ibogaína",short:"Investigada para dependência; risco cardiológico.",aliases:["tabernanthe iboga"],
-   topics:{resumo:"Interrompe abstinência; risco QT longo.",mecanismo:"Opioides/NMDA/sigma/nicotínico.",evidencia:"Observacional limitada.",indicacoes:"Dependência em protocolos hospitalares.",contra:"Cardiopatias, eletrólitos alterados.",doses:"Teste + plena em internação.",interacoes:"Muitos fármacos prolongam QT.",monitorizacao:"ECG, telemetria, eletrólitos.",manejo:"Arritmia → ACLS.",sensacoes:"Ataxia, visões oníricas.",legal:"Apenas em pesquisa no Brasil.",riscos:"Torsades/convulsões raras.",preparacao:"Correção de eletrólitos.",integracao:"Reabilitação e NA."} }
+/* ===== Glossário (40+) ===== */
+const GLOSS = {
+  "Neuroplasticidade":"Capacidade do cérebro de formar/ajustar conexões sinápticas.",
+  "BDNF":"Fator neurotrófico associado à plasticidade e aprendizado.",
+  "5-HT2A":"Receptor serotoninérgico alvo dos psicodélicos clássicos.",
+  "NMDA":"Receptor glutamatérgico modulado por cetamina.",
+  "Dissociação":"Desconexão transitória de corpo/tempo/ambiente.",
+  "Set & Setting":"Estado interno e contexto externo que influenciam a experiência.",
+  "Integração":"Processo de traduzir vivências em mudanças concretas.",
+  "IMAO":"Inibidores de monoamina oxidase (atenção a interações).",
+  "Oxitocina":"Hormônio pró-social, elevado no MDMA.",
+  "TEPT":"Transtorno de estresse pós-traumático.",
+  "TRD":"Depressão resistente ao tratamento.",
+  "Cefaleia em salvas":"Cefaleia rara e intensa; há pesquisas com psicodélicos.",
+  "Entropia cortical":"Aumento de variabilidade neural sob psicodélicos.",
+  "Flashback/HPPD":"Persistência de alterações perceptivas em raros casos.",
+  "QT longo":"Prolongamento do intervalo QT (risco arrítmico).",
+  "Torsades de pointes":"Taquicardia ventricular polimórfica associada a QT longo.",
+  "Telemetria":"Monitorização contínua do ritmo cardíaco.",
+  "SatO₂":"Saturação periférica de oxigênio (oximetria).",
+  "PA/FC":"Pressão arterial / Frequência cardíaca.",
+  "ISRS":"Inibidores seletivos de recaptação de serotonina.",
+  "Tricíclicos":"Classe de antidepressivos com múltiplas interações.",
+  "Hipertermia":"Elevação de temperatura corporal.",
+  "Hiponatremia":"Sódio baixo; risco com hidratação inadequada.",
+  "Farmacêutico grau clínico":"Padrão de pureza para uso médico.",
+  "Anamnese":"Coleta de histórico clínico detalhado.",
+  "Consentimento informado":"Explicação de riscos/benefícios antes do cuidado.",
+  "Psicose":"Perda de contato com a realidade; contraindicação relativa.",
+  "Mania":"Fase de humor elevado/irritável (transtorno bipolar).",
+  "Titulação de dose":"Ajuste progressivo da dose conforme resposta.",
+  "Reconsolidação":"Atualização de memórias com novas informações.",
+  "Craving":"Fissura forte por substância.",
+  "Purgação":"Náusea/vômito em rituais (ex.: ayahuasca).",
+  "Higiene do sono":"Hábitos saudáveis para dormir melhor.",
+  "Apoio social":"Rede de cuidado (familiares, amigos, grupos).",
+  "Acessibilidade AA":"Critério de contraste/legibilidade (WCAG).",
+  "CLS":"Cumulative Layout Shift (estabilidade visual).",
+  "LCP":"Largest Contentful Paint (desempenho).",
+  "Parallax":"Efeito visual de profundidade com movimento sutil.",
+  "Drawer":"Painel deslizante; aqui evitamos cobrir o texto no mobile.",
+  "Scroll spy":"Destaque do item ativo conforme rolagem.",
+  "Deep-link":"Link direto para seção/pergunta específica.",
+  "LGPD":"Lei Geral de Proteção de Dados (Brasil).",
+  "Redução de danos":"Conjunto de estratégias para reduzir riscos.",
+  "Back to top":"Ação para voltar ao topo da página."
+};
+
+/* ===== Base de conhecimento (ampliada V7) =====
+   status: 'clinico' → destaque; 'pesquisa' → “Em pesquisa”
+   Cada uma com seções extras + 12 FAQs (moléculas mais acessadas)
+*/
+const KNOWLEDGE = [
+  { id:"cetamina", status:"clinico", order:1, title:"Cetamina", short:"Alívio rápido em depressão resistente. Infusão/spray supervisionado.", aliases:["esketamina","ketamina"],
+    topics:{
+      resumo:`A cetamina é um anestésico dissociativo com propriedades antidepressivas rápidas em subdoses. Em
+      contexto clínico, pode reduzir ideação suicida e sintomas depressivos em horas ou poucos dias, funcionando como “janela de respiro”.`,
+      mecanismo:`Antagonismo NMDA → modulação glutamatérgica, ↑BDNF e plasticidade sináptica; pode facilitar reconsolidação de memórias.`,
+      evidencia:`Evidência robusta para depressão resistente; maior efeito no curto prazo; manutenção/integração são cruciais.`,
+      indicacoes:`TRD, urgência suicida, alguns casos de dor crônica refratária; avaliar comorbidades e metas.`,
+      contra:`Hipertensão não controlada, cardiopatia instável, psicose/mania ativas, gravidez; cautela em glaucoma descompensado.`,
+      doses:`Esquemas IV subanestésicos titulados por peso/resposta; esketamina intranasal conforme rotulagem; sempre em ambiente clínico.`,
+      interacoes:`Benzodiazepínicos podem atenuar efeito; monitorar com ISRS/tricíclicos; evitar álcool e sedativos no dia.`,
+      monitorizacao:`PA/FC, SatO₂ e estado mental durante e após; ambiente calmo, luz/sons controlados, retorno seguro.`,
+      manejo:`Náusea → antiemético; ansiedade aguda → contenção verbal/respiração; pico hipertensivo → protocolos médicos.`,
+      sensacoes:`Dissociação, alteração de tempo/corpo, náusea leve; ↑PA/FC transitórios (30–90 min).`,
+      legal:`Uso médico permitido no Brasil (anestesia; esketamina intranasal aprovada sob protocolos).`,
+      riscos:`Elevação transitória de PA/FC, náusea, cefaleia; potencial de uso problemático fora de contexto clínico.`,
+      preparacao:`Alinhar expectativas, intenção da sessão e apoio pós; jejum leve conforme orientação; transporte seguro.`,
+      integracao:`Sessão de integração para traduzir insights; monitorar bem-estar; ajustes com equipe.`,
+      referencias:[
+        "Diretrizes clínicas internacionais (cetamina/esketamina) para depressão resistente",
+        "Revisões sobre antagonismo NMDA e neuroplasticidade"
+      ],
+      mitos:[
+        { myth:"É só 'tranquilizante de cavalo'.", truth:"Em doses subanestésicas, mostrou eficácia antidepressiva rápida sob supervisão." },
+        { myth:"Vicia facilmente em contexto clínico.", truth:"Com uso protocolar e monitorado, o risco de dependência é baixo." }
+      ],
+      perguntas:[
+        "Quais efeitos vou sentir e quanto duram?",
+        "Preciso ajustar meus medicamentos atuais?",
+        "Quantas sessões são esperadas para depressão resistente?",
+        "Como é feita a monitorização de segurança?"
+      ],
+      checkPrep:[
+        "Reveja todas as medicações em uso (ex.: benzos).",
+        "Evite álcool/cafeína no dia.",
+        "Organize retorno seguro (não dirija).",
+        "Separe itens de conforto (opcionais)."
+      ],
+      checkIntegracao:[
+        "Descanse após a sessão.",
+        "Anote sentimentos e pensamentos nas 24h.",
+        "Participe da integração terapêutica.",
+        "Mantenha rede de apoio."
+      ],
+      faqs: [
+        {q:"Quanto tempo leva para começar a agir?", a:"Em geral, horas ou poucos dias após a sessão, com pico de alívio nas primeiras 24–72h."},
+        {q:"Vou “apagar” durante a sessão?", a:"Não. A dose é subanestésica. Você permanece responsivo, embora possa sentir dissociação."},
+        {q:"Posso trabalhar no mesmo dia?", a:"Evite dirigir/operar máquinas. Planeje descanso após a sessão e retome atividades leves no dia seguinte."},
+        {q:"Interage com ISRS?", a:"Pode coexistir, mas alguns fármacos modulam efeitos subjetivos. Ajustes são individualizados com seu médico."},
+        {q:"Quantas sessões preciso?", a:"Protocolos variam; comumente séries iniciais (ex.: 6–8) e espaçamento de manutenção conforme resposta."},
+        {q:"E se eu ficar ansioso?", a:"A equipe guia respiração/âncoras sensoriais; ambiente e preparo reduzem a chance."},
+        {q:"Tem risco de dependência?", a:"Risco baixo em contexto clínico com espaçamento e critérios claros; uso recreativo é outra realidade."},
+        {q:"Eleva a pressão arterial?", a:"Pode elevar transitoriamente. Monitorizamos PA/FC e tratamos conforme protocolo."},
+        {q:"Pode piorar a depressão depois?", a:"Rebotes são incomuns; por isso há integração, seguimento e plano terapêutico."},
+        {q:"Funciona para ansiedade grave?", a:"Pode reduzir sintomas em casos selecionados; avaliação individual é essencial."},
+        {q:"É caro? Planos cobrem?", a:"Cobertura varia. Exige justificativa robusta e auditoria. Consulte sua operadora."},
+        {q:"Preciso suspender benzodiazepínicos?", a:"Alguns reduzem efeitos; o time clínico orienta caso a caso."}
+      ]
+    }
+  },
+  { id:"ayahuasca", status:"clinico", order:2, title:"Ayahuasca (contexto religioso/tradicional)", short:"Uso religioso protegido no Brasil; requer respeito cultural e segurança.", aliases:["daime","vegetal"],
+    topics:{
+      resumo:`Decocção amazônica (B. caapi + P. viridis). Uso religioso protegido no Brasil, com lideranças e rituais próprios.`,
+      mecanismo:`Harmalinas (IMAO reversível) + DMT (agonismo serotoninérgico) → vivências de significado e coesão.`,
+      evidencia:`Observacionais sugerem benefícios em bem-estar e redução de uso de substâncias em grupos específicos.`,
+      indicacoes:`Busca espiritual/ritual; alguns relatos de melhora de humor e hábitos em contextos específicos.`,
+      contra:`Histórico de psicose/mania; interações perigosas com ISRS/tricíclicos/IMAO. Avaliação cuidadosa.`,
+      doses:`Preparação variável entre casas; sempre seguir orientação da liderança e comunicar medicações.`,
+      interacoes:`IMAO + antidepressivos tricíclicos/ISRS podem ser perigosos; evitar estimulantes/serotoninérgicos.`,
+      monitorizacao:`Atenção à hidratação, suporte emocional e supervisão de lideranças experientes.`,
+      manejo:`Náusea/purga esperada; se angústia, suporte de voz/música/respiração; respeitar pausas e limites pessoais.`,
+      sensacoes:`Purga (náusea/vômitos), visões, músicas/rezas; ~4h de duração.`,
+      legal:`Uso religioso regulamentado; fora desse contexto exige atenção legal/ética.`,
+      riscos:`Interações medicamentosas, desidratação, vulnerabilidade emocional.`,
+      preparacao:`Dieta orientada e abstinência de certas substâncias dias antes/depois.`,
+      integracao:`Rodas de conversa, diário, apoio comunitário e/ou psicoterapia.`,
+      referencias:[
+        "Resoluções CONAD (uso religioso da ayahuasca)",
+        "Estudos brasileiros observacionais"
+      ],
+      mitos:[
+        { myth:"Sempre causa dano psiquiátrico permanente.", truth:"Casos prolongados são raros e geralmente ligados à predisposição; contexto adequado reduz riscos." },
+        { myth:"Todo mundo passa mal inevitavelmente.", truth:"A purgação é variável; preparo influencia." }
+      ],
+      perguntas:[
+        "Posso usar tomando antidepressivos?",
+        "Como identificar um grupo seguro?",
+        "O que fazer se ficar angustiado durante o ritual?",
+        "Qual dieta seguir na véspera?"
+      ],
+      checkPrep:[
+        "Respeite a dieta recomendada.",
+        "Converse sobre medicações com seu médico.",
+        "Fale com lideranças sobre expectativas/medos.",
+        "Vá com espírito de aprendizado."
+      ],
+      checkIntegracao:[
+        "Participe das conversas pós-ritual.",
+        "Mantenha hábitos saudáveis.",
+        "Registre sonhos/insights.",
+        "Implemente mudanças de forma gradual."
+      ],
+      faqs: [
+        {q:"Qual a duração típica?", a:"Em torno de 4 horas, com variações entre pessoas e preparos."},
+        {q:"Posso levar acompanhante?", a:"Siga as normas da casa; muitas incentivam participação comunitária."},
+        {q:"E se eu estiver em uso de ISRS?", a:"Risco de interação. Converse com seu médico e com a liderança antes de qualquer decisão."},
+        {q:"Por que a purga acontece?", a:"Fatores fisiológicos e simbólicos; é esperada e nem sempre obrigatória."},
+        {q:"Há riscos cardiovasculares?", a:"Pessoas com condições instáveis devem avaliar cuidadosamente e informar a liderança."},
+        {q:"Pode ajudar na dependência?", a:"Relatos e estudos observacionais sugerem benefícios em alguns casos, sem substituir tratamento."},
+        {q:"Há idade mínima?", a:"Normas variam por tradição; siga as regras locais e a legislação."},
+        {q:"Como é o pós-rito?", a:"Integração com conversas, descanso e alimentação leve."},
+        {q:"Preciso jejuar?", a:"Siga a dieta recomendada pela casa; costuma ser leve e sem estimulantes."},
+        {q:"Tem risco com anticoncepcional?", a:"Sem evidências de interação direta, mas informe quaisquer medicamentos à liderança."},
+        {q:"É permitido gravar?", a:"Respeite a política do grupo; muitos proíbem gravações."},
+        {q:"É terapia médica?", a:"Não; é uso religioso regulamentado, distinto de tratamento médico."}
+      ]
+    }
+  },
+  { id:"ibogaina", status:"clinico", order:3, title:"Ibogaína", short:"Investigada em dependência; exige monitorização multiprofissional intensa.", aliases:["tabernanthe iboga","TA"],
+    topics:{
+      resumo:`Alcaloide da raiz da iboga. Relatos indicam interrupção de abstinência e redução de craving, com riscos cardiológicos relevantes.`,
+      mecanismo:`Interação com receptores opioides, NMDA, sigma e nicotínicos; possível “reinício” de padrões neuroquímicos.`,
+      evidencia:`Maior parte observacional; ensaios controlados escassos por questões de segurança.`,
+      indicacoes:`Dependência de opioides/estimulantes em protocolos hospitalares específicos.`,
+      contra:`Cardiopatias, QT longo, distúrbios eletrolíticos, hepatopatias; polifarmácia de risco.`,
+      doses:`Protocolo médico com dose teste + dose(s) plena(s), sempre em internação com telemetria.`,
+      interacoes:`Muitos fármacos prolongam QT (ex.: alguns antipsicóticos/macrólidos). Revisão farmacológica extensa é obrigatória.`,
+      monitorizacao:`ECG seriados, eletrólitos corrigidos, função hepática, telemetria 24–48h; suporte avançado disponível.`,
+      manejo:`Arritmia → ACLS/antiarrítmicos conforme protocolo; convulsão rara → suporte avançado.`,
+      sensacoes:`Ataxia, náuseas/vômitos (purga), visões oníricas prolongadas; fadiga no pós-pico.`,
+      legal:`Não aprovada como tratamento médico no Brasil; apenas pesquisa aprovada.`,
+      riscos:`Arritmias (torsades), convulsões raras, interações perigosas; observação prolongada necessária.`,
+      preparacao:`Correção de eletrólitos; redução segura de opioides; consentimento detalhado; jejum controlado.`,
+      integracao:`Psicoterapia motivacional, reabilitação, NA, prevenção de recaídas, seguimento cardio/hepático.`,
+      referencias:[
+        "Segurança cardiológica (prolongamento de QT) na ibogaína",
+        "Relatos clínicos em dependência de opioides"
+      ],
+      mitos:[
+        { myth:"Cura a dependência em uma dose para todos.", truth:"Pode ajudar no início; manutenção depende de suporte contínuo." },
+        { myth:"É segura para qualquer pessoa com dependência.", truth:"Riscos são significativos e requerem protocolos hospitalares." }
+      ],
+      perguntas:[
+        "Quais exames são obrigatórios antes?",
+        "Como é tratada uma arritmia se ocorrer?",
+        "Tempo total de internação?",
+        "Como é o plano de prevenção de recaída?"
+      ],
+      checkPrep:[
+        "Faça os exames solicitados (ECG e sangue).",
+        "Siga orientações de reduzir/suspender substâncias.",
+        "Prepare-se para internação e comunique família.",
+        "Pratique técnicas de relaxamento previamente."
+      ],
+      checkIntegracao:[
+        "Envolva familiares de confiança.",
+        "Faça terapia especializada nas semanas seguintes.",
+        "Participe de grupos de apoio.",
+        "Evite gatilhos de recaída no início."
+      ],
+      faqs: [
+        {q:"Por que é feita em internação?", a:"Devido aos riscos cardiológicos e necessidade de telemetria contínua."},
+        {q:"Quanto tempo dura o efeito agudo?", a:"Fase intensa de 12–24h, com rescaldo por mais tempo."},
+        {q:"Pode parar abstinência de opioides?", a:"Relatos indicam sim, mas exige plano de manutenção robusto."},
+        {q:"Quais exames preciso?", a:"ECG, eletrólitos, função hepática/renal e revisão de fármacos."},
+        {q:"É legal no Brasil?", a:"Apenas em pesquisa aprovada; não há aprovação ampla como tratamento."},
+        {q:"Posso ter arritmia?", a:"Sim; por isso o protocolo inclui prevenção e tratamento em hospital."},
+        {q:"E se eu desmaiar?", a:"Equipe monitora continuamente e intervém conforme protocolo."},
+        {q:"Dá para fazer ambulatorial?", a:"Não recomendado devido aos riscos; protocolos são hospitalares."},
+        {q:"Interage com antidepressivos?", a:"Vários podem prolongar QT; revisão detalhada é necessária."},
+        {q:"Terei acompanhamento depois?", a:"Sim; psicoterapia e reabilitação são essenciais."},
+        {q:"Há risco de convulsão?", a:"Raro, mas possível; o hospital tem manejo imediato."},
+        {q:"É uma cura definitiva?", a:"Não. É um início possível, com suporte contínuo."}
+      ]
+    }
+  },
+  /* Em pesquisa */
+  { id:"psilocibina", status:"pesquisa", order:4, title:"Psilocibina", short:"Investigada em depressão/ansiedade e fim de vida; sessões assistidas + integração.", aliases:["cogumelos mágicos","psilocybe"],
+    topics:{
+      resumo:`Triptamina presente em fungos Psilocybe; estudos de fase 2 mostram redução de sintomas depressivos/ansiosos em ambiente controlado.`,
+      mecanismo:`Agonismo parcial 5-HT2A → ↑entropia cortical e flexibilidade de redes; experiências de pico com potencial terapêutico.`,
+      evidencia:`Sinais promissores em depressão resistente/ansiedade de fim de vida/uso de álcool; ainda não aprovado fora de pesquisa no Brasil.`,
+      protocolo:`Triagem rigorosa; preparação; 1–3 sessões com 2 profissionais; ambiente seguro; integração por semanas.`,
+      sensacoes:`Alterações perceptuais/emocionais intensas; ansiedade possível em picos; 4–6h de duração.`,
+      seguranca:`Evitar em risco de psicose/mania; equipe treinada minimiza ansiedade aguda.`,
+      legal:`Ilegal fora de pesquisa no Brasil.`,
+      riscos:`Ansiedade aguda, náusea inicial, cefaleia pós.`,
+      preparacao:`Intenção clara; apoio pós; agenda livre no dia seguinte.`,
+      integracao:`Diário, psicoterapia de suporte, hábitos saudáveis.`
+    }
+  },
+  { id:"mdma", status:"pesquisa", order:5, title:"MDMA (terapia assistida)", short:"Estudada para TEPT; psicoterapia focada + sessões assistidas.", aliases:["ecstasy (contexto clínico)"],
+    topics:{
+      resumo:`Empatógeno/entactógeno; reduz medo/hipervigilância e facilita processamento de memórias traumáticas.`,
+      mecanismo:`↑Serotonina/NA/DA; ↑oxitocina; ↓atividade da amígdala; facilita extinção de medo com psicoterapia.`,
+      evidencia:`Resultados promissores em TEPT (MAPS). Aprovação varia por país; no Brasil, restrita a pesquisa.`,
+      protocolo:`Triagem cardio/psiquiátrica; várias sessões preparatórias; 2–3 sessões assistidas (6–8h cada) + integração.`,
+      sensacoes:`Empatia/conexão; calor, sudorese, bruxismo; ↑FC/PA; náusea ocasional.`,
+      seguranca:`Cuidado com interações serotoninérgicas (ISRS/IMAO); evitar em cardiopatia/gravidez/glaucoma ângulo fechado.`,
+      legal:`Não aprovado para uso clínico amplo no Brasil.`,
+      riscos:`Hipertermia/hiponatremia (se manejo inadequado), “comedown”, insônia.`,
+      preparacao:`Dormir bem; alimentação leve; hidratação moderada; definir foco terapêutico.`,
+      integracao:`Terapia de integração; higiene do sono; rotinas saudáveis.`
+    }
+  },
+  { id:"lsd", status:"pesquisa", order:6, title:"LSD", short:"Pesquisa em ansiedade/cefaleia em salvas; set & setting estruturados.", aliases:["ácido lisérgico"],
+    topics:{
+      resumo:`Psicodélico clássico potente; duração longa (8–12h) exige preparação e suporte.`,
+      mecanismo:`Agonismo 5-HT2A; ↑entropia neural; estados intensos com potencial de insight.`,
+      evidencia:`Evidência emergente; protocolos priorizam segurança/integração.`,
+      protocolo:`Triagem ampla; sessão longa com equipe e música; integração posterior.`,
+      sensacoes:`Visuais marcantes, sinestesia, distorção temporal, emoções amplificadas.`,
+      seguranca:`Evitar em risco de psicose; atenção a hipertensão grave; interações com antidepressivos variam.`,
+      legal:`Proibido para uso não científico no Brasil; apenas estudos aprovados.`,
+      riscos:`Ansiedade/pânico agudo; gatilho de psicose em vulneráveis; raros flashbacks.`,
+      preparacao:`Intenção clara; evitar cafeína; descanso adequado; dia seguinte livre.`,
+      integracao:`Sessões de acompanhamento; higiene do sono; expressão criativa.`
+    }
+  }
 ].sort((a,b)=>a.order-b.order);
 
-const DRUG_INDEX=KNOWLEDGE.reduce((a,d,i)=>(a[d.id]=i,a),{}); const DRUG_IDS=KNOWLEDGE.map(d=>d.id);
-const app=document.getElementById("app");
+/* Índices */
+const DRUG_INDEX = KNOWLEDGE.reduce((acc, d, i) => (acc[d.id]=i, acc), {});
+const DRUG_IDS   = KNOWLEDGE.map(d=>d.id);
 
-const routes={"/":renderHome,"/mensagem":()=>navigateTo("/#mensagem"),"/mapa":()=>navigateTo("/#mapa"),"/posts":()=>navigateTo("/#posts"),"/conhecimento":()=>navigateTo("/#conhecimento"),"/galeria":()=>navigateTo("/#galeria"),"/projetos":()=>navigateTo("/#projetos"),"/observatorio":()=>navigateTo("/#observatorio"),"/sobre":()=>navigateTo("/#sobre"),"/faq":()=>navigateTo("/#faq"),"/recomendado":()=>navigateTo("/#recomendado"),"/glossario":()=>navigateTo("/#glossario"),"/novidades":()=>navigateTo("/#novidades"),"/legal":()=>navigateTo("/#legal"),"/contato":()=>navigateTo("/#contato"),"/d/:id":renderDrugPage};
-function parseLocation(){const h=location.hash.replace(/^#/,"");const p=h.split("/").filter(Boolean);if(p.length===0)return{path:"/"};if(p[0]==="d"&&p[1])return{path:"/d/:id",params:{id:p[1]}};return{path:"/"+p[0]};}
-async function router(){const{path,params}=parseLocation();const h=routes[path]||renderHome;await h(params);document.body.setAttribute("data-page",path);} window.addEventListener("hashchange",router); document.addEventListener("DOMContentLoaded",router);
-function navigateTo(anchor){renderHome().then(()=>{const id=anchor.split("#")[1];const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:"smooth",block:"start"});});}
-function loadIframe(id,url){const i=document.getElementById(id); if(!i)return; i.src=url; i.addEventListener('load',()=>{i.style.opacity=1;i.parentElement.classList.remove('skeleton');}); i.addEventListener('error',()=>{i.parentElement.innerHTML=`<p class="muted" style="padding:12px">Falha ao carregar.</p>`;});}
-function toast(msg){const el=document.getElementById("toast"); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2200);}
-function applyReveal(root=document){const nodes=root.querySelectorAll(".reveal"); nodes.forEach(el=>el.classList.add("is-visible"));}
+/* ===== SPA Router ===== */
+const app = document.getElementById("app");
+const routes = {
+  "/": renderHome,
+  "/mensagem": () => navigateTo("/#mensagem"),
+  "/mapa":      () => navigateTo("/#mapa"),
+  "/posts":     () => navigateTo("/#posts"),
+  "/conhecimento": () => navigateTo("/#conhecimento"),
+  "/galeria":   () => navigateTo("/#galeria"),
+  "/projetos":  () => navigateTo("/#projetos"),
+  "/observatorio": () => navigateTo("/#observatorio"),
+  "/sobre":     () => navigateTo("/#sobre"),
+  "/faq":       () => navigateTo("/#faq"),
+  "/recomendado": () => navigateTo("/#recomendado"),
+  "/glossario": () => navigateTo("/#glossario"),
+  "/novidades": () => navigateTo("/#novidades"),
+  "/legal":     () => navigateTo("/#legal"),
+  "/contato":   () => navigateTo("/#contato"),
+  "/d/:id": renderDrugPage
+};
+function parseLocation(){
+  const hash = location.hash.replace(/^#/, "");
+  const parts = hash.split("/").filter(Boolean);
+  if(parts.length === 0) return { path: "/" };
+  if(parts[0] === "d" && parts[1]) return { path: "/d/:id", params: { id: parts[1] } };
+  const path = "/" + parts[0];
+  return { path };
+}
+async function router(){
+  const { path, params } = parseLocation();
+  const handler = routes[path] || renderHome;
+  await handler(params);
+  document.body.setAttribute("data-page", path);
+}
+window.addEventListener("hashchange", router);
+document.addEventListener("DOMContentLoaded", router);
 
+/* ===== Helpers ===== */
+function trackEvent(name, data={}){
+  try{ console.log("[analytics]", name, data); }catch{}
+}
+function navigateTo(anchor){
+  renderHome().then(() => {
+    const id = anchor.split("#")[1];
+    if(id){
+      const el = document.getElementById(id);
+      if(el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+}
+function htmlToEl(html){
+  const t = document.createElement("template");
+  t.innerHTML = html.trim();
+  return t.content;
+}
+function loadIframe(id, url){
+  const iframe = document.getElementById(id);
+  if(!iframe) return;
+  iframe.src = url;
+  iframe.addEventListener('load', () => {
+    iframe.style.opacity = 1;
+    iframe.parentElement.classList.remove('skeleton');
+  });
+  iframe.addEventListener('error', () => {
+    iframe.parentElement.innerHTML = `<p class="muted" style="padding:12px">Não foi possível carregar este conteúdo no momento.</p>`;
+  });
+}
+function toast(msg){
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2200);
+}
+function applyReveal(root = document){
+  const nodes = root.querySelectorAll(".reveal");
+  if(!("IntersectionObserver" in window)){
+    nodes.forEach(el => el.classList.add("is-visible"));
+    return;
+  }
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.classList.add("is-visible");
+        io.unobserve(e.target);
+      }
+    });
+  }, { rootMargin: "0px 0px -10% 0px", threshold: 0.05 });
+  nodes.forEach(el => {
+    const r = el.getBoundingClientRect(), vh = innerHeight || document.documentElement.clientHeight;
+    if(r.top < vh * 0.9 && r.bottom > 0){
+      el.classList.add("is-visible");
+    } else {
+      io.observe(el);
+    }
+  });
+  setTimeout(() => nodes.forEach(el => el.classList.add("is-visible")), 1500);
+}
+
+/* ===== Render: Home & seções ===== */
 async function renderHome(){
-  app.innerHTML=""; const tpl=document.getElementById("tpl-home").content.cloneNode(true); app.appendChild(tpl);
-  document.getElementById("logo").src="./logo.png"; const heroLogo=document.getElementById("heroLogo"); if(heroLogo) heroLogo.src="./logo.png";
-  const mailto=`mailto:${"admn@ntobr.com"}?subject=${encodeURIComponent("Quero aliviar meu sofrimento")}`;
-  ["footerMail","ctaHomeStart"].forEach(id=>{const el=document.getElementById(id); if(el){el.href=mailto;}});
-  const emailLink=document.getElementById("emailLink"); if(emailLink){emailLink.href="mailto:admn@ntobr.com"; emailLink.textContent="admn@ntobr.com";}
-  const hamb=document.getElementById("hamb"); const mobile=document.getElementById("mobile"); if(hamb&&mobile){ hamb.onclick=()=>{const open=!mobile.classList.contains("open"); mobile.classList.toggle("open",open); mobile.setAttribute("aria-hidden",String(!open)); hamb.setAttribute("aria-expanded",String(open)); if(open){ mobile.innerHTML=document.getElementById("navLinks").innerHTML; } }; }
-  const toTopBtn=document.getElementById('toTop'); window.addEventListener('scroll',()=>{ if(window.scrollY>600) toTopBtn.classList.add('show'); else toTopBtn.classList.remove('show'); },{passive:true});
-  toTopBtn.onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
-  const copyEmailBtn=document.getElementById('copyEmail'); if(copyEmailBtn){copyEmailBtn.onclick=async()=>{try{await navigator.clipboard.writeText("admn@ntobr.com");toast('Email copiado. Estamos com você.');}catch{toast('Não foi possível copiar');}}}
-  loadIframe('mapEmbed',"https://www.google.com/maps/d/embed?mid=1KD5QHhxyVWlFX7BDM0aoNufixLILENU&usp=sharing");
-  loadIframe('igEmbed',"https://www.instagram.com/p/Ck000000000/embed");
-  loadIframe('ytEmbed',"https://www.youtube.com/embed/dQw4w9WgXcQ");
-  const cardsWrap=document.getElementById("cards");
-  function cardTag(d){return d.status==="pesquisa"?`<span class="tag research">Em pesquisa</span>`:`<span class="tag">Uso atual</span>`;}
-  function renderCards(list){cardsWrap.innerHTML=""; list.forEach((k,i)=>{const art=document.createElement("article"); art.className="card reveal"; art.id="card-"+k.id; art.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><h3>${k.title}</h3>${cardTag(k)}</div><p class="muted">${k.short}</p><div class="toolbar" style="justify-content:space-between"><span class="muted" style="font-size:12px">${(k.aliases||[]).slice(0,2).join(" · ")}</span><a class="btn small primary" href="#/d/${k.id}" data-link>Saiba mais</a></div>`; cardsWrap.appendChild(art);}); applyReveal(cardsWrap);}
+  app.innerHTML = "";
+  const tpl = document.getElementById("tpl-home").content.cloneNode(true);
+  app.appendChild(tpl);
+
+  // Logos/CTAs
+  document.getElementById("logo").src = LOGO_URL;
+  const heroLogo = document.getElementById("heroLogo");
+  if(heroLogo) heroLogo.src = LOGO_URL;
+
+  const mailto = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Quero aliviar meu sofrimento")}`;
+  ["footerMail","ctaHomeStart"].forEach(id => {
+    const el = document.getElementById(id);
+    if(el){ el.href = mailto; el.setAttribute("data-event","cta_click"); }
+  });
+  const emailLink = document.getElementById("emailLink");
+  if(emailLink){ emailLink.href = `mailto:${CONTACT_EMAIL}`; emailLink.textContent = CONTACT_EMAIL; }
+
+  // Menu mobile
+  const hamb = document.getElementById("hamb");
+  const mobile = document.getElementById("mobile");
+  if(hamb && mobile){
+    hamb.onclick = () => {
+      const open = !mobile.classList.contains("open");
+      mobile.classList.toggle("open", open);
+      mobile.setAttribute("aria-hidden", String(!open));
+      hamb.setAttribute("aria-expanded", String(open));
+      if(open){ mobile.innerHTML = document.getElementById("navLinks").innerHTML; }
+    };
+  }
+
+  // Back to top
+  const toTopBtn = document.getElementById('toTop');
+  window.addEventListener('scroll', () => {
+    if(window.scrollY > 600) toTopBtn.classList.add('show'); else toTopBtn.classList.remove('show');
+  }, { passive:true });
+  toTopBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Copiar email
+  const copyEmailBtn = document.getElementById('copyEmail');
+  if(copyEmailBtn){
+    copyEmailBtn.onclick = async () => {
+      try{
+        await navigator.clipboard.writeText(CONTACT_EMAIL);
+        toast('Email copiado. Estamos aqui com você.');
+      }catch{ toast('Não foi possível copiar'); }
+    };
+  }
+
+  // Embeds
+  loadIframe('mapEmbed', MAP_URL);
+  loadIframe('igEmbed', SOCIAL.instagramEmbedUrl);
+  loadIframe('ytEmbed', SOCIAL.youtubeEmbedUrl);
+
+  // Render cartões de conhecimento
+  const cardsWrap = document.getElementById("cards");
+  function cardTag(d){
+    return d.status === "pesquisa" ? `<span class="tag research" title="Ainda em pesquisa">Em pesquisa</span>` : `<span class="tag" title="Uso atual">Uso atual</span>`;
+  }
+  function renderCards(list){
+    cardsWrap.innerHTML = "";
+    list.forEach((k, i) => {
+      const art = document.createElement("article");
+      art.className = "card reveal";
+      art.style.transitionDelay = (i * 35) + "ms";
+      art.id = "card-"+k.id;
+      art.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px">
+          <h3 style="margin:0">${k.title}</h3>
+          ${cardTag(k)}
+        </div>
+        <p class="muted" style="margin:0 0 10px">${k.short}</p>
+        <div class="toolbar" style="justify-content:space-between">
+          <span class="muted" style="font-size:12px">${(k.aliases || []).slice(0,2).join(" · ")}</span>
+          <a class="btn small primary" href="#/d/${k.id}" data-link>Saiba mais</a>
+        </div>
+      `;
+      cardsWrap.appendChild(art);
+    });
+    applyReveal(cardsWrap);
+  }
   renderCards(KNOWLEDGE);
-  const searchInput=document.getElementById("searchInp"); let currentFilter=localStorage.getItem('knowledgeFilter')||"all";
-  function applyFilter(){const q=(searchInput?.value||"").trim().toLowerCase(); let base=KNOWLEDGE.slice(); if(currentFilter!=="all") base=base.filter(k=>k.status===currentFilter); if(q){ base=base.filter(k=>{const all=[k.title,k.short,...(k.aliases||[]),JSON.stringify(k.topics||{})].join(" ").toLowerCase(); return all.includes(q);}); } renderCards(base);}
-  if(searchInput){const last=localStorage.getItem('lastSearch')||""; if(last){searchInput.value=last;} let t; searchInput.oninput=e=>{const v=e.target.value; localStorage.setItem('lastSearch',v); clearTimeout(t); t=setTimeout(applyFilter,140);};}
-  const quick=document.getElementById("quickGuide"); if(quick){quick.addEventListener('click',ev=>{const b=ev.target.closest('button'); if(!b)return; if(b.dataset.filter){currentFilter=b.dataset.filter; localStorage.setItem('knowledgeFilter',currentFilter); applyFilter();} if(b.dataset.jump){const target=document.getElementById("card-"+b.dataset.jump); if(target) target.scrollIntoView({behavior:"smooth",block:"center"});} });}
+
+  // Busca + Filtros (guia rápido sem mudar rota)
+  const searchInput = document.getElementById("searchInp");
+  const quick = document.getElementById("quickGuide");
+  let currentFilter = localStorage.getItem('knowledgeFilter') || "all";
+  function applyFilter(){
+    const q = (searchInput?.value || "").trim().toLowerCase();
+    let base = KNOWLEDGE.slice();
+    if(currentFilter !== "all") base = base.filter(k => k.status === currentFilter);
+    if(q){
+      base = base.filter(k => {
+        const all = [k.title,k.short,...(k.aliases||[]), JSON.stringify(k.topics||{})].join(" ").toLowerCase();
+        return all.includes(q);
+      });
+    }
+    renderCards(base);
+  }
+  if(searchInput){
+    const lastQuery = localStorage.getItem('lastSearch') || "";
+    if(lastQuery){ searchInput.value = lastQuery; }
+    let t; searchInput.oninput = (e)=>{ const v=e.target.value; localStorage.setItem('lastSearch', v); clearTimeout(t); t=setTimeout(applyFilter, 140); };
+  }
+  if(quick){
+    quick.addEventListener('click', (ev)=>{
+      const b = ev.target.closest('button');
+      if(!b) return;
+      if(b.dataset.filter){
+        currentFilter = b.dataset.filter;
+        localStorage.setItem('knowledgeFilter', currentFilter);
+        applyFilter();
+        trackEvent('quickguide_item_click', {filter: currentFilter});
+      }
+      if(b.dataset.jump){
+        const target = document.getElementById("card-"+b.dataset.jump);
+        if(target) target.scrollIntoView({behavior:"smooth", block:"center"});
+      }
+    });
+  }
   applyFilter();
+
+  // FAQ global (resumo)
   renderGlobalFAQ();
-  const recTbody=document.getElementById('recTable'); if(recTbody){recTbody.innerHTML=RECOMENDADOS.map(r=>`<tr><td><a href="${r.link}" target="_blank" rel="noopener">${r.t}</a></td><td>${r.tipo}</td><td class="muted">${r.sin}</td></tr>`).join("");}
-  const glTbody=document.getElementById('glossTable'); if(glTbody){glTbody.innerHTML=Object.entries(GLOSS).map(([k,v])=>`<tr><td><strong>${k}</strong></td><td class="muted">${v}</td></tr>`).join("");}
-  document.title=SITE_NAME+" — Psicodélicos com ciência, ética e cuidado";
+
+  // Recomendações
+  const recTbody = document.getElementById('recTable');
+  if(recTbody){
+    recTbody.innerHTML = RECOMENDADOS.map(r => `
+      <tr>
+        <td><a href="${r.link}" target="_blank" rel="noopener noreferrer" data-event="recommended_content_click">${r.t}</a></td>
+        <td>${r.tipo}</td>
+        <td class="muted">${r.sin}</td>
+      </tr>`).join("");
+  }
+
+  // Glossário
+  const glTbody = document.getElementById('glossTable');
+  if(glTbody){
+    glTbody.innerHTML = Object.entries(GLOSS).map(([k,v]) => `<tr><td><strong>${k}</strong></td><td class="muted">${v}</td></tr>`).join("");
+  }
+
+  // SEO padrão
+  document.title = SITE_NAME + " — Psicodélicos com ciência, ética e cuidado";
+  const canonical = document.getElementById('canonical');
+  if(canonical) canonical.setAttribute('href', location.origin + location.pathname);
+  document.querySelector('meta[name="description"]').content = DEFAULT_DESC;
+  document.querySelector('meta[property="og:title"]').content = DEFAULT_OG_TITLE;
+  document.querySelector('meta[property="og:description"]').content = DEFAULT_OG_DESC;
+  document.querySelector('meta[name="twitter:title"]').content = DEFAULT_OG_TITLE;
+  document.querySelector('meta[name="twitter:description"]').content = DEFAULT_OG_DESC;
+
+  // Animações de revelação
+  applyReveal(app);
+
+  // CTAs “Quero Alívio” → popup
+  ["ctaHeader","ctaFloat","ctaHero","ctaMensagem"].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el){ el.onclick = (e)=>{ e.preventDefault(); openLeadModal(); trackEvent('alivio_popup_open'); }; }
+  });
+
+  // Reduced motion telemetry
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    trackEvent('reduced_motion_active');
+  }
 }
-function renderGlobalFAQ(){const wrap=document.getElementById('faqWrap'); if(!wrap)return; const items=[
-  {q:"O que está disponível no Brasil?",a:"Cetamina (e esketamina) em contexto médico; ayahuasca em contexto religioso."},
-  {q:"Psilocibina/MDMA/LSD estão liberados?",a:"Não; restritos a pesquisas."},
-  {q:"Planos cobrem?",a:"Varia por operadora e indicação."}
-]; wrap.innerHTML=items.map((it,i)=>`<div class="faq-item" id="faq-${i+1}"><button class="faq-btn" aria-expanded="false"><span>${it.q}</span><span class="muted">+</span></button><p class="faq-ans">${it.a}</p></div>`).join(""); wrap.querySelectorAll(".faq-item").forEach(row=>{const btn=row.querySelector(".faq-btn"), ans=row.querySelector(".faq-ans"); btn.addEventListener("click",()=>{const open=ans.classList.toggle("open"); btn.setAttribute("aria-expanded",String(open)); btn.lastElementChild.textContent=open?"−":"+";});});}
+
+/* ===== FAQ Global (mantém V6 + complementa) ===== */
+function renderGlobalFAQ(){
+  const wrap = document.getElementById('faqWrap');
+  if(!wrap) return;
+  const items = [
+    {q:"Quais tratamentos psicodélicos já estão disponíveis no Brasil?", a:"Atualmente, a cetamina (e a esketamina nasal) é utilizada em tratamentos médicos, principalmente para depressão resistente. A ayahuasca ocorre em contextos religiosos regulamentados (não é terapia médica formal)."},
+    {q:"Psilocibina, MDMA e LSD estão liberados clinicamente?", a:"Não. Essas substâncias permanecem restritas a pesquisas. Fora desses estudos, seu uso clínico não é permitido no Brasil por enquanto."},
+    {q:"Planos de saúde cobrem cetamina?", a:"A cobertura varia por operadora e indicação. Em geral, requer justificativa clínica robusta, protocolos e auditoria. Oriente-se com seu médico e verifique diretamente com a operadora."},
+    {q:"Quem não deve fazer terapia com cetamina?", a:"Pessoas com hipertensão grave não controlada, cardiopatia instável, psicose ativa, mania, gravidez, entre outras condições, geralmente não são candidatas. Avaliação médica é obrigatória."},
+    {q:"O que levar para a sessão?", a:"Roupas confortáveis, um agasalho leve, fones de ouvido (se a clínica permitir) e um contato para retorno seguro. Evite dirigir após a sessão."},
+    {q:"Efeitos colaterais comuns e duração?", a:"Dissociação, alteração de percepção, leve náusea e aumento transitório de pressão/FC. Em geral, passam entre 30–90 minutos após o fim da aplicação."},
+    {q:"O que é integração e por que importa?", a:"É o processo de transformar a experiência em mudanças concretas de vida (psicoterapia, hábitos, suporte). Sem integração, parte dos ganhos pode se perder."},
+    {q:"Diferença entre uso religioso (ayahuasca) e uso clínico?", a:"No Brasil, o uso religioso é regulamentado em tradições específicas e não equivale a terapia médica. O uso clínico exige protocolos, equipe de saúde e regulamentação própria."},
+    // Novas
+    {q:"Quanto tempo até a primeira resposta terapêutica?", a:"Para cetamina, horas/dias. Para psicodélicos clássicos em pesquisa, os efeitos são avaliados em semanas com integração."},
+    {q:"É possível fazer acompanhamento remoto?", a:"A triagem pode incluir etapas remotas, mas sessões e monitorização são presenciais quando há administração de fármacos."},
+    {q:"Como saber se sou elegível?", a:"Converse com seu médico; a NTO oferece orientação inicial e triagem baseada em critérios de segurança e necessidade."},
+    {q:"Posso combinar com psicoterapia?", a:"Sim. A integração psicoterapêutica é componente central de melhores desfechos."}
+  ];
+  wrap.innerHTML = items.map((it, i)=>`
+    <div class="faq-item" id="faq-${i+1}">
+      <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
+        <span>${it.q}</span>
+        <span class="muted">+</span>
+      </button>
+      <p class="faq-ans" role="region">${it.a}</p>
+    </div>`).join("");
+  wrap.querySelectorAll(".faq-item").forEach(row => {
+    const btn = row.querySelector(".faq-btn");
+    const ans = row.querySelector(".faq-ans");
+    btn.addEventListener("click", () => {
+      const open = ans.classList.toggle("open");
+      btn.setAttribute("aria-expanded", String(open));
+      btn.lastElementChild.textContent = open ? "−" : "+";
+      if(open) location.hash = "#/faq";
+    });
+  });
+}
+
+/* ===== Render: Página de substância ===== */
 async function renderDrugPage(params){
-  app.innerHTML=""; const tpl=document.getElementById("tpl-drug-page").content.cloneNode(true); app.appendChild(tpl);
-  const drug=KNOWLEDGE.find(d=>d.id===params.id); const titleEl=document.getElementById("crumbDrug"); const article=document.getElementById("drugArticle"); const tocLinks=document.getElementById("tocLinks"); const neighbor=document.getElementById("neighborLinks");
-  if(!drug){article.innerHTML="<h2>Não encontrado</h2><p class='muted'>A substância solicitada não existe no catálogo.</p>"; return;}
-  titleEl.textContent=drug.title;
-  const sections=[["visao-geral","Visão geral",`<p class="muted">${drug.topics.resumo}</p>`],["mecanismo","Mecanismo",`<p>${drug.topics.mecanismo}</p>`],["evidencia","Evidência",`<p>${drug.topics.evidencia}</p>`],["indicacoes","Indicações",`<p>${drug.topics.indicacoes||"—"}</p>`],["contra","Contraindicações",`<p>${drug.topics.contra||"—"}</p>`],["doses","Doses",`<p>${drug.topics.doses||"—"}</p>`],["interacoes","Interações",`<p>${drug.topics.interacoes||"—"}</p>`],["monitorizacao","Monitorização",`<p>${drug.topics.monitorizacao||"—"}</p>`],["manejo","Manejo",`<p>${drug.topics.manejo||"—"}</p>`],["experiencia","Experiência",`<p>${drug.topics.sensacoes||"—"}</p>`],["legal","Legal",`<p>${drug.topics.legal||"—"}</p>`],["riscos","Riscos",`<p>${drug.topics.riscos||"—"}</p>`]];
-  tocLinks.innerHTML=sections.map(s=>`<a href="#sec-${s[0]}">${s[1]}</a>`).join("");
-  article.innerHTML = sections.map(([id,label,html])=>`<section id="sec-${id}" class="reveal" style="padding-top:10px;margin-top:10px;border-top:1px solid #22304a"><h2>${label}</h2>${html}</section>`).join("") + `<div class="toolbar" style="margin-top:12px"><a class="btn small" href="#/conhecimento" data-link>Catálogo</a></div>`;
-  const idx=DRUG_INDEX[drug.id], prevId=DRUG_IDS[idx-1], nextId=DRUG_IDS[idx+1];
-  neighbor.innerHTML = `${prevId?`<a class="btn small ghost" href="#/d/${prevId}" data-link>← ${KNOWLEDGE[DRUG_INDEX[prevId]].title}</a>`:""} <a class="btn small" href="#/conhecimento" data-link>Catálogo</a> ${nextId?`<a class="btn small ghost" href="#/d/${nextId}" data-link>${KNOWLEDGE[DRUG_INDEX[nextId]].title} →</a>`:""}`;
+  app.innerHTML = "";
+  const tpl = document.getElementById("tpl-drug-page").content.cloneNode(true);
+  app.appendChild(tpl);
+  const drug = KNOWLEDGE.find(d => d.id === params.id);
+  const titleEl = document.getElementById("crumbDrug");
+  const article = document.getElementById("drugArticle");
+  const tocLinks = document.getElementById("tocLinks");
+  const neighbor = document.getElementById("neighborLinks");
+  if(!drug){
+    article.innerHTML = `<h2>Não encontrado</h2><p class="muted">A substância solicitada não existe no catálogo.</p>`;
+    applyReveal(app); return;
+  }
+  titleEl.textContent = drug.title;
+
+  const sections = [
+    ["visao-geral","Visão geral",`
+      <p class="muted">${drug.topics.resumo}</p>
+      <div class="toolbar" style="gap:8px;flex-wrap:wrap">
+        ${(drug.aliases||[]).map(a=>`<span class="pill">${a}</span>`).join("")}
+        ${drug.status==="pesquisa" ? `<span class="tag research">Em pesquisa</span>` : `<span class="tag">Uso atual</span>`}
+      </div>
+      <p class="fancy" style="margin-top:12px"><span class="inner" style="display:block">
+        <strong>Empatia em primeiro lugar.</strong> Cada pessoa é única. Nosso papel é acolher, reduzir riscos e construir, junto com você, um caminho seguro.
+      </span></p>
+    `],
+    ["mecanismo","Mecanismo de ação",`<p>${drug.topics.mecanismo}</p>`],
+    ["evidencia","Evidência científica",`<p>${drug.topics.evidencia}</p>`],
+    ["indicacoes","Indicações",`<p>${drug.topics.indicacoes||"—"}</p>`],
+    ["contra","Contraindicações",`<p>${drug.topics.contra||"—"}</p>`],
+    ["doses","Doses e apresentações",`<p>${drug.topics.doses||"—"}</p>`],
+    ["interacoes","Interações relevantes",`<p>${drug.topics.interacoes||"—"}</p>`],
+    ["monitorizacao","Monitorização",`<p>${drug.topics.monitorizacao||"—"}</p>`],
+    ["manejo","Manejo de eventos adversos",`<p>${drug.topics.manejo||"—"}</p>`],
+    ["experiencia","Como pode ser a experiência",`<p>${drug.topics.sensacoes}</p>`],
+    ["seguranca","Segurança e triagem",`<p>${drug.topics.seguranca||drug.topics.seguranca||""}</p>`],
+    ["legal","Situação legal (Brasil)",`<p>${drug.topics.legal}</p>`],
+    ["riscos","Riscos e efeitos adversos",`<p class="fancy"><span class="inner">${drug.topics.riscos}</span></p>`],
+    ["preparacao","Preparação",`
+      <p>${drug.topics.preparacao}</p>
+      ${(drug.topics.checkPrep||[]).length?`<ul>${drug.topics.checkPrep.map(i=>`<li>${i}</li>`).join("")}</ul>`:""}
+    `],
+    ["integracao","Integração",`
+      <p>${drug.topics.integracao}</p>
+      ${(drug.topics.checkIntegracao||[]).length?`<ul>${drug.topics.checkIntegracao.map(i=>`<li>${i}</li>`).join("")}</ul>`:""}
+    `],
+    ["mitos","Mitos & Verdades",`
+      <ul>${(drug.topics.mitos||[]).map(m=>`<li><strong>Mito:</strong> ${m.myth}<br><strong>Verdade:</strong> ${m.truth}</li>`).join("")}</ul>
+    `],
+    ["perguntas","Perguntas para conversar com seu médico/terapeuta",`
+      <ul>${(drug.topics.perguntas||[]).map(q=>`<li>${q}</li>`).join("")}</ul>
+    `],
+    ["faqs","FAQ da substância",`
+      <div id="drugFaqs">${(drug.topics.faqs||[]).map((f,i)=>`
+        <div class="faq-item" id="faq-${drug.id}-${i+1}">
+          <button class="faq-btn" aria-expanded="false"><span>${f.q}</span><span class="muted">+</span></button>
+          <p class="faq-ans">${f.a}</p>
+        </div>`).join("")}</div>
+    `],
+    ["recursos","Leituras e recursos",`
+      <ul>${(drug.topics.referencias||[]).map(r=>`<li>${r}</li>`).join("")}</ul>
+      <div class="toolbar" style="margin-top:12px">
+        <a class="btn primary" href="mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Quero conversar sobre " + drug.title)}" data-event="cta_click">Falar por email</a>
+        <a class="btn ghost" href="#/conhecimento" data-link>Voltar ao catálogo</a>
+      </div>
+    `],
+    ["glossario","Glossário rápido",`
+      <ul>
+        <li><strong>Entropia cortical:</strong> desordem/variedade na atividade neural, ↑ com psicodélicos clássicos.</li>
+        <li><strong>Receptor 5-HT2A:</strong> alvo dos psicodélicos (LSD/psilocibina).</li>
+        <li><strong>BDNF:</strong> fator neurotrófico associado à plasticidade.</li>
+        <li><strong>Dissociação:</strong> desconexão transitória corpo/realidade (com cetamina).</li>
+        <li><strong>IMAO:</strong> inibidores da monoamina oxidase; atenção a interações.</li>
+        <li><strong>Oxitocina:</strong> hormônio pró-social elevado no MDMA.</li>
+      </ul>
+    `]
+  ];
+
+  tocLinks.innerHTML = sections.map(s=>`<a href="#sec-${s[0]}">${s[1]}</a>`).join("");
+  article.innerHTML = `
+    <header style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px">
+      <h1 style="margin:0">${drug.title}</h1>
+      <p class="muted" style="margin:0">${drug.short}</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+        <span class="tag">Conteúdo educativo</span>
+        <span class="tag">Triagem obrigatória</span>
+        <span class="tag">Integração</span>
+      </div>
+    </header>
+    ${sections.map(([id,label,html])=>`
+      <section id="sec-${id}" class="reveal" style="padding-top:10px;margin-top:10px;border-top:1px solid var(--line)">
+        <h2 style="margin:8px 0 6px">${label}</h2>
+        ${html}
+      </section>
+    `).join("")}
+    <p class="muted" style="font-size:13px;margin-top:16px">
+      Nota: Este material é informativo e não substitui consulta médica. Se estiver em crise ou em perigo imediato, procure ajuda emergencial.
+    </p>
+  `;
+
+  // Ativar acordeões das FAQs da droga
+  article.querySelectorAll('#drugFaqs .faq-item').forEach(row=>{
+    const btn=row.querySelector('.faq-btn'), ans=row.querySelector('.faq-ans');
+    btn.addEventListener('click',()=>{
+      const open = ans.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(open));
+      btn.lastElementChild.textContent = open ? "−" : "+";
+      location.hash = `#/d/${drug.id}`;
+    });
+  });
+
+  // Navegação vizinha
+  const idx = DRUG_INDEX[drug.id];
+  const prevId = DRUG_IDS[idx-1], nextId = DRUG_IDS[idx+1];
+  neighbor.innerHTML = `
+    ${prevId?`<a class="btn small ghost" href="#/d/${prevId}" data-link>← ${KNOWLEDGE[DRUG_INDEX[prevId]].title}</a>`:""}
+    <a class="btn small" href="#/conhecimento" data-link>Catálogo</a>
+    ${nextId?`<a class="btn small ghost" href="#/d/${nextId}" data-link>${KNOWLEDGE[DRUG_INDEX[nextId]].title} →</a>`:""}
+  `;
+
+  // Âncoras internas suaves
+  article.querySelectorAll('a[href^="#sec-"]').forEach(a=>{
+    a.addEventListener("click",(e)=>{ e.preventDefault(); const t=document.querySelector(a.getAttribute("href")); if(t) t.scrollIntoView({behavior:"smooth"}); });
+  });
+
+  // SEO dinâmico
   document.title = `${drug.title} — ${SITE_NAME}`;
+  const canonicalEl = document.getElementById('canonical');
+  if(canonicalEl) canonicalEl.setAttribute('href', location.origin + location.pathname + '#/d/' + drug.id);
+  document.querySelector('meta[name="description"]').content = `${drug.short} — ${SITE_NAME}`;
+  document.querySelector('meta[property="og:title"]').content = `${drug.title} — ${SITE_NAME}`;
+  document.querySelector('meta[property="og:description"]').content = drug.short || DEFAULT_OG_DESC;
+  document.querySelector('meta[name="twitter:title"]').content = `${drug.title} — ${SITE_NAME}`;
+  document.querySelector('meta[name="twitter:description"]').content = drug.short || DEFAULT_OG_DESC;
+
+  applyReveal(app);
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
-document.addEventListener("click",(e)=>{const a=e.target.closest('a[data-link]'); if(a&&a.getAttribute("href")&&a.getAttribute("href").startsWith("#/")){e.preventDefault(); location.hash=a.getAttribute("href").replace(/^#/,"");}});
-const leadModal=document.getElementById("leadModal"), leadForm=document.getElementById("leadForm"), leadClose=document.getElementById("leadClose");
-function openLeadModal(){leadModal.style.display="flex"} function closeLeadModal(){leadModal.style.display="none"} leadClose.addEventListener("click",closeLeadModal); leadModal.addEventListener("click",(e)=>{if(e.target===leadModal)closeLeadModal();});
-leadForm.addEventListener("submit",(e)=>{e.preventDefault(); const payload={email:document.getElementById("leadEmail").value.trim(),cidade:document.getElementById("leadCidade").value.trim(),assunto:document.getElementById("leadAssunto").value,lgpd:document.getElementById("leadLGPD").checked,ts:new Date().toISOString()}; if(!payload.email||!payload.cidade||!payload.assunto||!payload.lgpd){alert("Preencha os campos obrigatórios"); return;} try{const arr=JSON.parse(localStorage.getItem("nto_leads")||"[]"); arr.push(payload); localStorage.setItem("nto_leads",JSON.stringify(arr));}catch{} closeLeadModal(); location.hash="/mapa";});
+
+/* ===== Inicialização global ===== */
+document.getElementById("logo").src = LOGO_URL;
+document.getElementById("year").textContent = new Date().getFullYear();
+
+// Delegação de cliques (links internos '#/')
+document.addEventListener("click", (e) => {
+  const anchor = e.target.closest('a[data-link]');
+  if(anchor && anchor.getAttribute("href") && anchor.getAttribute("href").startsWith("#/")){
+    e.preventDefault();
+    location.hash = anchor.getAttribute("href").replace(/^#/, "");
+  }
+});
+
+// CTA popup “Quero Alívio”
+const leadModal = document.getElementById("leadModal");
+const leadForm  = document.getElementById("leadForm");
+const leadClose = document.getElementById("leadClose");
+function openLeadModal(){ leadModal.style.display = "flex"; }
+function closeLeadModal(){ leadModal.style.display = "none"; }
+leadClose.addEventListener("click", closeLeadModal);
+leadModal.addEventListener("click",(e)=>{ if(e.target===leadModal) closeLeadModal(); });
+leadForm.addEventListener("submit",(e)=>{
+  e.preventDefault();
+  const payload = {
+    nome: document.getElementById("leadNome").value.trim(),
+    email: document.getElementById("leadEmail").value.trim(),
+    cidade: document.getElementById("leadCidade").value.trim(),
+    whats: document.getElementById("leadWhats").value.trim(),
+    assunto: document.getElementById("leadAssunto").value,
+    lgpd: document.getElementById("leadLGPD").checked,
+    ts: new Date().toISOString()
+  };
+  if(!payload.email || !payload.cidade || !payload.assunto || !payload.lgpd){ toast("Preencha todos os campos obrigatórios."); return; }
+  try{
+    const arr = JSON.parse(localStorage.getItem("nto_leads")||"[]");
+    arr.push(payload);
+    localStorage.setItem("nto_leads", JSON.stringify(arr));
+  }catch{}
+  trackEvent('alivio_form_submit', { assunto: payload.assunto });
+  toast("Obrigado! Vamos te responder em breve.");
+  closeLeadModal();
+  // Abre mapa após coleta
+  location.hash = "/mapa";
+});
+
+// Header CTA (fallback)
+["ctaHeader","ctaFloat"].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el){ el.addEventListener("click",(e)=>{ e.preventDefault(); openLeadModal(); }); }
+});
+
+// Help: reduced motion telemetry already on renderHome
+
+// Ano e favicon
+(function(){
+  let l = document.querySelector("link[rel='icon']");
+  if(!l){ l = document.createElement("link"); l.rel = "icon"; document.head.appendChild(l); }
+  l.href = LOGO_URL;
+})();
+
+/* ===== Scrollspy do topo (Home nav highlight) ===== */
+function initScrollSpy(){
+  const spyLinks = Array.from(document.querySelectorAll('.nav-links a'));
+  const sectionIds = ["hero","mensagem","mapa","posts","conhecimento","galeria","projetos","observatorio","sobre","faq","recomendado","glossario","novidades","legal","contato"];
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+  function onScrollSpy(){
+    let activeLink = spyLinks.find(a=>a.getAttribute('href')==="#/") || spyLinks[0];
+    const y = window.scrollY + 120;
+    sections.forEach((sec) => { if(sec && sec.offsetTop <= y) {
+      const href = "#/"+sec.id;
+      const match = spyLinks.find(a => a.getAttribute('href')===href);
+      if(match) activeLink = match;
+    }});
+    spyLinks.forEach(a => a.classList.remove('active'));
+    activeLink && activeLink.classList.add('active');
+  }
+  window.addEventListener('scroll', onScrollSpy, { passive:true });
+  onScrollSpy();
+}
+document.addEventListener('DOMContentLoaded', initScrollSpy);
 </script>
 
+<!-- JSON-LD básico -->
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"MedicalOrganization","name":"NTO Brasil","url":"https://ntobr.com","logo":"https://ntobr.com/logo.png","address":{"@type":"PostalAddress","addressCountry":"BR"},"description":"Instituto clínico e multidisciplinar focado em terapias psicodélicas com ciência, ética e cuidado"}
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "MedicalOrganization",
+      "name": "NTO Brasil",
+      "url": "https://ntobr.com",
+      "logo": "https://ntobr.com/logo.png",
+      "address": { "@type": "PostalAddress", "addressCountry": "BR" },
+      "description": "Instituto clínico e multidisciplinar focado em terapias psicodélicas com ciência, ética e cuidado",
+      "sameAs": [
+        "https://www.instagram.com/nto_oficial",
+        "https://www.youtube.com/channel/NTObrasil"
+      ]
+    },
+    {
+      "@type": "ItemList",
+      "name": "Psicodélicos em estudo",
+      "itemListElement": [
+        { "@type": "Drug", "name": "Cetamina", "description": "Alívio rápido em depressão resistente com infusão/spray supervisionado." },
+        { "@type": "Drug", "name": "Ayahuasca", "description": "Decocção tradicional amazônica com uso ritual e potencial impacto em bem-estar." },
+        { "@type": "Drug", "name": "Ibogaína", "description": "Alcaloide africano em estudo para dependência química (desintoxicação assistida)." },
+        { "@type": "Drug", "name": "Psilocibina", "description": "Triptamina investigada para depressão/ansiedade." },
+        { "@type": "Drug", "name": "MDMA", "description": "Empatógeno estudado como coadjuvante em psicoterapia de TEPT." },
+        { "@type": "Drug", "name": "LSD", "description": "Clássico psicodélico investigado para ansiedade/cefaleia em salvas." }
+      ]
+    }
+  ]
+}
 </script>
 </body>
 </html>
+
+

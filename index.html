@@ -35,6 +35,7 @@
   @media(min-width:768px){ .cols-2{grid-template-columns:repeat(2,1fr)} }
   @media(min-width:1024px){ .cols-3{grid-template-columns:repeat(3,1fr)} }
 
+  /* animação de entrada com fallback controlado por JS */
   .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
   .reveal.is-visible{opacity:1;transform:none}
 
@@ -242,13 +243,13 @@
 <a id="ctaFloat" class="floating-cta" href="#">🫶 Quero Alívio</a>
 
 <script>
-  // ===== Config variáveis (troque aqui) =====
+  // ===== Config (ajuste aqui) =====
   const SITE_NAME = "NTO – Brasil";
-  const LOGO_URL  = "https://via.placeholder.com/160x160.png?text=NTO"; // troque pelo seu arquivo/URL
+  const LOGO_URL  = "./logo.png"; // ✅ usa o arquivo da raiz do repo
   const CONTACT_EMAIL = "admn@ntobr.com";
   const SOCIAL = {
-    instagramEmbedUrl: "https://www.instagram.com/p/Ck000000000/embed",
-    youtubeEmbedUrl:   "https://www.youtube.com/embed/dQw4w9WgXcQ"
+    instagramEmbedUrl: "https://www.instagram.com/p/Ck000000000/embed", // troque pelo seu embed
+    youtubeEmbedUrl:   "https://www.youtube.com/embed/dQw4w9WgXcQ"      // troque por vídeo/playlist
   };
   const MAP_URL = "https://www.google.com/maps/d/embed?mid=1KD5QHhxyVWlFX7BDM0aoNufixLILENU&usp=sharing";
   const KNOWLEDGE = [
@@ -259,9 +260,9 @@
     { id:"ayahuasca",  title:"Ayahuasca",  text:"Uso religioso protegido no Brasil. Contextos ritualísticos." },
     { id:"mdma",       title:"MDMA",       text:"Estudos em TEPT. Psicoterapia assistida." },
   ];
-  // =========================================
+  // ================================
 
-  // SEO / favicon
+  // Título e favicon
   document.title = SITE_NAME + " — Psicodélicos com ciência, ética e cuidado";
   (function(){
     let l = document.querySelector("link[rel='icon']");
@@ -315,7 +316,7 @@
     });
   });
 
-  // Reveal
+  // Reveal com fallback (evita página em branco)
   function applyReveal(){
     const nodes = document.querySelectorAll(".reveal");
     if(!("IntersectionObserver" in window)){
@@ -332,7 +333,6 @@
     }, { rootMargin:"0px 0px -10% 0px", threshold:0.05 });
 
     nodes.forEach(el=>{
-      // revela imediato se já estiver no viewport
       const r = el.getBoundingClientRect(), vh = innerHeight || document.documentElement.clientHeight;
       if(r.top < vh*0.9 && r.bottom > 0){ el.classList.add("is-visible"); }
       else { io.observe(el); }

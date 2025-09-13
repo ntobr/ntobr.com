@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
@@ -308,6 +309,7 @@
   @media(max-width: 600px){
     .help-bar{ display: block; }
     #ctaFloat{ bottom: 88px; }
+    .toc{ display: none !important; }
   }
   /* Footer */
   footer{
@@ -429,79 +431,177 @@ Contexto rápido:
 - Objetivo: reduzir fricção emocional e cognitiva; aumentar sensação de segurança; facilitar contato; educar com responsabilidade; fortalecer confiança na marca.
 
 Entrada:
-- Receba o arquivo `index.html` atual (SPA com hash-router, páginas para cada substância e home com seções).
-- O código contém: layout, conteúdo educativo, FAQ, catálogo com rotas /d/:id (cetamina, psilocibina, MDMA, ibogaína, LSD, ayahuasca), CTAs e microinterações.
+Receba o arquivo index.html atual (SPA com hash-router, páginas para cada substância e home com seções).
 
-SEU TRABALHO — ENTREGUE UMA NOVA VERSÃO DO `index.html` PRONTA PARA PRODUÇÃO, MANTENDO O QUE FUNCIONA E MELHORANDO TUDO MAIS:
 
-1) VOZ, PERSONALIDADE & HUMANIDADE
-- Reescreva microcopys para aumentar empatia, clareza e antijargão (sem promessas indevidas).
-- Use tom caloroso, respeitoso, informativo, com frases curtas e escaneáveis.
-        Evite “marketing duro”.
-- Inclua mensagens que validam o sofrimento sem julgamentos, reforçam autonomia e explicam limites com transparência.
-- Mantenha linguagem inclusiva e acessível (WCAG), evitando gatilhos desnecessários.
-        Ofereça ajuda imediata com diretrizes de crise (sem substituir serviços de emergência).
+O código contém: layout, conteúdo educativo, FAQ, catálogo com rotas /d/:id (cetamina, psilocibina, MDMA, ibogaína, LSD, ayahuasca), CTAs e microinterações.
 
-2) UX & FLUXOS DE AJUDA
-- Faça “primeiro passo” cristalino, com CTAs consistentes (email/agenda) e redundância de acesso (header, hero, rodapé, seções).
-- Adicione uma barra de “Ajuda agora” persistente em mobile com CTA e link de recursos de crise (visual discreto).
-- Crie “modo foco” para leitura de páginas de substâncias (TOC fixo/ancoras; progresso de leitura; voltar ao catálogo).
-- Simplifique navegação (hierarquia, estado ativo, rota ao voltar).
-        Mantenha hash-router.
 
-3) CONTEÚDO CLÍNICO (PÁGINAS DE SUBSTÂNCIAS)
-- Para cada substância, amplie: mecanismos, evidências (nível/força), indicações/limitações, preparo, sessão, integração, riscos/contraindicações, interações comuns (antidepressivos, IMAO, cardiológicos), diferenças legais no Brasil, leituras úteis (formato de referência curto).
-- Estruture com sumário ancorado, cartões de “atenção” (warning), “nota” (note), “mitos & verdades”, e “perguntas para conversar com seu médico/terapeuta”.
-- Inclua checklists imprimíveis (preparo/integração) e uma versão “resumo em 1 minuto”.
-- Traga um mini-glossário no final (entropia cortical, 5-HT2A, BDNF, dissociação etc).
+SEU TRABALHO — ENTREGUE UMA NOVA VERSÃO DO index.html PRONTA PARA PRODUÇÃO, MANTENDO O QUE FUNCIONA E MELHORANDO TUDO MAIS:
+VOZ, PERSONALIDADE & HUMANIDADE
 
-4) ACESSIBILIDADE & COMFORTO
-- Contraste AA/AAA, tamanhos e alturas confortáveis, foco visível, aria-labels, navegação por teclado, “pular para conteúdo”.
-- Preferências do usuário: respeitar prefers-reduced-motion; oferecer “reduzir animações” e “alto contraste” no header.
-- Texto legível em devices de baixa densidade e largura reduzida.
 
-5) SISTEMA VISUAL & CORES
-- Preserve a base, mas refine paleta (cores de feedback claras: ok, alerta, risco).
-- Introduza “Design Tokens” no :root (spacing, radius, sombras, gradientes), compondo estilo coeso.
-- Melhorar estados (hover/active/focus), skeletons e microanimações (discretas).
+Reescreva microcopys para aumentar empatia, clareza e antijargão (sem promessas indevidas).
 
-6) MICROINTERAÇÕES & CONFIANÇA
-- Toasts e feedbacks verbosos (ex.: “Email copiado. Estamos aqui com você.”).
-- Indicadores de carregamento dos iframes (mapa, IG, YouTube) com fallback.
-- Conteúdo offline-friendly básico: mensagens quando embeds falham.
 
-7) SEO, SHARE & ANALYTICS
-- Melhorar metas (title/description por rota), Open Graph e Twitter Cards por substância (nome + resumo).
-- Schema.org: MedicalEntity/Drug (resumo educativo), Organization.
-- Incluir JSON-LD mínimo e atualização da URL canonical (mesmo em hash-router).
-- Inserir hooks de analytics (padrão: data-attrs) sem amarrar a libs específicas.
-        Mapear eventos: cta_click, page_view, faq_toggle, knowledge_search.
+Use tom caloroso, respeitoso, informativo, com frases curtas e escaneáveis.
 
-8) PERFORMANCE
-- Preload/decodificação do logo; `loading="lazy"` em imagens fora de viewport; CSS crítico inline + minificação simples; JS de interação sem frameworks.
-- Evitar layout shift (dimensões fixas nos iframes/imagens).
-- Debounce na busca do catálogo.
-        Armazenar última consulta em localStorage para continuidade.
+ Evite “marketing duro”.
 
-9) TEXTO DE SEGURANÇA & LIMITES
-- Avisos claros de que material é educativo e não substitui consulta médica; destacar quando algo é “em pesquisa”.
-- “Se estiver em perigo imediato, procure emergência local”.
-        Inclua link configurável de recursos de crise no Brasil.
 
-10) ENTREGÁVEL
-- ENTREGUE **UM ARQUIVO ÚNICO** `index.html`, autônomo (sem dependências externas além dos embeds).
-- O código deve permanecer vanilla JS/CSS/HTML.
-        Mantenha roteamento hash.
-- Não remova seções existentes; reorganize e melhore com comentários `// UX:` explicando decisões.
-- Comentários no topo: changelog e “como manter”.
-- Inclua testes manuais: checklist de QA (acessibilidade, navegação, CTAs, impressão).
-- Garanta que todo conteúdo novo esteja em português claro, com ortografia consistente.
+Inclua mensagens que validam o sofrimento sem julgamentos, reforçam autonomia e explicam limites com transparência.
+
+
+Mantenha linguagem inclusiva e acessível (WCAG), evitando gatilhos desnecessários.
+
+ Ofereça ajuda imediata com diretrizes de crise (sem substituir serviços de emergência).
+
+
+UX & FLUXOS DE AJUDA
+
+
+Faça “primeiro passo” cristalino, com CTAs consistentes (email/agenda) e redundância de acesso (header, hero, rodapé, seções).
+
+
+Adicione uma barra de “Ajuda agora” persistente em mobile com CTA e link de recursos de crise (visual discreto).
+
+
+Crie “modo foco” para leitura de páginas de substâncias (TOC fixo/ancoras; progresso de leitura; voltar ao catálogo).
+
+
+Simplifique navegação (hierarquia, estado ativo, rota ao voltar).
+
+ Mantenha hash-router.
+
+
+CONTEÚDO CLÍNICO (PÁGINAS DE SUBSTÂNCIAS)
+
+
+Para cada substância, amplie: mecanismos, evidências (nível/força), indicações/limitações, preparo, sessão, integração, riscos/contraindicações, interações comuns (antidepressivos, IMAO, cardiológicos), diferenças legais no Brasil, leituras úteis (formato de referência curto).
+
+
+Estruture com sumário ancorado, cartões de “atenção” (warning), “nota” (note), “mitos & verdades”, e “perguntas para conversar com seu médico/terapeuta”.
+
+
+Inclua checklists imprimíveis (preparo/integração) e uma versão “resumo em 1 minuto”.
+
+
+Traga um mini-glossário no final (entropia cortical, 5-HT2A, BDNF, dissociação etc).
+
+
+ACESSIBILIDADE & COMFORTO
+
+
+Contraste AA/AAA, tamanhos e alturas confortáveis, foco visível, aria-labels, navegação por teclado, “pular para conteúdo”.
+
+
+Preferências do usuário: respeitar prefers-reduced-motion; oferecer “reduzir animações” e “alto contraste” no header.
+
+
+Texto legível em devices de baixa densidade e largura reduzida.
+
+
+SISTEMA VISUAL & CORES
+
+
+Preserve a base, mas refine paleta (cores de feedback claras: ok, alerta, risco).
+
+
+Introduza “Design Tokens” no :root (spacing, radius, sombras, gradientes), compondo estilo coeso.
+
+
+Melhorar estados (hover/active/focus), skeletons e microanimações (discretas).
+
+
+MICROINTERAÇÕES & CONFIANÇA
+
+
+Toasts e feedbacks verbosos (ex.: “Email copiado. Estamos aqui com você.”).
+
+
+Indicadores de carregamento dos iframes (mapa, IG, YouTube) com fallback.
+
+
+Conteúdo offline-friendly básico: mensagens quando embeds falham.
+
+
+SEO, SHARE & ANALYTICS
+
+
+Melhorar metas (title/description por rota), Open Graph e Twitter Cards por substância (nome + resumo).
+
+
+Schema.org: MedicalEntity/Drug (resumo educativo), Organization.
+
+
+Incluir JSON-LD mínimo e atualização da URL canonical (mesmo em hash-router).
+
+
+Inserir hooks de analytics (padrão: data-attrs) sem amarrar a libs específicas.
+
+ Mapear eventos: cta_click, page_view, faq_toggle, knowledge_search.
+
+
+PERFORMANCE
+
+
+Preload/decodificação do logo; loading="lazy" em imagens fora de viewport; CSS crítico inline + minificação simples; JS de interação sem frameworks.
+
+
+Evitar layout shift (dimensões fixas nos iframes/imagens).
+
+
+Debounce na busca do catálogo.
+
+ Armazenar última consulta em localStorage para continuidade.
+
+
+TEXTO DE SEGURANÇA & LIMITES
+
+
+Avisos claros de que material é educativo e não substitui consulta médica; destacar quando algo é “em pesquisa”.
+
+
+“Se estiver em perigo imediato, procure emergência local”.
+
+ Inclua link configurável de recursos de crise no Brasil.
+
+
+ENTREGÁVEL
+
+
+ENTREGUE UM ARQUIVO ÚNICO index.html, autônomo (sem dependências externas além dos embeds).
+
+
+O código deve permanecer vanilla JS/CSS/HTML.
+
+ Mantenha roteamento hash.
+
+
+Não remova seções existentes; reorganize e melhore com comentários // UX: explicando decisões.
+
+
+Comentários no topo: changelog e “como manter”.
+
+
+Inclua testes manuais: checklist de QA (acessibilidade, navegação, CTAs, impressão).
+
+
+Garanta que todo conteúdo novo esteja em português claro, com ortografia consistente.
+
 
 Diretivas finais:
-- Respeite o rigor ético: sem recomendações individuais, sem promessas de cura, sem linguagem sensacionalista.
-- Otimize para mobile primeiro.
-- Mantenha a experiência acolhedora end-to-end, com ênfase em “pequenos passos fáceis”.
--->
+Respeite o rigor ético: sem recomendações individuais, sem promessas de cura, sem linguagem sensacionalista.
+
+
+Otimize para mobile primeiro.
+
+
+Mantenha a experiência acolhedora end-to-end, com ênfase em “pequenos passos fáceis”.
+
+ –>
+
+
 </head>
 <body>
 <a href="#hero" class="visually-hidden">Pular para conteúdo</a>
@@ -516,22 +616,19 @@ Diretivas finais:
       <a href="#/mapa" data-link>Mapa</a>
       <a href="#/posts" data-link>Posts</a>
       <a href="#/conhecimento" data-link>Conhecimento</a>
-      <a href="#/galeria" data-link>Galeria</a>
       <a href="#/sobre" data-link>Sobre</a>
       <a href="#/faq" data-link>FAQ</a>
       <a href="#/recomendado" data-link>Recomendações</a>
       <a href="#/contato" data-link>Contato</a>
     </nav>
-    <button id="toggleContrast" class="btn ghost small" type="button">Contraste</button>
-    <button id="toggleMotion" class="btn ghost small" type="button">Reduzir animação</button>
     <button class="hamb" id="hamb" aria-controls="mobile" aria-expanded="false">☰ Menu</button>
-    <a id="ctaHeader" class="btn small" href="#/mapa" data-link data-event="cta_click">QUERO ALÍVIO 🫶</a>
+    <a id="ctaHeader" class="btn small" href="#" data-event="cta_click">QUERO ALÍVIO 🫶</a>
   </div>
   <div class="container" id="mobile" aria-hidden="true"></div>
 </header>
 <main id="app" tabindex="-1" aria-live="polite"></main>
 <!-- CTA flutuante + topo + barra de ajuda -->
-<a id="ctaFloat" class="btn small" style="position:fixed;right:24px;bottom:24px;z-index:74" href="#/mapa" data-link data-event="cta_click">🫶 Quero Alívio</a>
+<a id="ctaFloat" class="btn small" style="position:fixed;right:24px;bottom:24px;z-index:74" href="#" data-event="cta_click">🫶 Quero Alívio</a>
 <div class="help-bar" id="helpBar">Em crise suicida ou perigo imediato? <a href="tel:188">Ligue 188 (CVV)</a> ou <a href="tel:192">192 (SAMU)</a>.</div>
 <button id="toTop" class="btn small" aria-label="Voltar ao topo">↑ Topo</button>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -576,7 +673,7 @@ Diretivas finais:
           responsabilidade, para que você recupere o fôlego e a esperança. Estamos com você — no seu ritmo, no seu tempo.
         </p>
         <div class="toolbar" style="gap:10px;justify-content:center">
-          <a id="ctaHero" class="btn" href="#/mapa" data-link data-event="cta_click">QUERO ALÍVIO 🫶</a>
+          <a id="ctaHero" class="btn" href="#" data-event="cta_click">QUERO ALÍVIO 🫶</a>
           <a class="btn secondary" href="#/conhecimento" data-link>Conhecimento</a>
           <a class="btn ghost" href="#/faq" data-link>FAQ</a>
         </div>
@@ -645,7 +742,6 @@ Diretivas finais:
         <p>Podem ocorrer sensações dissociativas que passam rápido. Resultados variam; nossa promessa é cuidado sério, transparente e humano.</p>
         <div class="toolbar">
           <a id="ctaMensagem" class="btn" href="#/mapa" data-link data-event="cta_click">QUERO ALÍVIO 🫶</a>
-          <button id="printMsg" class="btn ghost">Imprimir Mensagem</button>
         </div>
       </div>
     </div>
@@ -688,30 +784,21 @@ Diretivas finais:
         <p class="muted" style="margin:0">Resumo responsável + links — escolha uma substância para saber mais</p>
       </div>
       <input id="searchInp" class="input" placeholder="Buscar psicodélico (ex: Cetamina)" aria-label="Buscar psicodélico" data-event="knowledge_search" />
-      <div id="cards" class="grid cols-3"></div>
+      <div id="cards"></div>
     </div>
   </section>
   <section id="galeria" class="section">
-    <div class="container">
-      <div class="reveal center" style="margin-bottom:20px">
-        <h2 style="font-size:28px;margin:0 0 8px">Imagens</h2>
-        <p class="muted" style="margin:0">Fotos de alto impacto visual</p>
-      </div>
       <div class="grid cols-3">
-        <figure class="card reveal" style="overflow:hidden;padding:0">
-          <img src="https://images.unsplash.com/photo-1520975922284-9f786f2de3aa?q=80&w=1400&auto=format&fit=crop" alt="Floresta amazônica" style="height:256px;width:100%;object-fit:cover" />
-          <figcaption class="muted center" style="padding:12px">Floresta amazônica</figcaption>
+        <figure class="reveal" style="overflow:hidden;padding:0">
+          <img src="https://images.unsplash.com/photo-1520975922284-9f786f2de3aa?q=80&w=1400&auto=format&fit=crop" alt="Floresta amazônica" style="height:400px;width:100%;object-fit:cover" />
         </figure>
-        <figure class="card reveal" style="overflow:hidden;padding:0">
-          <img src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1400&auto=format&fit=crop" alt="Céu estrelado" style="height:256px;width:100%;object-fit:cover" />
-          <figcaption class="muted center" style="padding:12px">Céu estrelado</figcaption>
+        <figure class="reveal" style="overflow:hidden;padding:0">
+          <img src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1400&auto=format&fit=crop" alt="Céu estrelado" style="height:400px;width:100%;object-fit:cover" />
         </figure>
-        <figure class="card reveal" style="overflow:hidden;padding:0">
-          <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1400&auto=format&fit=crop" alt="Montanhas" style="height:256px;width:100%;object-fit:cover" />
-          <figcaption class="muted center" style="padding:12px">Montanhas</figcaption>
+        <figure class="reveal" style="overflow:hidden;padding:0">
+          <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1400&auto=format&fit=crop" alt="Montanhas" style="height:400px;width:100%;object-fit:cover" />
         </figure>
       </div>
-    </div>
   </section>
   <section id="sobre" class="section">
     <div class="container">
@@ -790,6 +877,27 @@ Diretivas finais:
           </button>
           <p class="faq-ans" role="region">As sessões incluem uma preparação prévia, a experiência monitorada em ambiente controlado e uma integração terapêutica após a sessão para dar sentido ao que foi vivenciado.</p>
         </div>
+        <div class="faq-item">
+          <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
+            <span>Preciso de encaminhamento médico?</span>
+            <span class="muted">+</span>
+          </button>
+          <p class="faq-ans" role="region">Não é necessário encaminhamento formal; você pode entrar em contato diretamente. Caso já esteja em tratamento com outro profissional, é importante mantê-lo informado e, se possível, integrar as abordagens.</p>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
+            <span>Posso dirigir ou trabalhar no dia da sessão?</span>
+            <span class="muted">+</span>
+          </button>
+          <p class="faq-ans" role="region">Não. No dia da sessão, planeje descansar e evite atividades que exijam atenção (como dirigir ou tomar decisões importantes). Os efeitos da cetamina podem deixar você sonolento ou com os reflexos alterados por algumas horas.</p>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
+            <span>E se a cetamina não funcionar para mim?</span>
+            <span class="muted">+</span>
+          </button>
+          <p class="faq-ans" role="region">Nem todos respondem da mesma maneira. Se não houver melhora após as sessões iniciais, a equipe irá reavaliar o plano terapêutico com você — isso pode incluir ajustar doses, aumentar o número de sessões ou considerar outras abordagens. O importante é continuarmos acompanhando de perto e buscando alternativas em conjunto.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -802,6 +910,8 @@ Diretivas finais:
       <div class="card reveal" style="max-width:800px;margin:0 auto">
         <ul style="margin:0;padding:0 0 0 20px;line-height:1.6">
           <li><strong><a href="https://www.netflix.com/title/80229847" target="_blank" rel="noopener noreferrer">Como Mudar sua Mente</a></strong> – série documental (Netflix, 2022). O autor Michael Pollan explora a história e o uso terapêutico de psicodélicos (LSD, psilocibina, MDMA e mescalina) em quatro episódios envolventes.</li>
+          <li><strong><a href="https://www.netflix.com/br/title/81183477" target="_blank" rel="noopener noreferrer">Fungos Fantásticos</a></strong> – documentário (Netflix, 2019). Um mergulho visualmente deslumbrante no reino dos cogumelos e seu impacto na saúde, cultura e ecologia, incluindo seu potencial terapêutico.</li>
+          <li><strong><a href="https://maps.org/" target="_blank" rel="noopener noreferrer">MAPS (Multidisciplinary Association for Psychedelic Studies)</a></strong> – organização líder em pesquisas sobre psicoterapia assistida por psicodélicos, com um acervo extenso de artigos e recursos educacionais (conteúdo em inglês).</li>
         </ul>
       </div>
     </div>
@@ -1356,11 +1466,6 @@ Diretivas finais:
         }
       };
     }
-    // Imprimir mensagem institucional
-    const printBtn = document.getElementById('printMsg');
-    if(printBtn){
-      printBtn.onclick = () => window.print();
-    }
     // Carregar embeds (mapa, Instagram, YouTube)
     loadIframe('mapEmbed', MAP_URL);
     loadIframe('igEmbed', SOCIAL.instagramEmbedUrl);
@@ -1368,21 +1473,39 @@ Diretivas finais:
     // Renderizar cartões de Conhecimento
     const cardsWrap = document.getElementById("cards");
     function renderCards(list){
-      cardsWrap.innerHTML = "";
-      list.forEach((k, i) => {
-        const art = document.createElement("article");
-        art.className = "card reveal";
-        art.style.transitionDelay = (i * 50) + "ms";
-        art.innerHTML = `
-          <h3 style="margin:0 0 8px">${k.title}</h3>
-          <p class="muted" style="margin:0 0 10px">${k.short}</p>
-          <div class="toolbar" style="justify-content:space-between">
-            <span class="muted" style="font-size:12px">${(k.aliases || []).slice(0,2).join(" · ")}</span>
-            <a class="btn small" href="#/d/${k.id}" data-link>Saiba mais</a>
-          </div>
-        `;
-        cardsWrap.appendChild(art);
-      });
+      const clinicos = list.filter(k => !k.id || ["cetamina","ayahuasca","ibogaina"].includes(k.id));
+      const pesquisa = list.filter(k => k.id && !["cetamina","ayahuasca","ibogaina"].includes(k.id));
+      let html = "";
+      if(clinicos.length){
+        html += `<h3 style="margin:16px 0 8px">Em uso clínico</h3><div class="grid cols-3" style="margin-bottom:24px">`;
+        clinicos.forEach((k, i) => {
+          html += `<article class="card reveal" style="transition-delay:${i * 50}ms">
+            <h3 style="margin:0 0 8px">${k.title}</h3>
+            <p class="muted" style="margin:0 0 10px">${k.short}</p>
+            <div class="toolbar" style="justify-content:space-between">
+              <span class="muted" style="font-size:12px">${(k.aliases || []).slice(0,2).join(" · ")}</span>
+              <a class="btn small" href="#/d/${k.id}" data-link>Saiba mais</a>
+            </div>
+          </article>`;
+        });
+        html += `</div>`;
+      }
+      if(pesquisa.length){
+        html += `<h3 style="margin:16px 0 8px">Em pesquisa</h3><div class="grid cols-3">`;
+        pesquisa.forEach((k, j) => {
+          const i = j + (clinicos.length ? 1 : 0);
+          html += `<article class="card reveal" style="transition-delay:${i * 50}ms">
+            <h3 style="margin:0 0 8px">${k.title}</h3>
+            <p class="muted" style="margin:0 0 10px">${k.short} <span class="tag" style="background:#fff3cd;border:1px solid #ffecb5;color:#856404;margin-left:4px">Pesquisa</span></p>
+            <div class="toolbar" style="justify-content:space-between">
+              <span class="muted" style="font-size:12px">${(k.aliases || []).slice(0,2).join(" · ")}</span>
+              <a class="btn small" href="#/d/${k.id}" data-link>Saiba mais</a>
+            </div>
+          </article>`;
+        });
+        html += `</div>`;
+      }
+      cardsWrap.innerHTML = html;
       applyReveal(cardsWrap);
     }
     renderCards(KNOWLEDGE);
@@ -1524,7 +1647,7 @@ Diretivas finais:
     article.innerHTML = `
       <header style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px">
         <h1 style="margin:0">${drug.title}</h1>
-        <p class="muted" style="margin:0">${drug.short}</p>
+        <p class="muted" style="margin:0">${drug.short}${["psilocibina","mdma","lsd"].includes(drug.id) ? ' <span class="tag" style="background:#fff3cd;border:1px solid #ffecb5;color:#856404">Pesquisa</span>' : ''}</p>
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
           <span class="tag">Conteúdo educativo</span>
           <span class="tag">Triagem obrigatória</span>
@@ -1560,7 +1683,7 @@ Diretivas finais:
       btnPrint.onclick = () => window.print();
     }
     // Rolagem suave para âncoras internas
-    article.querySelectorAll('a[href^="#sec-"]').forEach(a => {
+    document.querySelectorAll('a[href^="#sec-"]').forEach(a => {
       a.addEventListener("click", (e) => {
         e.preventDefault();
         const target = document.querySelector(a.getAttribute("href"));
@@ -1594,30 +1717,48 @@ Diretivas finais:
       const el = document.getElementById(id);
       if(el) el.href = mailto;
     });
-    // Botões de acessibilidade (alto contraste, reduzir animação)
-    const contrastBtn = document.getElementById("toggleContrast");
-    const motionBtn = document.getElementById("toggleMotion");
-    if(contrastBtn){
-      contrastBtn.onclick = () => {
-        const hc = document.documentElement.classList.toggle("high-contrast");
-        contrastBtn.textContent = hc ? "Contraste normal" : "Contraste";
-      };
-    }
-    if(motionBtn){
-      motionBtn.onclick = () => {
-        const rm = document.documentElement.classList.toggle("reduce-motion");
-        motionBtn.textContent = rm ? "Ativar animação" : "Reduzir animação";
-      };
-    }
   })();
   // Delegação de cliques (links internos com data-link)
   document.addEventListener("click", (e) => {
     const anchor = e.target.closest('a[data-link]');
     if(anchor && anchor.getAttribute("href") && anchor.getAttribute("href").startsWith("#/")){
       e.preventDefault();
-      location.hash = anchor.getAttribute("href").replace(/^#/, "");
+      const targetHash = anchor.getAttribute("href").replace(/^#/, "");
+      if(location.hash === "#" + targetHash){
+        router();
+      } else {
+        location.hash = targetHash;
+      }
     }
   });
+  // Evento CTA alívio e popup
+  const ctaHeaderEl = document.getElementById("ctaHeader");
+  const ctaHeroEl = document.getElementById("ctaHero");
+  const ctaFloatEl = document.getElementById("ctaFloat");
+  function showPopup(){
+    document.getElementById("popupOverlay").style.display = "block";
+    document.getElementById("alivioPopup").style.display = "block";
+    const firstInput = document.querySelector("#alivioPopup input");
+    if(firstInput) firstInput.focus();
+  }
+  function hidePopup(){
+    document.getElementById("popupOverlay").style.display = "none";
+    document.getElementById("alivioPopup").style.display = "none";
+  }
+  if(ctaHeaderEl) ctaHeaderEl.addEventListener("click", e => { e.preventDefault(); showPopup(); });
+  if(ctaHeroEl) ctaHeroEl.addEventListener("click", e => { e.preventDefault(); showPopup(); });
+  if(ctaFloatEl) ctaFloatEl.addEventListener("click", e => { e.preventDefault(); showPopup(); });
+  const overlayEl = document.getElementById("popupOverlay");
+  const cancelBtn = document.getElementById("cancelPopup");
+  if(overlayEl) overlayEl.addEventListener("click", hidePopup);
+  if(cancelBtn) cancelBtn.addEventListener("click", hidePopup);
+  const alivioForm = document.querySelector("#alivioPopup form");
+  if(alivioForm) alivioForm.onsubmit = e => {
+    e.preventDefault();
+    hidePopup();
+    toast("Dados enviados. Em breve entraremos em contato.");
+    setTimeout(() => { location.hash = "/mapa"; }, 1200);
+  };
 </script>
 <script type="application/ld+json">
 {
@@ -1677,5 +1818,24 @@ Diretivas finais:
   ]
 }
 </script>
+<div id="popupOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index:99;"></div>
+<div id="alivioPopup" class="card" style="display:none; position:fixed; z-index:100; max-width:90%; width:400px; top:50%; left:50%; transform:translate(-50%, -50%);">
+  <h3 style="margin-top:0">Queremos te ajudar</h3>
+  <p class="muted">Por favor, informe alguns dados para agilizar o atendimento:</p>
+  <form>
+    <label style="display:block; margin-bottom:8px;">Nome:
+      <input type="text" required style="width:100%; padding:6px;" />
+    </label>
+    <label style="display:block; margin-bottom:8px;">Contato (Email ou Telefone):
+      <input type="text" required style="width:100%; padding:6px;" />
+    </label>
+    <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:10px;">
+      <button type="button" id="cancelPopup" class="btn ghost small">Cancelar</button>
+      <button type="submit" class="btn small">Enviar</button>
+    </div>
+  </form>
+</div>
 </body>
 </html>
+
+

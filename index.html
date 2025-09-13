@@ -275,6 +275,34 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
 
 /* Segurança: caso o markup do botão permaneça, esconda-o */
 #ctaHeader{ display: none !important; }
+
+/* ——— Colar a paisagem logo sob os cards (sem “buraco preto”) ——— */
+.hero { padding-bottom: 24px; }
+.hero + .interlude { margin-top: 0; }
+
+/* ——— Veil mais suave pra foto brilhar ——— */
+.interlude .veil{
+  background:
+    radial-gradient(900px 420px at 10% 10%, rgba(0,0,0,.25), transparent 60%),
+    radial-gradient(900px 420px at 90% 80%, rgba(0,0,0,.20), transparent 60%);
+}
+
+/* ——— Fade sutil entre hero e interlude ——— */
+.hero::after{
+  content:"";
+  display:block;
+  height: 24px;
+  background: linear-gradient(to bottom, rgba(9,11,18,0) 0%, rgba(9,11,18,.35) 100%);
+}
+
+/* ——— Garantias de cobertura da imagem ——— */
+.interlude{
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+
 </style>
    <link
   rel="stylesheet"
@@ -406,10 +434,10 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
     </div>
   </section>
 
-  <!-- Interlúdio visual (full-bleed) -->
-  <section class="interlude" style="background-image:url('https://images.unsplash.com/photo-1495427513693-3f80f06a46b1?q=80&w=1800&auto=format&fit=crop');">
-    <span class="veil" aria-hidden="true"></span>
-  </section>
+<!-- Interlúdio inspirador (imagem definida via JS) -->
+<section id="interlude-hero" class="interlude">
+  <span class="veil" aria-hidden="true"></span>
+</section>
 
   <section id="mensagem" class="section page active">
     <div class="container">
@@ -672,6 +700,47 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
 
 <!-- ========================= SCRIPT ========================= -->
 <script>
+
+/* === Paisagens super-realistas (sua foto + sugestões) === */
+const LANDSCAPE_URLS = [
+  "./paisagem-hero.jpg", // sua imagem local (mesma pasta do index.html)
+  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1800&auto=format&fit=crop", // amanhecer nas montanhas
+  "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1800&auto=format&fit=crop", // céu dourado e picos
+  "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?q=80&w=1800&auto=format&fit=crop"  // vale com neblina ao pôr do sol
+];
+
+// Verifica se a imagem carrega
+function probeImage(url){
+  return new Promise(res=>{
+    const img = new Image();
+    img.onload = () => res(true);
+    img.onerror = () => res(false);
+    img.src = url;
+  });
+}
+
+// Escolhe uma disponível; rotaciona por dia entre as URLs
+async function pickLandscape(){
+  const dayIndex = Math.floor(Date.now()/86400000) % LANDSCAPE_URLS.length;
+  const order = [...LANDSCAPE_URLS.slice(dayIndex), ...LANDSCAPE_URLS.slice(0, dayIndex)];
+  for(const url of order){
+    if(await probeImage(url)) return url;
+  }
+  return LANDSCAPE_URLS[LANDSCAPE_URLS.length - 1]; // fallback
+}
+
+// Aplica no interlúdio da Home
+async function setHeroInterludeImage(){
+  const el = document.getElementById("interlude-hero");
+  if(!el || el.dataset.bgApplied) return;
+  el.dataset.bgApplied = "1";
+  const url = await pickLandscape();
+  el.style.backgroundImage = `url('${url}')`;
+}
+
+
+
+
 /* ===== CONFIG ===== */
 const SITE_NAME = "NTO – Brasil";
 const DEFAULT_DESC = "NTO Brasil — Alívio com dignidade para quem carrega um peso insuportável: ciência, ética e cuidado incluindo cetamina em contexto clínico.";
@@ -1145,8 +1214,11 @@ async function renderHome(){
   document.querySelector('meta[name="twitter:title"]').content = DEFAULT_OG_TITLE;
   document.querySelector('meta[name="twitter:description"]').content = DEFAULT_OG_DESC;
 
-  // Animações de revelação
-  applyReveal(app);
+// Aplica paisagem inspiradora no interlúdio
+await setHeroInterludeImage();
+
+// Animações de revelação
+applyReveal(app);
 
   // CTAs “Quero Alívio” → popup
   ["ctaHeader","ctaFloat","ctaHero","ctaMensagem"].forEach(id=>{
@@ -1657,15 +1729,5 @@ document.addEventListener('DOMContentLoaded', initScrollSpy);
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
 
 

@@ -1,28 +1,69 @@
+O QUE VOCE REALMENTE ACHA QUE VAI ACRESCENTAR PARA OS PACEINTES NO CODIGO INFRACITADO? PESQUISE E ACRESCENTE SEM RETIRAR NADA NO INDEX HTML 
+
+
+ME RESPONDA APENAS EM CODIGO 
+
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>NTO – Brasil</title>
-
+<title>NTO – Brasil — Psicodélicos com ciência, ética e cuidado</title>
+<meta name="description" content="NTO Brasil — Alívio com dignidade para quem carrega um peso insuportável: ciência, ética e cuidado incluindo cetamina em contexto clínico." />
+<meta property="og:title" content="NTO – Brasil" />
+<meta property="og:description" content="Ciência, ética e cuidado." />
+<meta property="og:type" content="website" />
+<meta name="theme-color" content="#10b981" />
+<link rel="preload" as="image" href="./logo.png" />
 <style>
   :root{
     --ink:#0f172a; --muted:#475569; --bg:#f8fafc; --card:#fff; --line:#e2e8f0;
     --grad: linear-gradient(90deg,#10b981,#06b6d4,#7c3aed);
+    --ring:#22d3ee; --brand:#10b981;
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    .reveal,.toast{transition:none!important}
+  }
   body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;background:var(--bg);color:var(--ink)}
   a{color:inherit}
+  img{max-width:100%;display:block}
+  /* foco acessível */
+  :focus-visible{outline:3px solid var(--ring);outline-offset:2px;border-radius:6px}
+
+  /* layout base */
   .container{max-width:1120px;margin:0 auto;padding:0 24px}
   .section{padding:64px 0}
+  .center{text-align:center}
+  .muted{color:var(--muted)}
   .card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
-  .btn{display:inline-flex;align-items:center;justify-content:center;padding:.8rem 1.4rem;border-radius:999px;font-weight:600;text-decoration:none;background:var(--grad);color:#fff}
+  .btn{display:inline-flex;align-items:center;justify-content:center;padding:.8rem 1.4rem;border-radius:999px;font-weight:600;text-decoration:none;background:var(--grad);color:#fff;border:0;cursor:pointer}
   .btn.secondary{background:#111827}
-  header{position:sticky;top:0;z-index:10;background:#ffffffcc;border-bottom:1px solid var(--line);backdrop-filter:saturate(1.2) blur(8px)}
+  .btn.ghost{background:#fff;color:#0f172a;border:1px solid var(--line)}
+  .btn.small{padding:.55rem 1rem;font-size:.95rem}
+  .btn:disabled{opacity:.6;cursor:not-allowed}
+
+  /* header */
+  header{position:sticky;top:0;z-index:50;background:#ffffffcc;border-bottom:1px solid var(--line);backdrop-filter:saturate(1.2) blur(8px)}
   .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
   .nav-links{display:flex;gap:14px;font-size:14px;flex-wrap:wrap}
-  .nav-links a{text-decoration:none;color:#334155}
+  .nav-links a{text-decoration:none;color:#334155;padding:6px 8px;border-radius:10px}
+  .nav-links a.active{background:#e2e8f0}
+  .hamb{display:none}
+  @media (max-width:840px){
+    .nav-links{display:none}
+    .hamb{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:#fff}
+    #mobile{display:none}
+    #mobile.open{display:flex;flex-direction:column;gap:10px;padding:14px 0}
+    #mobile a{padding:10px;border-radius:10px;text-decoration:none;color:#334155}
+  }
+
+  /* hero */
   .hero{padding:72px 0;text-align:center;position:relative;overflow:hidden}
   .hero::before{
     content:"";position:absolute;inset:-20% -10%;z-index:-1;
@@ -31,56 +72,84 @@
       radial-gradient(800px 450px at 110% 30%, #e9d5ff 0%, transparent 55%),
       radial-gradient(600px 380px at 50% 120%, #bae6fd 0%, transparent 60%);
   }
+
+  /* grids */
   .grid{display:grid;gap:16px}
   @media(min-width:768px){ .cols-2{grid-template-columns:repeat(2,1fr)} }
   @media(min-width:1024px){ .cols-3{grid-template-columns:repeat(3,1fr)} }
 
-  /* animação de entrada com fallback controlado por JS */
+  /* reveal */
   .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
   .reveal.is-visible{opacity:1;transform:none}
 
+  /* FAQ */
   .faq-item{border-bottom:1px solid var(--line)}
   .faq-btn{width:100%;text-align:left;padding:14px 0;display:flex;justify-content:space-between;align-items:center;background:none;border:0;cursor:pointer;font-weight:600}
   .faq-ans{margin:0 0 14px;color:var(--muted);display:none}
   .faq-ans.open{display:block}
 
-  .floating-cta{
-    position:fixed;right:24px;bottom:24px;z-index:50;background:var(--grad);color:#fff;
-    border-radius:999px;padding:12px 18px;text-decoration:none;font-weight:600;
-    box-shadow:0 12px 28px rgba(0,0,0,.2)
-  }
+  /* inputs */
+  .input{display:block;width:100%;max-width:520px;margin:0 auto 16px;padding:12px 16px;border:1px solid #cbd5e1;border-radius:999px}
+  .toolbar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
 
-  .input{display:block;width:100%;max-width:440px;margin:0 auto 16px;padding:10px 14px;border:1px solid #cbd5e1;border-radius:999px}
-  .muted{color:var(--muted)} .center{text-align:center}
+  /* iframe skeleton */
+  .skeleton{position:relative;overflow:hidden;background:#eef2f7;border-radius:16px;border:1px solid var(--line)}
+  .skeleton::after{
+    content:"";position:absolute;inset:0;transform:translateX(-100%);
+    background:linear-gradient(90deg,rgba(255,255,255,0) 0%, rgba(255,255,255,.6) 50%, rgba(255,255,255,0) 100%);
+    animation:shimmer 1.6s infinite;
+  }
+  @keyframes shimmer{100%{transform:translateX(100%)}}
+
+  /* toast */
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);
+    opacity:0;background:#111827;color:#fff;border-radius:14px;padding:10px 14px;z-index:60;
+    box-shadow:0 16px 40px rgba(0,0,0,.25);transition:.35s}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* back-to-top */
+  #toTop{position:fixed;right:24px;bottom:88px;z-index:55;display:none}
+  #toTop.show{display:inline-flex}
+
+  /* footer */
+  footer{padding:32px 0;border-top:1px solid var(--line);background:#fff}
+  .footer-cols{display:grid;gap:16px}
+  @media(min-width:768px){.footer-cols{grid-template-columns: 2fr 1fr 1fr}}
 </style>
 </head>
 <body>
+<a href="#home" class="visually-hidden"></a>
+
 <header>
   <div class="container nav">
-    <a href="#home" style="display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit">
+    <a href="#home" class="brand">
       <img id="logo" alt="Logo NTO" width="56" height="56" style="object-fit:contain" />
       <span style="font-size:22px;font-weight:700">BRASIL</span>
     </a>
-    <nav class="nav-links">
+
+    <nav class="nav-links" id="navLinks">
       <a href="#home">Home</a><a href="#mensagem">Mensagem</a><a href="#mapa">Mapa</a>
       <a href="#posts">Posts</a><a href="#conhecimento">Conhecimento</a><a href="#galeria">Galeria</a>
       <a href="#sobre">Sobre</a><a href="#faq">FAQ</a><a href="#contato">Contato</a>
     </nav>
-    <a id="ctaHeader" class="btn" href="#">QUERO ALÍVIO 🫶</a>
+
+    <button class="hamb" id="hamb" aria-controls="mobile" aria-expanded="false">☰ Menu</button>
+    <a id="ctaHeader" class="btn small" href="#">QUERO ALÍVIO 🫶</a>
   </div>
+  <div class="container" id="mobile" aria-hidden="true"></div>
 </header>
 
-<main id="home">
+<main id="home" tabindex="-1">
   <!-- HERO -->
-  <section class="hero">
+  <section class="hero" id="hero">
     <div class="container">
-      <div class="reveal">
-        <img id="heroLogo" alt="NTO Brasil" style="height:160px;width:auto;margin-bottom:24px" />
+      <div class="reveal center">
+        <img id="heroLogo" alt="NTO Brasil" style="height:160px;width:auto;margin:0 auto 24px" />
         <h1 style="font-size:36px;margin:0 0 12px">Ciência, ética e cuidado</h1>
         <p class="muted" style="max-width:720px;margin:0 auto 20px">
           Alívio com dignidade para quem carrega um peso insuportável. A NTO caminha com você.
         </p>
-        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <div class="toolbar">
           <a id="ctaHero" class="btn" href="#">QUERO ALÍVIO 🫶</a>
           <a class="btn secondary" href="#conhecimento">Conhecimento</a>
         </div>
@@ -95,24 +164,31 @@
         <h2 style="font-size:28px;margin:0 0 8px">Mensagem da NTO – Brasil</h2>
         <p class="muted" style="margin:0">Carinho, ciência e responsabilidade</p>
       </div>
-      <div class="card reveal" style="color:#334155;line-height:1.55">
+      <div class="card reveal" style="color:#334155;line-height:1.58">
         <p>
-          A NTO acredita que psicodélicos, quando usados com ciência, ética e carinho, podem abrir uma janela real de alívio — especialmente para quem já tentou “de tudo”.
+          A NTO acredita que psicodélicos, quando usados com ciência, ética e carinho, podem abrir uma janela real de alívio — especialmente para quem já tentou “de tudo” e continua carregando um peso insuportável.
           <strong> Não é fuga. É cuidado.</strong>
         </p>
         <p>
-          Psicodélicos, em ambiente clínico supervisionado, favorecem neuroplasticidade e flexibilizam padrões rígidos ligados à depressão, urgência suicida e dependência.
+          Psicodélicos são ferramentas terapêuticas que, em ambiente clínico supervisionado, favorecem neuroplasticidade e flexibilizam padrões rígidos de pensamento ligados à depressão, à urgência suicida e a certos quadros de dependência. No Brasil, a cetamina (e o spray de esketamina) já está disponível legalmente em contexto médico e pode oferecer alívio em horas ou poucos dias, enquanto o tratamento de base continua a agir.
         </p>
         <h3>Por que considerar agora</h3>
-        <p>A cetamina pode funcionar como “bote salva-vidas” enquanto o tratamento de base age.</p>
+        <p>Quando a dor aperta, esperar semanas por resposta é cruel. A cetamina pode funcionar como “bote salva-vidas”: reduz a intensidade do sofrimento e devolve fôlego para retomar o plano terapêutico.</p>
         <h3>Como cuidamos de você</h3>
         <ul>
-          <li><strong>Avaliação médica</strong> rigorosa.</li>
-          <li><strong>Sessões seguras</strong> (infusão/spray) com monitorização.</li>
-          <li><strong>Integração</strong> pós-sessão.</li>
-          <li><strong>Plano personalizado</strong>.</li>
+          <li><strong>Avaliação médica rigorosa</strong> para entender história, riscos e objetivos.</li>
+          <li><strong>Sessões seguras (infusão/spray)</strong> com monitorização e conforto.</li>
+          <li><strong>Integração pós-sessão</strong> para transformar a experiência em mudança de vida.</li>
+          <li><strong>Plano personalizado</strong>, combinando psicoterapia e ajustes quando indicado.</li>
         </ul>
-        <div style="padding-top:8px"><a id="ctaMensagem" class="btn" href="#">QUERO ALÍVIO 🫶</a></div>
+        <h3>O que você pode esperar</h3>
+        <p>Podem ocorrer sensações dissociativas que passam rápido. Resultados variam; nossa promessa é cuidado sério, transparente e humano.</p>
+
+        <div class="toolbar">
+          <a id="ctaMensagem" class="btn" href="#">QUERO ALÍVIO 🫶</a>
+          <button id="printMsg" class="btn ghost">Imprimir Mensagem</button>
+          <button id="copyEmail" class="btn ghost">Copiar Email</button>
+        </div>
       </div>
     </div>
   </section>
@@ -125,7 +201,7 @@
         <p class="muted" style="margin:0">Pontos públicos em Google My Maps</p>
       </div>
       <div class="card reveal">
-        <iframe id="mapEmbed" loading="lazy" style="width:100%;height:420px;border:0;border-radius:16px"></iframe>
+        <div class="skeleton" style="height:420px"><iframe id="mapEmbed" loading="lazy" style="width:100%;height:420px;border:0;border-radius:16px;opacity:0"></iframe></div>
       </div>
     </div>
   </section>
@@ -139,12 +215,8 @@
       </div>
       <div class="card reveal">
         <div class="grid cols-2">
-          <iframe id="igEmbed" title="Instagram" loading="lazy"
-                  style="width:100%;height:360px;border:1px solid var(--line);border-radius:12px"></iframe>
-          <iframe id="ytEmbed" title="YouTube" loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen
-                  style="width:100%;height:360px;border:1px solid var(--line);border-radius:12px"></iframe>
+          <div class="skeleton" style="height:360px"><iframe id="igEmbed" title="Instagram" loading="lazy" style="width:100%;height:360px;border:0;border-radius:12px;opacity:0"></iframe></div>
+          <div class="skeleton" style="height:360px"><iframe id="ytEmbed" title="YouTube" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;height:360px;border:0;border-radius:12px;opacity:0"></iframe></div>
         </div>
       </div>
     </div>
@@ -157,8 +229,8 @@
         <h2 style="font-size:28px;margin:0 0 8px">Conhecimento</h2>
         <p class="muted" style="margin:0">Resumo responsável + links</p>
       </div>
-      <input id="searchInp" class="input" placeholder="Buscar psicodélico" />
-      <div id="cards" class="grid cols-3"><!-- gerado por JS --></div>
+      <input id="searchInp" class="input" placeholder="Buscar psicodélico (ex: Cetamina)" aria-label="Buscar psicodélico" />
+      <div id="cards" class="grid cols-3"></div>
     </div>
   </section>
 
@@ -171,11 +243,11 @@
       </div>
       <div class="grid cols-3">
         <figure class="card reveal" style="overflow:hidden;padding:0">
-          <img src="https://images.unsplash.com/photo-1520975922284-9f786f2de3aa?q=80&w=1400&auto=format&fit=crop" alt="Floresta" style="height:256px;width:100%;object-fit:cover" />
+          <img src="https://images.unsplash.com/photo-1520975922284-9f786f2de3aa?q=80&w=1400&auto=format&fit=crop" alt="Floresta amazônica" style="height:256px;width:100%;object-fit:cover" />
           <figcaption class="muted center" style="padding:12px">Floresta amazônica</figcaption>
         </figure>
         <figure class="card reveal" style="overflow:hidden;padding:0">
-          <img src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1400&auto=format&fit=crop" alt="Céu" style="height:256px;width:100%;object-fit:cover" />
+          <img src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1400&auto=format&fit=crop" alt="Céu estrelado" style="height:256px;width:100%;object-fit:cover" />
           <figcaption class="muted center" style="padding:12px">Céu estrelado</figcaption>
         </figure>
         <figure class="card reveal" style="overflow:hidden;padding:0">
@@ -211,16 +283,16 @@
       </div>
       <div class="card reveal" style="max-width:720px;margin:0 auto">
         <div class="faq-item">
-          <button class="faq-btn"><span>A NTO atende urgências?</span><span class="muted">+</span></button>
-          <p class="faq-ans">Fazemos avaliação rápida para avaliar risco e opções clínicas.</p>
+          <button class="faq-btn" aria-expanded="false"><span>A NTO atende urgências?</span><span class="muted">+</span></button>
+          <p class="faq-ans" role="region">Fazemos avaliação rápida para avaliar risco e opções clínicas.</p>
         </div>
         <div class="faq-item">
-          <button class="faq-btn"><span>Cetamina é para todo mundo?</span><span class="muted">+</span></button>
-          <p class="faq-ans">Não. Exige triagem médica e pode ter contraindicações.</p>
+          <button class="faq-btn" aria-expanded="false"><span>Cetamina é para todo mundo?</span><span class="muted">+</span></button>
+          <p class="faq-ans" role="region">Não. Exige triagem médica e pode ter contraindicações.</p>
         </div>
         <div class="faq-item">
-          <button class="faq-btn"><span>Como funcionam as sessões?</span><span class="muted">+</span></button>
-          <p class="faq-ans">Preparação, sessão monitorada e integração pós-sessão.</p>
+          <button class="faq-btn" aria-expanded="false"><span>Como funcionam as sessões?</span><span class="muted">+</span></button>
+          <p class="faq-ans" role="region">Preparação, sessão monitorada e integração pós-sessão.</p>
         </div>
       </div>
     </div>
@@ -232,7 +304,7 @@
       <div class="reveal center" style="margin-bottom:20px">
         <h2 style="font-size:28px;margin:0 0 8px">Contato</h2>
       </div>
-      <div class="card reveal" style="text-align:center">
+      <div class="card reveal center">
         <p style="font-size:18px">Email: <a id="emailLink" href="#">admn@ntobr.com</a></p>
         <p class="muted" style="font-size:14px">Preferimos comunicação assíncrona, curta e objetiva. Para assuntos clínicos, evite dados sensíveis sem canal seguro.</p>
       </div>
@@ -240,15 +312,43 @@
   </section>
 </main>
 
+<!-- CTA flutuante + topo -->
 <a id="ctaFloat" class="floating-cta" href="#">🫶 Quero Alívio</a>
+<button id="toTop" class="btn small" aria-label="Voltar ao topo">↑ Topo</button>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<footer>
+  <div class="container footer-cols">
+    <div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <img src="./logo.png" alt="" width="40" height="40" />
+        <strong>NTO — Brasil</strong>
+      </div>
+      <p class="muted" style="margin:8px 0 0">© <span id="year"></span> NTO. Todos os direitos reservados.</p>
+    </div>
+    <div>
+      <strong>Mapa do site</strong>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+        <a href="#mensagem">Mensagem</a><a href="#mapa">Mapa</a><a href="#conhecimento">Conhecimento</a>
+        <a href="#faq">FAQ</a><a href="#contato">Contato</a>
+      </div>
+    </div>
+    <div>
+      <strong>Contato</strong>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+        <a id="footerMail" href="#">Email</a>
+      </div>
+    </div>
+  </div>
+</footer>
 
 <script>
-  // ===== Config (ajuste aqui) =====
+  // ===== CONFIG =====
   const SITE_NAME = "NTO – Brasil";
-  const LOGO_URL  = "./logo.png"; // ✅ usa o arquivo da raiz do repo
+  const LOGO_URL  = "./logo.png"; // arquivo na raiz do repo
   const CONTACT_EMAIL = "admn@ntobr.com";
   const SOCIAL = {
-    instagramEmbedUrl: "https://www.instagram.com/p/Ck000000000/embed", // troque pelo seu embed
+    instagramEmbedUrl: "https://www.instagram.com/p/Ck000000000/embed", // troque pelo embed real
     youtubeEmbedUrl:   "https://www.youtube.com/embed/dQw4w9WgXcQ"      // troque por vídeo/playlist
   };
   const MAP_URL = "https://www.google.com/maps/d/embed?mid=1KD5QHhxyVWlFX7BDM0aoNufixLILENU&usp=sharing";
@@ -260,7 +360,7 @@
     { id:"ayahuasca",  title:"Ayahuasca",  text:"Uso religioso protegido no Brasil. Contextos ritualísticos." },
     { id:"mdma",       title:"MDMA",       text:"Estudos em TEPT. Psicoterapia assistida." },
   ];
-  // ================================
+  // ===================
 
   // Título e favicon
   document.title = SITE_NAME + " — Psicodélicos com ciência, ética e cuidado";
@@ -274,15 +374,73 @@
   document.getElementById("logo").src = LOGO_URL;
   document.getElementById("heroLogo").src = LOGO_URL;
   const mailto = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Quero aliviar meu sofrimento")}`;
-  [["ctaHeader"],["ctaHero"],["ctaMensagem"],["ctaFloat"]].forEach(([id])=>{
-    const el=document.getElementById(id); if(el) el.href = mailto;
+  ["ctaHeader","ctaHero","ctaMensagem","ctaFloat","footerMail"].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.href = mailto;
   });
-  const emailLink=document.getElementById("emailLink"); if(emailLink){ emailLink.href=`mailto:${CONTACT_EMAIL}`; emailLink.textContent=CONTACT_EMAIL; }
+  const emailLink = document.getElementById("emailLink"); if(emailLink){ emailLink.href=`mailto:${CONTACT_EMAIL}`; emailLink.textContent=CONTACT_EMAIL; }
+  document.getElementById("year").textContent = new Date().getFullYear();
 
-  // Embeds
-  document.getElementById("igEmbed").src = SOCIAL.instagramEmbedUrl;
-  document.getElementById("ytEmbed").src = SOCIAL.youtubeEmbedUrl;
-  document.getElementById("mapEmbed").src = MAP_URL;
+  // Mobile menu
+  const hamb = document.getElementById("hamb");
+  const mobile = document.getElementById("mobile");
+  hamb.addEventListener("click", ()=>{
+    const open = !mobile.classList.contains("open");
+    mobile.classList.toggle("open", open);
+    mobile.setAttribute("aria-hidden", String(!open));
+    hamb.setAttribute("aria-expanded", String(open));
+    if(open){
+      mobile.innerHTML = document.getElementById("navLinks").innerHTML;
+    }
+  });
+
+  // Scrollspy: realça link ativo
+  const spyLinks = Array.from(document.querySelectorAll('.nav-links a'));
+  const sections = ['home','mensagem','mapa','posts','conhecimento','galeria','sobre','faq','contato']
+    .map(id=>document.getElementById(id));
+  function onScrollSpy(){
+    let active = spyLinks[0];
+    const y = window.scrollY + 120;
+    sections.forEach((s, i)=>{
+      if(s && s.offsetTop <= y) active = spyLinks[i] || active;
+    });
+    spyLinks.forEach(a=>a.classList.remove('active'));
+    active && active.classList.add('active');
+  }
+  window.addEventListener('scroll', onScrollSpy, {passive:true});
+  onScrollSpy();
+
+  // Back to top
+  const toTop = document.getElementById('toTop');
+  window.addEventListener('scroll', ()=>{
+    if(window.scrollY > 600) toTop.classList.add('show'); else toTop.classList.remove('show');
+  }, {passive:true});
+  toTop.addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+  // Toast helper
+  const toastEl = document.getElementById('toast');
+  function toast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    setTimeout(()=>toastEl.classList.remove('show'), 1800);
+  }
+
+  // Ações da Mensagem
+  document.getElementById('printMsg').addEventListener('click', ()=>{ window.print(); });
+  document.getElementById('copyEmail').addEventListener('click', async ()=>{
+    try{ await navigator.clipboard.writeText(CONTACT_EMAIL); toast('Email copiado'); }
+    catch{ toast('Não foi possível copiar'); }
+  });
+
+  // Embeds com skeleton fade-in
+  function loadIframe(id, url){
+    const iframe = document.getElementById(id);
+    iframe.src = url;
+    iframe.addEventListener('load', ()=>{ iframe.style.opacity = 1; iframe.parentElement.classList.remove('skeleton'); });
+  }
+  loadIframe('mapEmbed', MAP_URL);
+  loadIframe('igEmbed', SOCIAL.instagramEmbedUrl);
+  loadIframe('ytEmbed', SOCIAL.youtubeEmbedUrl);
 
   // Cards Conhecimento
   const cardsWrap = document.getElementById("cards");
@@ -291,7 +449,7 @@
     list.forEach((k,i)=>{
       const art = document.createElement("article");
       art.className="card reveal";
-      art.style.transitionDelay = (i*60)+"ms";
+      art.style.transitionDelay = (i*50)+"ms";
       art.innerHTML = `<h3 style="margin:0 0 8px">${k.title}</h3>
                        <p class="muted" style="margin:0">${k.text}</p>`;
       cardsWrap.appendChild(art);
@@ -306,17 +464,18 @@
     renderCards(!q ? KNOWLEDGE : KNOWLEDGE.filter(k=>k.title.toLowerCase().includes(q)));
   });
 
-  // FAQ toggle
-  document.querySelectorAll(".faq-item").forEach(row=>{
+  // FAQ toggle acessível
+  document.querySelectorAll(".faq-item").forEach((row)=>{
     const btn=row.querySelector(".faq-btn");
     const ans=row.querySelector(".faq-ans");
     btn.addEventListener("click", ()=>{
       const open=ans.classList.toggle("open");
+      btn.setAttribute("aria-expanded", String(open));
       btn.lastElementChild.textContent = open ? "−" : "+";
     });
   });
 
-  // Reveal com fallback (evita página em branco)
+  // Reveal com fallback (evita “página em branco”)
   function applyReveal(){
     const nodes = document.querySelectorAll(".reveal");
     if(!("IntersectionObserver" in window)){

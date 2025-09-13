@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -257,6 +258,23 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
 .table{ width:100%; border-collapse: collapse; }
 .table th, .table td{ border-bottom:1px solid var(--line); padding:10px; text-align:left; }
 .table th{ color:#cbd5e1; }
+
+/* === V7 tweak: logo grande na primeira vista + header responsivo === */
+#heroLogo{
+  height: clamp(240px, 52vh, 720px) !important;
+  width: auto;
+  max-width: 92vw;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,.6));
+}
+
+#logo{
+  width: clamp(56px, 9vw, 128px);
+  height: auto !important;
+  object-fit: contain;
+}
+
+/* Segurança: caso o markup do botão permaneça, esconda-o */
+#ctaHeader{ display: none !important; }
 </style>
 </head>
 
@@ -287,7 +305,9 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
       <a href="#/contato" data-link>Contato</a>
     </nav>
     <button class="hamb" id="hamb" aria-controls="mobile" aria-expanded="false">☰ Menu</button>
+    <!-- REMOVIDO: botão duplicado ao lado da logo no topo
     <a id="ctaHeader" class="btn small primary" href="#/mapa" data-link data-event="cta_click">QUERO ALÍVIO 🫶</a>
+    -->
   </div>
   <div class="container" id="mobile" aria-hidden="true"></div>
 </header>
@@ -1253,16 +1273,16 @@ async function renderHome(){
   if(recTbody){
     recTbody.innerHTML = RECOMENDADOS.map(r => `
       <tr>
-        <td><a href="${r.link}" target="_blank" rel="noopener noreferrer" data-event="recommended_content_click">${r.t}</a></td>
-        <td>${r.tipo}</td>
-        <td class="muted">${r.sin}</td>
+        <td><a href="\${r.link}" target="_blank" rel="noopener noreferrer" data-event="recommended_content_click">\${r.t}</a></td>
+        <td>\${r.tipo}</td>
+        <td class="muted">\${r.sin}</td>
       </tr>`).join("");
   }
 
   // Glossário
   const glTbody = document.getElementById('glossTable');
   if(glTbody){
-    glTbody.innerHTML = Object.entries(GLOSS).map(([k,v]) => `<tr><td><strong>${k}</strong></td><td class="muted">${v}</td></tr>`).join("");
+    glTbody.innerHTML = Object.entries(GLOSS).map(([k,v]) => `<tr><td><strong>\${k}</strong></td><td class="muted">\${v}</td></tr>`).join("");
   }
 
   // SEO padrão
@@ -1585,5 +1605,7 @@ document.addEventListener('DOMContentLoaded', initScrollSpy);
 </script>
 </body>
 </html>
+```
+
 
 

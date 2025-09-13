@@ -275,6 +275,12 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
 /* Segurança: caso o markup do botão permaneça, esconda-o */
 #ctaHeader{ display: none !important; }
 </style>
+   <link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin=""
+/>
 </head>
 
 <body>
@@ -439,19 +445,17 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
     </div>
   </section>
 
-  <section id="mapa" class="section">
-    <div class="container">
-      <div class="reveal center" style="margin-bottom:20px">
-        <h2 style="font-size:28px;margin:0 0 8px">Mapa Psicodélico</h2>
-        <p class="muted" style="margin:0">Pontos públicos em Google My Maps</p>
-      </div>
-      <div class="card reveal">
-        <div class="skeleton" style="height:420px">
-          <iframe id="mapEmbed" loading="lazy" style="width:100%;height:420px;border:0;border-radius:16px;opacity:0"></iframe>
-        </div>
-      </div>
+<section id="mapa" class="section">
+  <div class="container">
+    <div class="reveal center" style="margin-bottom:20px">
+      <h2 style="font-size:28px;margin:0 0 8px">Mapa Psicodélico</h2>
+      <p class="muted" style="margin:0">Clínicas (Leaflet + OpenStreetMap)</p>
     </div>
-  </section>
+    <div class="card reveal">
+      <div id="mapbr" style="width:100%;height:420px;border-radius:16px;overflow:hidden"></div>
+    </div>
+  </div>
+</section>
 
   <!-- Interlúdio -->
   <section class="interlude" style="background-image:url('https://images.unsplash.com/photo-1520975922284-9f786f2de3aa?q=80&w=1800&auto=format&fit=crop');">
@@ -1601,6 +1605,196 @@ document.addEventListener('DOMContentLoaded', initScrollSpy);
   ]
 }
 </script>
+   <script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""
+></script>
+<script>
+/**
+ * === NTO MAPA DE CLÍNICAS (Leaflet) ===
+ * - Dados em JSON (CLINICAS)
+ * - Funções: addClinics, clearPins, fitToPins, filterClinics
+ * - Integra sem conflito com sua SPA (MutationObserver)
+ */
+
+(function(){
+  // --- DADOS: edite/adicione quantas clínicas quiser ---
+  // Campos: id, nome, categoria, uf, cidade, lat, lng, whats, site, obs
+  const CLINICAS = [
+    {
+      id: "sp_nto_jardins",
+      nome: "NTO • Unidade Jardins",
+      categoria: "Cetamina",
+      uf: "SP",
+      cidade: "São Paulo",
+      lat: -23.561414, lng: -46.662935,
+      whats: "55 11 90000-0000",
+      site: "https://ntobr.com",
+      obs: "Infusão e integração"
+    },
+    {
+      id: "rj_nto_botafogo",
+      nome: "NTO • Unidade Botafogo",
+      categoria: "Cetamina",
+      uf: "RJ",
+      cidade: "Rio de Janeiro",
+      lat: -22.949646, lng: -43.186901,
+      whats: "55 21 90000-0000",
+      site: "https://ntobr.com",
+      obs: "Spray intranasal / IV"
+    },
+    {
+      id: "df_nto_brasilia",
+      nome: "NTO • Unidade Brasília",
+      categoria: "Cetamina",
+      uf: "DF",
+      cidade: "Brasília",
+      lat: -15.794229, lng: -47.882166,
+      whats: "55 61 90000-0000",
+      site: "https://ntobr.com",
+      obs: "Triagem e integração"
+    },
+    {
+      id: "mg_parceiro_bh",
+      nome: "Parceiro BH",
+      categoria: "Parceiro",
+      uf: "MG",
+      cidade: "Belo Horizonte",
+      lat: -19.924501, lng: -43.935237,
+      whats: "",
+      site: "",
+      obs: "Rede de referência"
+    },
+    {
+      id: "rs_parceiro_poa",
+      nome: "Parceiro POA",
+      categoria: "Parceiro",
+      uf: "RS",
+      cidade: "Porto Alegre",
+      lat: -30.027704, lng: -51.228735,
+      whats: "",
+      site: "",
+      obs: ""
+    },
+    {
+      id: "ba_parceiro_salvador",
+      nome: "Parceiro Salvador",
+      categoria: "Parceiro",
+      uf: "BA",
+      cidade: "Salvador",
+      lat: -12.977749, lng: -38.501630,
+      whats: "",
+      site: "",
+      obs: ""
+    }
+  ];
+
+  // --- CONFIG MAPA ---
+  let map, markersLayer;
+  const BR_BOUNDS = L.latLngBounds(L.latLng(-33.75, -73.99), L.latLng(5.27, -32.39));
+
+  function ensureMap(){
+    const host = document.getElementById('mapbr');
+    if(!host || host.dataset.inited) return;
+    host.dataset.inited = "1";
+
+    map = L.map('mapbr', {
+      zoomControl: true,
+      minZoom: 3,
+      maxZoom: 19
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap',
+      maxZoom: 19
+    }).addTo(map);
+
+    markersLayer = L.layerGroup().addTo(map);
+    map.fitBounds(BR_BOUNDS, { padding: [20,20] });
+
+    // Render inicial (todas)
+    addClinics(CLINICAS);
+    fitToPins();
+
+    // Expor utilitários
+    window.NTO_MAP = {
+      addClinics,
+      clearPins,
+      fitToPins,
+      filterClinics, // { uf?: "SP", categoria?: "Cetamina" }
+      data: CLINICAS
+    };
+  }
+
+  // --- RENDERIZAÇÃO DE CLÍNICAS ---
+  function addClinics(list){
+    if(!markersLayer) return;
+    list.forEach(c => {
+      const marker = L.marker([c.lat, c.lng], { title: c.nome });
+      marker.bindPopup(popupHtml(c), { maxWidth: 320 });
+      marker.addTo(markersLayer);
+    });
+  }
+
+  function clearPins(){
+    if(markersLayer) markersLayer.clearLayers();
+  }
+
+  function fitToPins(){
+    if(!markersLayer) return;
+    const latlngs = [];
+    markersLayer.eachLayer(l => { if(l.getLatLng) latlngs.push(l.getLatLng()); });
+    if(latlngs.length) map.fitBounds(L.latLngBounds(latlngs), { padding:[30,30], maxZoom: 8 });
+    else map.fitBounds(BR_BOUNDS, { padding:[20,20] });
+  }
+
+  function popupHtml(c){
+    const wa = c.whats ? `<a class="btn small primary" target="_blank" rel="noopener" href="${whatsLink(c.whats)}">WhatsApp</a>` : "";
+    const site = c.site ? `<a class="btn small ghost" target="_blank" rel="noopener" href="${c.site}">Site</a>` : "";
+    const obs = c.obs ? `<p class="muted" style="margin:8px 0 0">${c.obs}</p>` : "";
+    return `
+      <div style="min-width:220px">
+        <strong>${c.nome}</strong><br/>
+        <span class="muted">${c.cidade} • ${c.uf} • ${c.categoria}</span>
+        ${obs}
+        <div class="toolbar" style="margin-top:10px;gap:8px;flex-wrap:wrap">
+          ${wa} ${site}
+        </div>
+      </div>
+    `;
+  }
+
+  function whatsLink(raw){
+    // Aceita "55 11 99999-0000" ou só "11999990000"
+    const digits = String(raw || "").replace(/\D+/g, "");
+    const phone = digits.length >= 10 ? digits : "";
+    return phone ? `https://wa.me/${phone}` : "#";
+  }
+
+  // --- FILTRO: por UF e/ou categoria ---
+  // Ex: window.NTO_MAP.filterClinics({ uf:"SP" })
+  //     window.NTO_MAP.filterClinics({ categoria:"Parceiro" })
+  //     window.NTO_MAP.filterClinics({ uf:"SP", categoria:"Cetamina" })
+  function filterClinics({ uf, categoria } = {}){
+    const list = CLINICAS.filter(c => {
+      const okUf = uf ? c.uf.toUpperCase() === uf.toUpperCase() : true;
+      const okCat = categoria ? c.categoria.toLowerCase() === categoria.toLowerCase() : true;
+      return okUf && okCat;
+    });
+    clearPins();
+    addClinics(list);
+    fitToPins();
+    return list;
+  }
+
+  // --- INICIALIZAÇÃO (SPA) ---
+  const mo = new MutationObserver(() => ensureMap());
+  mo.observe(document.body, { childList: true, subtree: true });
+  document.addEventListener('DOMContentLoaded', ensureMap);
+})();
+</script>
+
 </body>
 </html>
 

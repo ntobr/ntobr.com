@@ -1,87 +1,458 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NTO Brasil - Em Construção</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
-      color: #333;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      flex-direction: column;
-      text-align: center;
-    }
-    .container {
-      max-width: 600px;
-      padding: 20px;
-      border: 3px dashed #ff9800;
-      border-radius: 15px;
-      background: #fff8e1;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    h1 {
-      font-size: 2.5em;
-      color: #ff9800;
-      margin-bottom: 10px;
-    }
-    p {
-      font-size: 1.1em;
-      line-height: 1.6;
-    }
-    .emoji {
-      font-size: 3em;
-      margin: 10px 0;
-    }
-    .bar {
-      margin: 20px 0;
-      height: 20px;
-      background: #ddd;
-      border-radius: 10px;
-      overflow: hidden;
-      position: relative;
-    }
-    .bar-fill {
-      width: 60%;
-      height: 100%;
-      background: repeating-linear-gradient(
-        -45deg,
-        #ff9800,
-        #ff9800 10px,
-        #f57c00 10px,
-        #f57c00 20px
-      );
-      animation: progress 2s infinite linear;
-    }
-    @keyframes progress {
-      from { background-position: 0 0; }
-      to { background-position: 40px 0; }
-    }
-    footer {
-      margin-top: 15px;
-      font-size: 0.9em;
-      color: #666;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="emoji">🏗️🚧</div>
-    <h1>NTO Brasil</h1>
-    <p>
-      Bem-vindo à <strong>NTO Brasil</strong>!<br>
-      Nossa empresa está em construção para se tornar uma referência em saúde mental e inovação.
-    </p>
-    <div class="bar">
-      <div class="bar-fill"></div>
-    </div>
-    <p>Estamos preparando algo incrível para você.</p>
-    <footer>© 2025 NTO Brasil</footer>
+import React, { useMemo, useState } from "react";
+
+/**
+ * NTOBR.com – Preview de site em uma única página (React + Tailwind)
+ * - Estrutura de navegação (Home, Blog, Biblioteca, Cursos, Sobre, Contato)
+ * - Logo NTO (releitura vetorial com anel arco-íris) – substituível por PNG oficial
+ * - cards de posts com exemplos reais de conteúdo
+ * - busca local (título, tags) e filtro por categoria
+ * - leitor de post simplificado
+ *
+ * Como usar a sua logo oficial:
+ * 1) Substitua o componente <LogoNTO/> por <img src="/sua-logo.png" alt="NTO" className="h-9"/> em <Header/>.
+ * 2) Ajuste o tamanho conforme sua necessidade.
+ */
+
+// ====== DADOS EXEMPLO ======
+const posts = [
+  {
+    id: "psilocibina-depressao-2025",
+    title: "Psilocibina na depressão resistente: o que já sabemos em 2025",
+    excerpt:
+      "Panorama das evidências clínicas, parâmetros de set & setting e pontos de segurança para profissionais.",
+    tag: "Revisão",
+    readTime: 9,
+    date: "2025-09-01",
+    coverEmoji: "🍄",
+    keywords: ["psilocibina", "depressão", "ensaios clínicos"],
+    body:
+      "Resumo crítico de estudos fase II/III, endpoints de resposta e remissão, comparação com ISRS, e diretrizes práticas de triagem, titulação e follow‑up. Inclui mapa de riscos (psicose, mania, ideação), interações medicamentosas e checklist de segurança pré‑sessão.",
+  },
+  {
+    id: "mapeando-riscos-seguranca",
+    title: "Mapeando riscos: segurança em terapias assistidas por psicodélicos",
+    excerpt:
+      "Framework de segurança (bio-psico-social), contratos terapêuticos, manejo de eventos adversos e critérios de exclusão.",
+    tag: "Guia",
+    readTime: 8,
+    date: "2025-09-03",
+    coverEmoji: "🛡️",
+    keywords: ["segurança", "riscos", "guia"],
+    body:
+      "Checklist para triagem, consentimento informado, preparo, presença de equipe, monitorização e cuidados pós‑sessão. Inclui matriz de gravidade x probabilidade para tomada de decisão clínica.",
+  },
+  {
+    id: "mdma-tept-status",
+    title: "MDMA e TEPT: onde estamos agora?",
+    excerpt:
+      "Atualização do pipeline regulatório, qualidade de evidência e boas práticas para integração psicoterapêutica.",
+    tag: "Panorama",
+    readTime: 7,
+    date: "2025-09-05",
+    coverEmoji: "💠",
+    keywords: ["MDMA", "TEPT", "regulação"],
+    body:
+      "Discussão sobre endpoints funcionais, escore CAPS‑5, desenho de estudos e nuances de comorbidades (uso de substâncias, TCE).",  
+  },
+  {
+    id: "ketamina-ambulatorial",
+    title: "Cetamina ambulatorial: protocolo enxuto e seguro",
+    excerpt:
+      "Do screening ao follow‑up: parâmetros mínimos, documentação e fluxos operacionais.",
+    tag: "Protocolo",
+    readTime: 6,
+    date: "2025-09-07",
+    coverEmoji: "💉",
+    keywords: ["cetamina", "protocolo", "operacional"],
+    body:
+      "Algoritmo de decisão, doseamento inicial, monitorização, critérios de alta, red flags e template de evolução/consentimento.",
+  },
+  {
+    id: "neuroetica-psicodelicos",
+    title: "Neuroética dos psicodélicos: autonomia, risco e acesso",
+    excerpt:
+      "Questões éticas centrais: justiça distributiva, vulnerabilidade, hype versus evidência e conflitos de interesse.",
+    tag: "Opinião",
+    readTime: 5,
+    date: "2025-09-09",
+    coverEmoji: "⚖️",
+    keywords: ["ética", "acesso", "regulação"],
+    body:
+      "Reflexão sobre modelos de acesso, formação de profissionais, e responsabilidades de comunicação pública.",
+  },
+  {
+    id: "microdosing-verdades-mitos",
+    title: "Microdosing: verdades, mitos e o que falta estudar",
+    excerpt:
+      "Onde a evidência é sólida e onde ainda há viés ou efeito placebo? Como estudar melhor sem perder o contexto ecológico.",
+    tag: "Explainer",
+    readTime: 6,
+    date: "2025-09-10",
+    coverEmoji: "🧪",
+    keywords: ["microdosing", "placebo", "metodologia"],
+    body:
+      "Resumo de RCTs, estudos naturalísticos, limitações metodológicas e desenho de futuros trials pragmaticamente úteis.",
+  },
+];
+
+const categories = [
+  { key: "all", label: "Todos" },
+  { key: "Revisão", label: "Revisão" },
+  { key: "Guia", label: "Guia" },
+  { key: "Panorama", label: "Panorama" },
+  { key: "Protocolo", label: "Protocolo" },
+  { key: "Opinião", label: "Opinião" },
+  { key: "Explainer", label: "Explainer" },
+];
+
+// ====== COMPONENTES DE ÁTOMO ======
+const RainbowRing: React.FC<{ size?: number; className?: string }> = ({ size = 44, className }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 100 100"
+    className={className}
+    aria-hidden
+  >
+    <defs>
+      <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stopColor="#0ea5e9"/>
+        <stop offset="20%" stopColor="#22c55e"/>
+        <stop offset="40%" stopColor="#eab308"/>
+        <stop offset="60%" stopColor="#f97316"/>
+        <stop offset="80%" stopColor="#ef4444"/>
+        <stop offset="100%" stopColor="#8b5cf6"/>
+      </linearGradient>
+      <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+        <feMerge>
+          <feMergeNode in="coloredBlur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+    <circle cx="50" cy="50" r="36" fill="none" stroke="url(#grad)" strokeWidth="14" filter="url(#glow)"/>
+    <circle cx="50" cy="50" r="27" fill="transparent"/>
+  </svg>
+);
+
+const LogoNTO: React.FC<{ className?: string }> = ({ className }) => (
+  <div className={`flex items-center gap-2 ${className ?? ""}`}>
+    <span className="text-3xl sm:text-4xl font-serif tracking-tight text-stone-900 leading-none">NT</span>
+    <RainbowRing size={40} />
   </div>
-</body>
-</html>
+);
+
+const Chip: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <span className="inline-flex items-center rounded-full border border-stone-200 px-2 py-0.5 text-xs text-stone-700 bg-white/70 backdrop-blur">
+    {children}
+  </span>
+);
+
+// ====== CABEÇALHO / NAVEGAÇÃO ======
+const Header: React.FC<{ view: string; setView: (v: string) => void }> = ({ view, setView }) => {
+  const nav = [
+    { key: "home", label: "Início" },
+    { key: "blog", label: "Blog" },
+    { key: "library", label: "Biblioteca" },
+    { key: "courses", label: "Cursos" },
+    { key: "about", label: "Sobre" },
+    { key: "contact", label: "Contato" },
+  ];
+  return (
+    <header className="sticky top-0 z-50 border-b border-stone-200/70 bg-stone-50/80 backdrop-blur">
+      <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+        <button className="flex items-center gap-2" onClick={() => setView("home")}>
+          <LogoNTO />
+        </button>
+        <nav className="hidden md:flex gap-4 text-sm">
+          {nav.map((n) => (
+            <button
+              key={n.key}
+              onClick={() => setView(n.key)}
+              className={`px-3 py-1 rounded-full transition hover:bg-white ${
+                view === n.key ? "bg-white shadow-sm" : ""
+              }`}
+            >
+              {n.label}
+            </button>
+          ))}
+        </nav>
+        <div className="flex items-center gap-2">
+          <a
+            href="#newsletter"
+            className="rounded-full bg-stone-900 text-white text-sm px-3 py-1.5 shadow hover:shadow-md transition"
+          >
+            Assine a newsletter
+          </a>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+// ====== SEÇÕES ======
+const Hero: React.FC<{ setView: (v: string) => void }> = ({ setView }) => (
+  <section className="relative">
+    <div className="absolute inset-0 -z-10 from-transparent via-fuchsia-200/30 to-sky-200/30 bg-[radial-gradient(80%_50%_at_50%_0%,rgba(168,85,247,0.25)_0%,rgba(255,255,255,0)_60%)]"/>
+    <div className="mx-auto max-w-6xl px-4 py-14 sm:py-20">
+      <div className="flex flex-col items-start gap-6">
+        <LogoNTO className="scale-110" />
+        <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight text-stone-900 max-w-3xl">
+          Observatório do Mundo Psicodélico no Brasil
+        </h1>
+        <p className="text-stone-700 max-w-2xl">
+          Educação baseada em evidências, sem hype. Conteúdo clínico, ético e prático para profissionais e curiosos – com um leve toque psicodélico.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <button onClick={() => setView("blog")} className="rounded-lg px-4 py-2 bg-stone-900 text-white shadow hover:shadow-md">Explorar o Blog</button>
+          <button onClick={() => setView("courses")} className="rounded-lg px-4 py-2 bg-white border border-stone-300 shadow-sm hover:shadow">
+            Ver futuros cursos
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+const HighlightPosts: React.FC<{ onOpen: (id: string) => void }> = ({ onOpen }) => (
+  <section className="mx-auto max-w-6xl px-4 pb-10">
+    <div className="mb-6 flex items-center justify-between">
+      <h2 className="text-xl font-semibold">Destaques do Blog</h2>
+      <a className="text-sm text-stone-700 hover:text-stone-900" href="#" onClick={(e)=>{e.preventDefault(); onOpen(posts[0].id);}}>Ver um exemplo</a>
+    </div>
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {posts.slice(0, 6).map((p) => (
+        <article key={p.id} className="group rounded-2xl border border-stone-200 bg-white shadow-sm hover:shadow-md transition overflow-hidden">
+          <div className="h-28 flex items-center justify-center text-5xl bg-gradient-to-tr from-amber-100 via-sky-100 to-fuchsia-100">
+            <span className="select-none">{p.coverEmoji}</span>
+          </div>
+          <div className="p-4 flex flex-col gap-2">
+            <div className="flex items-center gap-2 text-xs">
+              <Chip>{p.tag}</Chip>
+              <span className="text-stone-500">{p.readTime} min</span>
+            </div>
+            <h3 className="text-base font-semibold leading-snug line-clamp-2">{p.title}</h3>
+            <p className="text-sm text-stone-700 line-clamp-2">{p.excerpt}</p>
+            <button onClick={() => onOpen(p.id)} className="mt-2 text-sm text-stone-900 hover:underline text-left">Ler mais →</button>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+);
+
+const Newsletter: React.FC = () => (
+  <section id="newsletter" className="relative">
+    <div className="absolute inset-0 -z-10 bg-[radial-gradient(50%_50%_at_50%_50%,rgba(59,130,246,0.12)_0%,rgba(255,255,255,0)_60%)]"/>
+    <div className="mx-auto max-w-6xl px-4 py-12">
+      <div className="rounded-3xl border border-stone-200 bg-white/80 backdrop-blur p-6 sm:p-10 shadow">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h3 className="text-lg font-semibold">Assine a newsletter NTO</h3>
+            <p className="text-stone-700 text-sm">Uma curadoria semanal, sem spam. Estudos, notícias e eventos.</p>
+          </div>
+          <form className="flex w-full sm:w-auto gap-2">
+            <input className="w-full sm:w-80 rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400" placeholder="Seu melhor e-mail"/>
+            <button className="rounded-xl bg-stone-900 text-white px-4 py-2 text-sm shadow hover:shadow-md">Quero receber</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+const Footer: React.FC<{ setView: (v: string) => void }> = ({ setView }) => (
+  <footer className="border-t border-stone-200">
+    <div className="mx-auto max-w-6xl px-4 py-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 text-sm">
+      <div>
+        <LogoNTO />
+        <p className="text-stone-700 mt-2">Observatório independente sobre psicodélicos no Brasil.</p>
+      </div>
+      <div>
+        <h4 className="font-semibold mb-2">Conteúdo</h4>
+        <ul className="space-y-1">
+          <li><button className="hover:underline" onClick={()=>setView("blog")}>Blog</button></li>
+          <li><button className="hover:underline" onClick={()=>setView("library")}>Biblioteca</button></li>
+          <li><button className="hover:underline" onClick={()=>setView("courses")}>Cursos</button></li>
+        </ul>
+      </div>
+      <div>
+        <h4 className="font-semibold mb-2">Institucional</h4>
+        <ul className="space-y-1">
+          <li><button className="hover:underline" onClick={()=>setView("about")}>Sobre a NTO</button></li>
+          <li><button className="hover:underline" onClick={()=>setView("contact")}>Contato</button></li>
+        </ul>
+      </div>
+      <div>
+        <h4 className="font-semibold mb-2">Siga</h4>
+        <p className="text-stone-700">Instagram · YouTube · LinkedIn</p>
+      </div>
+    </div>
+    <div className="text-center text-xs text-stone-500 pb-6">© {new Date().getFullYear()} NTO. Educação baseada em evidências.</div>
+  </footer>
+);
+
+// ====== PÁGINAS SIMPLIFICADAS ======
+const BlogView: React.FC<{ onOpen: (id: string) => void }> = ({ onOpen }) => {
+  const [q, setQ] = useState("");
+  const [cat, setCat] = useState("all");
+  const filtered = useMemo(() => {
+    return posts.filter((p) => {
+      const matchQ = (p.title + " " + p.excerpt + " " + p.keywords.join(" ")).toLowerCase().includes(q.toLowerCase());
+      const matchC = cat === "all" ? true : p.tag === cat;
+      return matchQ && matchC;
+    });
+  }, [q, cat]);
+
+  return (
+    <section className="mx-auto max-w-6xl px-4 py-10">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-2xl font-semibold">Blog</h2>
+        <div className="flex gap-2">
+          <input value={q} onChange={(e)=>setQ(e.target.value)} placeholder="Buscar artigos..." className="w-64 rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-400"/>
+          <select value={cat} onChange={(e)=>setCat(e.target.value)} className="rounded-xl border border-stone-300 bg-white px-3 py-2 text-sm">
+            {categories.map(c => <option key={c.key} value={c.key}>{c.label}</option>)}
+          </select>
+        </div>
+      </div>
+      <p className="text-sm text-stone-700 mt-2">{filtered.length} artigo(s) encontrados.</p>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mt-6">
+        {filtered.map((p) => (
+          <article key={p.id} className="group rounded-2xl border border-stone-200 bg-white shadow-sm hover:shadow-md transition overflow-hidden">
+            <div className="h-28 flex items-center justify-center text-5xl bg-gradient-to-tr from-amber-100 via-sky-100 to-fuchsia-100">
+              <span className="select-none">{p.coverEmoji}</span>
+            </div>
+            <div className="p-4 flex flex-col gap-2">
+              <div className="flex items-center gap-2 text-xs">
+                <Chip>{p.tag}</Chip>
+                <span className="text-stone-500">{p.readTime} min</span>
+                <span className="text-stone-400">· {new Date(p.date).toLocaleDateString()}</span>
+              </div>
+              <h3 className="text-base font-semibold leading-snug">{p.title}</h3>
+              <p className="text-sm text-stone-700 line-clamp-2">{p.excerpt}</p>
+              <button onClick={() => onOpen(p.id)} className="mt-2 text-sm text-stone-900 hover:underline text-left">Ler mais →</button>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+const LibraryView: React.FC = () => (
+  <section className="mx-auto max-w-6xl px-4 py-10">
+    <h2 className="text-2xl font-semibold">Biblioteca</h2>
+    <p className="text-stone-700 mt-2 max-w-2xl">Repositório curado de artigos, revisões e documentos públicos. (Aqui você pode organizar por tipo de estudo, ano, intervenção e diagnóstico.)</p>
+    <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {["Ensaios clínicos", "Diretrizes e Position Papers", "Ciências básicas", "Política e regulação", "Ética", "Ferramentas e checklists"].map((t) => (
+        <div key={t} className="rounded-xl border border-stone-200 bg-white p-4 shadow-sm">
+          <h3 className="font-medium">{t}</h3>
+          <p className="text-sm text-stone-700">Em breve.</p>
+        </div>
+      ))}
+    </div>
+  </section>
+);
+
+const CoursesView: React.FC = () => (
+  <section className="mx-auto max-w-6xl px-4 py-10">
+    <h2 className="text-2xl font-semibold">Cursos</h2>
+    <p className="text-stone-700 mt-2">Validação de interesse para turmas futuras. Deixe seu e-mail na newsletter para ser avisado.</p>
+    <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {[
+        { title: "Cetamina: do protocolo à prática", level: "Intermediário" },
+        { title: "Psicodélicos e segurança clínica", level: "Fundamental" },
+        { title: "Integração psicoterapêutica", level: "Avançado" },
+      ].map((c) => (
+        <div key={c.title} className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-2 mb-2">
+            <RainbowRing size={22} />
+            <h3 className="font-semibold">{c.title}</h3>
+          </div>
+          <p className="text-sm text-stone-700">Nível: {c.level}</p>
+          <button className="mt-3 text-sm underline">Quero ser avisado</button>
+        </div>
+      ))}
+    </div>
+  </section>
+);
+
+const AboutView: React.FC = () => (
+  <section className="mx-auto max-w-6xl px-4 py-10">
+    <h2 className="text-2xl font-semibold">Sobre a NTO</h2>
+    <p className="text-stone-700 mt-2 max-w-3xl">
+      A NTO é um observatório independente focado em educação baseada em evidências sobre psicodélicos no Brasil.
+      Nossa estética é clean com um leve toque psicodélico (anel arco‑íris). Priorizamos rigor científico, segurança e
+      comunicação acessível.
+    </p>
+  </section>
+);
+
+const ContactView: React.FC = () => (
+  <section className="mx-auto max-w-6xl px-4 py-10">
+    <h2 className="text-2xl font-semibold">Contato</h2>
+    <form className="mt-4 grid gap-3 max-w-xl">
+      <input placeholder="Seu nome" className="rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm"/>
+      <input placeholder="Seu e-mail" className="rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm"/>
+      <textarea placeholder="Mensagem" rows={5} className="rounded-xl border border-stone-300 bg-white px-4 py-2 text-sm"/>
+      <button className="rounded-xl bg-stone-900 text-white px-4 py-2 text-sm w-fit">Enviar</button>
+    </form>
+  </section>
+);
+
+const PostReader: React.FC<{ id: string; onBack: () => void }> = ({ id, onBack }) => {
+  const p = posts.find((x) => x.id === id)!;
+  return (
+    <section className="mx-auto max-w-3xl px-4 py-10">
+      <button onClick={onBack} className="text-sm hover:underline">← Voltar</button>
+      <div className="mt-3 flex items-center gap-2 text-xs">
+        <Chip>{p.tag}</Chip>
+        <span className="text-stone-500">{p.readTime} min</span>
+        <span className="text-stone-400">· {new Date(p.date).toLocaleDateString()}</span>
+      </div>
+      <h1 className="mt-2 text-3xl font-semibold">{p.title}</h1>
+      <div className="mt-4 rounded-xl border border-stone-200 bg-white p-5 shadow-sm">
+        <p className="text-stone-800 leading-relaxed">
+          {p.body}
+        </p>
+        <div className="mt-4 text-stone-500 text-sm">Palavras‑chave: {p.keywords.join(", ")}</div>
+      </div>
+    </section>
+  );
+};
+
+// ====== APP PRINCIPAL ======
+export default function NTOPreview() {
+  const [view, setView] = useState("home");
+  const [openPost, setOpenPost] = useState<string | null>(null);
+
+  return (
+    <div className="min-h-screen bg-stone-50 text-stone-900">
+      <Header view={view} setView={(v)=>{ setOpenPost(null); setView(v); }} />
+
+      {view === "home" && (
+        <>
+          <Hero setView={setView} />
+          <HighlightPosts onOpen={(id)=>{ setOpenPost(id); setView("blog"); }} />
+          <Newsletter />
+        </>
+      )}
+
+      {view === "blog" && (
+        openPost ? (
+          <PostReader id={openPost} onBack={()=> setOpenPost(null)} />
+        ) : (
+          <BlogView onOpen={(id)=> setOpenPost(id)} />
+        )
+      )}
+
+      {view === "library" && <LibraryView />}
+      {view === "courses" && <CoursesView />}
+      {view === "about" && <AboutView />}
+      {view === "contact" && <ContactView />}
+
+      <Footer setView={setView} />
+    </div>
+  );
+}

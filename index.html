@@ -3,69 +3,372 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>NTO Brasil – Teste React</title>
+  <title>NTO – Brasil</title>
+
   <style>
-    body {
-      margin:0;
-      font-family: system-ui, sans-serif;
-      background:#f1f5f9;
-      color:#111;
+    :root{
+      --ink:#0f172a; --muted:#475569; --bg:#f8fafc; --card:#fff; --line:#e2e8f0;
+      --accent:#10b981; --accent2:#111827;
     }
-    header {
-      padding:16px;
-      background:#0ea5e9;
-      color:#fff;
-      font-weight:bold;
-      text-align:center;
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;background:var(--bg);color:var(--ink)}
+    a{color:inherit}
+    /* layout util */
+    .container{max-width:1120px;margin:0 auto;padding:0 24px}
+    .section{padding:64px 0}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:.8rem 1.4rem;border-radius:999px;font-weight:600;text-decoration:none;background:linear-gradient(90deg,#10b981,#06b6d4,#7c3aed);color:#fff}
+    .btn.secondary{background:var(--accent2)}
+    /* header */
+    header{position:sticky;top:0;z-index:10;background:#ffffffcc;border-bottom:1px solid var(--line);backdrop-filter:saturate(1.2) blur(8px)}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+    .nav-links{display:flex;gap:14px;font-size:14px;flex-wrap:wrap}
+    .nav-links a{text-decoration:none;color:#334155}
+    /* hero */
+    .hero{padding:72px 0;text-align:center;position:relative;overflow:hidden}
+    .hero::before{
+      content:"";position:absolute;inset:-20% -10%;z-index:-1;
+      background:
+        radial-gradient(1000px 500px at 10% -10%, #dcfce7 0%, transparent 60%),
+        radial-gradient(800px 450px at 110% 30%, #e9d5ff 0%, transparent 55%),
+        radial-gradient(600px 380px at 50% 120%, #bae6fd 0%, transparent 60%);
     }
-    main {
-      display:grid;
-      place-items:center;
-      min-height:80vh;
-      text-align:center;
-      padding:24px;
+    /* grid simples */
+    .grid{display:grid;gap:16px}
+    @media(min-width:768px){ .grid.cols-2{grid-template-columns:repeat(2,1fr)} }
+    @media(min-width:1024px){ .grid.cols-3{grid-template-columns:repeat(3,1fr)} }
+
+    /* reveal animation */
+    .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+    .reveal.is-visible{opacity:1;transform:none}
+
+    /* FAQ */
+    .faq-item{border-bottom:1px solid var(--line)}
+    .faq-btn{width:100%;text-align:left;padding:14px 0;display:flex;justify-content:space-between;align-items:center;background:none;border:0;cursor:pointer;font-weight:600}
+    .faq-ans{margin:0 0 14px;color:var(--muted);display:none}
+    .faq-ans.open{display:block}
+
+    /* floating cta */
+    .floating-cta{
+      position:fixed;right:24px;bottom:24px;z-index:50;
+      background:linear-gradient(90deg,#10b981,#06b6d4,#7c3aed);
+      color:#fff;border-radius:999px;padding:12px 18px;text-decoration:none;font-weight:600;
+      box-shadow:0 12px 28px rgba(0,0,0,.2)
     }
-    button {
-      margin-top:20px;
-      padding:10px 20px;
-      font-size:16px;
-      border:0;
-      border-radius:8px;
-      background:#0ea5e9;
-      color:#fff;
-      cursor:pointer;
+
+    /* inputs */
+    .input{
+      display:block;width:100%;max-width:440px;margin:0 auto 16px;
+      padding:10px 14px;border:1px solid #cbd5e1;border-radius:999px
     }
+
+    /* small helpers */
+    .muted{color:var(--muted)}
+    .center{text-align:center}
   </style>
 </head>
 <body>
-  <header>NTO Brasil – Teste</header>
-  <div id="root"></div>
+  <header>
+    <div class="container nav">
+      <a href="#home" style="display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit">
+        <img id="logo" src="" alt="Logo NTO" width="56" height="56" style="object-fit:contain" />
+        <span style="font-size:22px;font-weight:700">BRASIL</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#mensagem">Mensagem</a>
+        <a href="#mapa">Mapa</a>
+        <a href="#posts">Posts</a>
+        <a href="#conhecimento">Conhecimento</a>
+        <a href="#galeria">Galeria</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contato">Contato</a>
+      </nav>
+      <a id="ctaHeader" class="btn" href="#">QUERO ALÍVIO 🫶</a>
+    </div>
+  </header>
 
-  <!-- React 18 + Babel -->
-  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
-
-  <script type="text/babel" data-presets="env,react">
-    function App() {
-      const [count, setCount] = React.useState(0);
-      return (
-        <main>
-          <div>
-            <img src="https://via.placeholder.com/150?text=NTO" alt="Logo NTO" style={{marginBottom:20}} />
-            <h1>React está funcionando 🎉</h1>
-            <p>Se você está vendo isso no GitHub Pages, deu certo!</p>
-            <button onClick={()=>setCount(c=>c+1)}>
-              Cliquei {count} vezes
-            </button>
+  <main id="home">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container">
+        <div class="reveal">
+          <img id="heroLogo" src="" alt="NTO Brasil" style="height:160px;width:auto;margin-bottom:24px" />
+          <h1 style="font-size:36px;margin:0 0 12px">Ciência, ética e cuidado</h1>
+          <p class="muted" style="max-width:720px;margin:0 auto 20px">
+            Alívio com dignidade para quem carrega um peso insuportável. A NTO caminha com você.
+          </p>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <a id="ctaHero" class="btn" href="#">QUERO ALÍVIO 🫶</a>
+            <a class="btn secondary" href="#conhecimento">Conhecimento</a>
           </div>
-        </main>
-      );
-    }
+        </div>
+      </div>
+    </section>
 
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
+    <!-- MENSAGEM -->
+    <section id="mensagem" class="section">
+      <div class="container">
+        <div class="reveal center" style="margin-bottom:20px">
+          <h2 style="font-size:28px;margin:0 0 8px">Mensagem da NTO – Brasil</h2>
+          <p class="muted" style="margin:0">Carinho, ciência e responsabilidade</p>
+        </div>
+        <div class="card reveal" style="color:#334155;line-height:1.55">
+          <p>
+            A NTO acredita que psicodélicos, quando usados com ciência, ética e carinho, podem abrir uma janela real de alívio — especialmente para quem já tentou “de tudo” e continua carregando um peso insuportável.
+            <strong> Não é fuga. É cuidado.</strong>
+          </p>
+          <p>
+            Psicodélicos são ferramentas terapêuticas que, em ambiente clínico supervisionado, favorecem neuroplasticidade e flexibilizam padrões rígidos de pensamento ligados à depressão, à urgência suicida e a certos quadros de dependência.
+          </p>
+          <h3>Por que considerar agora</h3>
+          <p>Quando a dor aperta, esperar semanas por resposta é cruel. A cetamina pode funcionar como “bote salva-vidas”.</p>
+          <h3>Como cuidamos de você</h3>
+          <ul>
+            <li><strong>Avaliação médica</strong> rigorosa.</li>
+            <li><strong>Sessões seguras</strong> (infusão/spray) com monitorização.</li>
+            <li><strong>Integração</strong> pós-sessão.</li>
+            <li><strong>Plano personalizado</strong>.</li>
+          </ul>
+          <div style="padding-top:8px">
+            <a id="ctaMensagem" class="btn" href="#">QUERO ALÍVIO 🫶</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAPA -->
+    <section id="mapa" class="section">
+      <div class="container">
+        <div class="reveal center" style="margin-bottom:20px">
+          <h2 style="font-size:28px;margin:0 0 8px">Mapa Psicodélico</h2>
+          <p class="muted" style="margin:0">Pontos públicos em Google My Maps</p>
+        </div>
+        <div class="card reveal">
+          <iframe id="mapEmbed" src="" loading="lazy"
+                  style="width:100%;height:420px;border:0;border-radius:16px"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- POSTS -->
+    <section id="posts" class="section">
+      <div class="container">
+        <div class="reveal center" style="margin-bottom:20px">
+          <h2 style="font-size:28px;margin:0 0 8px">Redes da NTO</h2>
+          <p class="muted" style="margin:0">Atualizações do Instagram e YouTube</p>
+        </div>
+        <div class="card reveal">
+          <div class="grid cols-2">
+            <iframe id="igEmbed" title="Instagram" src="" loading="lazy"
+                    style="width:100%;height:360px;border:1px solid var(--line);border-radius:12px"></iframe>
+            <iframe id="ytEmbed" title="YouTube" src="" loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    style="width:100%;height:360px;border:1px solid var(--line);border-radius:12px"></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONHECIMENTO -->
+    <section id="conhecimento" class="section">
+      <div class="container">
+        <div class="reveal center" style="margin-bottom:20px">
+          <h2 style="font-size:28px;margin:0 0 8px">Conhecimento</h2>
+          <p class="muted" style="margin:0">Resumo responsável + links de referência</p>
+        </div>
+
+        <input id="searchInp" class="input" placeholder="Buscar psicodélico" />
+
+        <div id="cards" class="grid cols-3">
+          <!-- os cards são gerados por JS com base em KNOWLEDGE -->
+        </div>
+      </div>
+    </section>
+
+    <!-- GALERIA -->
+    <section id="galeria" class="section">
+      <div class="container">
+        <div class="reveal center" style="margin-bottom:20px">
+          <h2 style="font-size:28px;margin:0 0 8px">Imagens</h2>
+          <p class="muted" style="margin:0">Espaço para fotos de alto impacto visual</p>
+        </div>
+        <div class="grid cols-3">
+          <figure class="card reveal" style="overflow:hidden;padding:0">
+            <img src="https://images.unsplash.com/photo-1520975922284-9f786f2de3aa?q=80&w=1400&auto=format&fit=crop" alt="Floresta amazônica" style="height:256px;width:100%;object-fit:cover" />
+            <figcaption style="padding:12px" class="muted center">Floresta amazônica</figcaption>
+          </figure>
+          <figure class="card reveal" style="overflow:hidden;padding:0">
+            <img src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1400&auto=format&fit=crop" alt="Céu estrelado" style="height:256px;width:100%;object-fit:cover" />
+            <figcaption style="padding:12px" class="muted center">Céu estrelado</figcaption>
+          </figure>
+          <figure class="card reveal" style="overflow:hidden;padding:0">
+            <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1400&auto=format&fit=crop" alt="Montanhas" style="height:256px;width:100%;object-fit:cover" />
+            <figcaption style="padding:12px" class="muted center">Montanhas</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOBRE -->
+    <section id="sobre" class="section">
+      <div class="container">
+        <div class="reveal center" style="margin-bottom:20px">
+          <h2 style="font-size:28px;margin:0 0 8px">Sobre</h2>
+        </div>
+        <div class="card reveal" style="color:#334155">
+          <p><strong>Somos Produtora, Editora, Tradutora.</strong> Instituto médico e multidisciplinar de pesquisa, estudo e promoção de enteógenos para fins de proteção à vida.</p>
+          <ul>
+            <li><strong>Valores</strong>: Ciência, Espiritualidade, Sabedoria, Transcendência.</li>
+            <li><strong>Missão</strong>: Aliviar o sofrimento humano através dos enteógenos.</li>
+            <li><strong>Visão</strong>: Ser peça fundamental para a revolução psicodélica do século XXI no Brasil.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="section">
+      <div class="container">
+        <div class="reveal center" style="margin-bottom:20px">
+          <h2 style="font-size:28px;margin:0 0 8px">Perguntas Frequentes</h2>
+          <p class="muted" style="margin:0">As dúvidas mais comuns, respondidas de forma direta</p>
+        </div>
+
+        <div class="card reveal" style="max-width:720px;margin:0 auto">
+          <div class="faq-item">
+            <button class="faq-btn"><span>A NTO atende urgências?</span><span class="muted">+</span></button>
+            <p class="faq-ans">Fazemos avaliação rápida para avaliar risco e opções clínicas.</p>
+          </div>
+          <div class="faq-item">
+            <button class="faq-btn"><span>Cetamina é para todo mundo?</span><span class="muted">+</span></button>
+            <p class="faq-ans">Não. Exige triagem médica e pode ter contraindicações.</p>
+          </div>
+          <div class="faq-item">
+            <button class="faq-btn"><span>Como funcionam as sessões?</span><span class="muted">+</span></button>
+            <p class="faq-ans">Preparação, sessão monitorada e integração pós-sessão.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTATO -->
+    <section id="contato" class="section">
+      <div class="container">
+        <div class="reveal center" style="margin-bottom:20px">
+          <h2 style="font-size:28px;margin:0 0 8px">Contato</h2>
+        </div>
+        <div class="card reveal" style="text-align:center">
+          <p style="font-size:18px">Email: <a id="emailLink" href="#">admn@ntobr.com</a></p>
+          <p class="muted" style="font-size:14px">Preferimos comunicação assíncrona, curta e objetiva. Para assuntos clínicos, evite dados sensíveis sem canal seguro.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- CTA flutuante -->
+  <a id="ctaFloat" class="floating-cta" href="#">🫶 Quero Alívio</a>
+
+  <script>
+    // ====== CONFIGURÁVEIS ======
+    const SITE_NAME = "NTO – Brasil";
+    const LOGO_URL  = "https://via.placeholder.com/160x160.png?text=NTO"; // troque pelo seu logo
+    const CONTACT_EMAIL = "admn@ntobr.com";
+
+    const SOCIAL = {
+      instagramEmbedUrl: "https://www.instagram.com/p/Ck000000000/embed", // troque pelo embed oficial
+      youtubeEmbedUrl:   "https://www.youtube.com/embed/dQw4w9WgXcQ"      // troque pelo vídeo/playlist
+    };
+
+    const MAP_URL = "https://www.google.com/maps/d/embed?mid=1KD5QHhxyVWlFX7BDM0aoNufixLILENU&usp=sharing";
+
+    const KNOWLEDGE = [
+      { id: "cetamina",   title: "Cetamina",   text: "Alívio rápido em depressão resistente. Infusão/spray supervisionado." },
+      { id: "ibogaina",   title: "Ibogaína",   text: "Protocolos em dependência. Monitorização multiprofissional." },
+      { id: "psilocibina",title: "Psilocibina",text: "Pesquisada em depressão/ansiedade. Sessões assistidas com integração." },
+      { id: "lsd",        title: "LSD",        text: "Investigada em contextos de pesquisa. Set & setting estruturados." },
+      { id: "ayahuasca",  title: "Ayahuasca",  text: "Uso religioso protegido no Brasil. Contextos ritualísticos." },
+      { id: "mdma",       title: "MDMA",       text: "Estudos em TEPT. Psicoterapia assistida." },
+    ];
+    // ============================
+
+    // SEO / título / favicon
+    document.title = SITE_NAME + " — Psicodélicos com ciência, ética e cuidado";
+    const fav = document.querySelector("link[rel='icon']") || (() => {
+      const l = document.createElement("link"); l.rel = "icon"; document.head.appendChild(l); return l;
+    })();
+    fav.href = LOGO_URL;
+
+    // Coloca logo e e-mail/CTAs
+    document.getElementById("logo").src = LOGO_URL;
+    document.getElementById("heroLogo").src = LOGO_URL;
+    const mailto = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Quero aliviar meu sofrimento")}`;
+    ["ctaHeader","ctaHero","ctaMensagem","ctaFloat","emailLink"].forEach(id=>{
+      const el = document.getElementById(id);
+      if(!el) return;
+      if(id==="emailLink"){ el.href = `mailto:${CONTACT_EMAIL}`; el.textContent = CONTACT_EMAIL; }
+      else { el.href = mailto; }
+    });
+
+    // Embeds
+    document.getElementById("igEmbed").src = SOCIAL.instagramEmbedUrl;
+    document.getElementById("ytEmbed").src = SOCIAL.youtubeEmbedUrl;
+    document.getElementById("mapEmbed").src = MAP_URL;
+
+    // Cards Conhecimento
+    const cardsWrap = document.getElementById("cards");
+    function renderCards(list){
+      cardsWrap.innerHTML = "";
+      list.forEach((k,i) => {
+        const art = document.createElement("article");
+        art.className = "card reveal";
+        art.style.transitionDelay = (i*60) + "ms";
+        art.innerHTML = `<h3 style="margin:0 0 8px">${k.title}</h3>
+                         <p class="muted" style="margin:0">${k.text}</p>`;
+        cardsWrap.appendChild(art);
+      });
+      applyReveal(); // re-aplica observer para novos elementos
+    }
+    renderCards(KNOWLEDGE);
+
+    // Busca (filtra por título)
+    const inp = document.getElementById("searchInp");
+    inp.addEventListener("input", () => {
+      const q = inp.value.trim().toLowerCase();
+      const data = !q ? KNOWLEDGE : KNOWLEDGE.filter(k => k.title.toLowerCase().includes(q));
+      renderCards(data);
+    });
+
+    // FAQ toggle
+    document.querySelectorAll(".faq-item").forEach((row) => {
+      const btn = row.querySelector(".faq-btn");
+      const ans = row.querySelector(".faq-ans");
+      btn.addEventListener("click", () => {
+        const open = ans.classList.toggle("open");
+        btn.lastElementChild.textContent = open ? "−" : "+";
+      });
+    });
+
+    // Reveal (IntersectionObserver)
+    let io;
+    function applyReveal(){
+      if(io) io.disconnect();
+      io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){
+            e.target.classList.add("is-visible");
+            io.unobserve(e.target);
+          }
+        });
+      }, { rootMargin:"0px 0px -10% 0px", threshold:0.15 });
+      document.querySelectorAll(".reveal:not(.is-visible)").forEach(el=>io.observe(el));
+    }
+    applyReveal();
   </script>
 </body>
 </html>
+
 

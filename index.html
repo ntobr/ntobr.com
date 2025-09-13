@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -159,8 +160,7 @@
       </div>
       <div class="card reveal" style="color:#334155;line-height:1.58">
         <p>
-          A NTO acredita que psicodélicos, quando usados com ciência, ética e carinho, podem abrir uma janela real de alívio — especialmente para quem já tentou “de tudo” e continua carregando um peso insuportável.
-          <strong> Não é fuga. É cuidado.</strong>
+          Se você carrega um sofrimento que parece insuportável e já tentou de tudo, entendemos sua dor e estamos aqui por você. A NTO acredita que psicodélicos, quando usados com ciência, ética e carinho, podem abrir uma janela real de alívio. <strong>Não é fuga. É cuidado.</strong>
         </p>
         <p>
           Psicodélicos são ferramentas terapêuticas que, em ambiente clínico supervisionado, favorecem neuroplasticidade e flexibilizam padrões rígidos de pensamento ligados à depressão, à urgência suicida e a certos quadros de dependência. No Brasil, a cetamina (e o spray de esketamina) já está disponível legalmente em contexto médico e pode oferecer alívio em horas ou poucos dias, enquanto o tratamento de base continua a agir.
@@ -338,11 +338,11 @@
 <script>
   // ===== CONFIG =====
   const SITE_NAME = "NTO – Brasil";
-  const LOGO_URL  = "./logo.png"; // arquivo na raiz do repo
+  const LOGO_URL  = "./logo.png";
   const CONTACT_EMAIL = "admn@ntobr.com";
   const SOCIAL = {
-    instagramEmbedUrl: "https://www.instagram.com/p/Ck000000000/embed", // troque pelo embed real
-    youtubeEmbedUrl:   "https://www.youtube.com/embed/dQw4w9WgXcQ"      // troque por vídeo/playlist
+    instagramEmbedUrl: "https://www.instagram.com/p/Ck000000000/embed",
+    youtubeEmbedUrl:   "https://www.youtube.com/embed/dQw4w9WgXcQ"
   };
   const MAP_URL = "https://www.google.com/maps/d/embed?mid=1KD5QHhxyVWlFX7BDM0aoNufixLILENU&usp=sharing";
   const KNOWLEDGE = [
@@ -443,8 +443,8 @@
       const art = document.createElement("article");
       art.className="card reveal";
       art.style.transitionDelay = (i*50)+"ms";
-      art.innerHTML = `<h3 style="margin:0 0 8px">${k.title}</h3>
-                       <p class="muted" style="margin:0">${k.text}</p>`;
+      art.innerHTML = `<h3 style="margin:0 0 8px"><a href="${k.id}.html" style="text-decoration:underline;color:var(--brand)">${k.title}</a></h3>
+                       <p class="muted" style="margin:0">${k.text} <a href="${k.id}.html" style="color:var(--brand);text-decoration:underline;white-space:nowrap">Saiba mais</a></p>`;
       cardsWrap.appendChild(art);
     });
     applyReveal();

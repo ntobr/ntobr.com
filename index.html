@@ -338,6 +338,7 @@
     color: #334155;
   }
   .toc a:hover{ background: #f1f5f9; }
+  @media(max-width: 980px){ .toc{ position: static !important; top: auto !important; } }
   .breadcrumb{
     display: flex;
     flex-wrap: wrap;
@@ -388,6 +389,17 @@
   /* Redução de animações via classe */
   html.reduce-motion{ scroll-behavior: auto !important; }
   html.reduce-motion .reveal, html.reduce-motion .toast{ transition: none !important; }
+  @media(max-width: 600px){
+    .nav { flex-wrap: wrap; gap: 8px; }
+  }
+  .high-contrast .hero::before{ background: none !important; }
+  .high-contrast header{ background: #000 !important; }
+  .high-contrast footer{ background: #000 !important; }
+  .high-contrast .help-bar{
+    background: #000 !important;
+    color: #fff !important;
+    border-color: #fff !important;
+  }
 </style>
 <!-- 
   Changelog (2025-09-13):
@@ -489,24 +501,6 @@ Diretivas finais:
 - Respeite o rigor ético: sem recomendações individuais, sem promessas de cura, sem linguagem sensacionalista.
 - Otimize para mobile primeiro.
 - Mantenha a experiência acolhedora end-to-end, com ênfase em “pequenos passos fáceis”.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 -->
 </head>
 <body>
@@ -515,7 +509,6 @@ Diretivas finais:
   <div class="container nav">
     <a href="#/" class="brand" data-link>
       <img id="logo" alt="Logo NTO" width="56" height="56" style="object-fit:contain" />
-      <span style="font-size:22px;font-weight:700">BRASIL</span>
     </a>
     <nav class="nav-links" id="navLinks">
       <a href="#/" data-link>Home</a>
@@ -526,18 +519,19 @@ Diretivas finais:
       <a href="#/galeria" data-link>Galeria</a>
       <a href="#/sobre" data-link>Sobre</a>
       <a href="#/faq" data-link>FAQ</a>
+      <a href="#/recomendado" data-link>Recomendações</a>
       <a href="#/contato" data-link>Contato</a>
     </nav>
     <button id="toggleContrast" class="btn ghost small" type="button">Contraste</button>
     <button id="toggleMotion" class="btn ghost small" type="button">Reduzir animação</button>
     <button class="hamb" id="hamb" aria-controls="mobile" aria-expanded="false">☰ Menu</button>
-    <a id="ctaHeader" class="btn small" href="#">QUERO ALÍVIO 🫶</a>
+    <a id="ctaHeader" class="btn small" href="#/mapa" data-link data-event="cta_click">QUERO ALÍVIO 🫶</a>
   </div>
   <div class="container" id="mobile" aria-hidden="true"></div>
 </header>
 <main id="app" tabindex="-1" aria-live="polite"></main>
 <!-- CTA flutuante + topo + barra de ajuda -->
-<a id="ctaFloat" class="btn small" style="position:fixed;right:24px;bottom:24px;z-index:74" href="#">🫶 Quero Alívio</a>
+<a id="ctaFloat" class="btn small" style="position:fixed;right:24px;bottom:24px;z-index:74" href="#/mapa" data-link data-event="cta_click">🫶 Quero Alívio</a>
 <div class="help-bar" id="helpBar">Em crise suicida ou perigo imediato? <a href="tel:188">Ligue 188 (CVV)</a> ou <a href="tel:192">192 (SAMU)</a>.</div>
 <button id="toTop" class="btn small" aria-label="Voltar ao topo">↑ Topo</button>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -557,6 +551,7 @@ Diretivas finais:
         <a href="#/mapa" data-link>Mapa</a>
         <a href="#/conhecimento" data-link>Conhecimento</a>
         <a href="#/faq" data-link>FAQ</a>
+        <a href="#/recomendado" data-link>Recomendações</a>
         <a href="#/contato" data-link>Contato</a>
       </div>
     </div>
@@ -581,7 +576,7 @@ Diretivas finais:
           responsabilidade, para que você recupere o fôlego e a esperança. Estamos com você — no seu ritmo, no seu tempo.
         </p>
         <div class="toolbar" style="gap:10px;justify-content:center">
-          <a id="ctaHero" class="btn" href="#">QUERO ALÍVIO 🫶</a>
+          <a id="ctaHero" class="btn" href="#/mapa" data-link data-event="cta_click">QUERO ALÍVIO 🫶</a>
           <a class="btn secondary" href="#/conhecimento" data-link>Conhecimento</a>
           <a class="btn ghost" href="#/faq" data-link>FAQ</a>
         </div>
@@ -649,7 +644,7 @@ Diretivas finais:
         <h3>O que você pode esperar</h3>
         <p>Podem ocorrer sensações dissociativas que passam rápido. Resultados variam; nossa promessa é cuidado sério, transparente e humano.</p>
         <div class="toolbar">
-          <a id="ctaMensagem" class="btn" href="#">QUERO ALÍVIO 🫶</a>
+          <a id="ctaMensagem" class="btn" href="#/mapa" data-link data-event="cta_click">QUERO ALÍVIO 🫶</a>
           <button id="printMsg" class="btn ghost">Imprimir Mensagem</button>
         </div>
       </div>
@@ -741,25 +736,73 @@ Diretivas finais:
       <div class="card reveal" style="max-width:820px;margin:0 auto">
         <div class="faq-item">
           <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
-            <span>A NTO atende urgências?</span>
+            <span>Quais tratamentos psicodélicos já estão disponíveis no Brasil?</span>
             <span class="muted">+</span>
           </button>
-          <p class="faq-ans" role="region">Fazemos avaliação rápida para avaliar risco e opções clínicas.</p>
+          <p class="faq-ans" role="region">Atualmente, apenas a cetamina (e a esketamina nasal) é utilizada em tratamentos médicos, principalmente para depressão resistente. A ayahuasca também ocorre no Brasil, mas apenas em contextos religiosos (não como terapia médica formal).</p>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
+            <span>Quais psicodélicos ainda não podem ser usados clinicamente?</span>
+            <span class="muted">+</span>
+          </button>
+          <p class="faq-ans" role="region">Substâncias como psilocibina, MDMA, LSD e ibogaína ainda não têm aprovação para uso terapêutico fora de pesquisas no Brasil. Elas só podem ser acessadas legalmente em estudos científicos autorizados; fora isso, seu uso clínico não é permitido por enquanto.</p>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
+            <span>Preciso tentar outros tratamentos antes de recorrer à cetamina?</span>
+            <span class="muted">+</span>
+          </button>
+          <p class="faq-ans" role="region">Em geral, sim. As terapias com psicodélicos (como a cetamina) são consideradas quando tratamentos tradicionais (medicações, terapia) não trouxeram melhora suficiente. Elas não são a primeira opção e fazem parte de um plano de cuidado mais amplo.</p>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
+            <span>A terapia com cetamina substitui meu tratamento atual?</span>
+            <span class="muted">+</span>
+          </button>
+          <p class="faq-ans" role="region">Não. A cetamina age como um complemento para alívio rápido; os tratamentos de base (como antidepressivos ou terapia contínua) geralmente continuam. Qualquer mudança nos medicamentos deve ser feita com orientação médica.</p>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
+            <span>Terapia psicodélica é segura?</span>
+            <span class="muted">+</span>
+          </button>
+          <p class="faq-ans" role="region">Quando realizada com avaliação médica e acompanhamento profissional, a terapia assistida por psicodélicos tem um perfil de segurança aceitável. Existem riscos específicos, mas equipes treinadas seguem protocolos para minimizá-los durante e após as sessões.</p>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
+            <span>Quantas sessões de cetamina vou precisar?</span>
+            <span class="muted">+</span>
+          </button>
+          <p class="faq-ans" role="region">Depende de cada caso. Algumas pessoas melhoram após 1–2 sessões; outras podem precisar de várias sessões ao longo de semanas. O número de sessões é ajustado conforme a resposta individual e decidido em conjunto com a equipe clínica.</p>
         </div>
         <div class="faq-item">
           <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
             <span>Cetamina é para todo mundo?</span>
             <span class="muted">+</span>
           </button>
-          <p class="faq-ans" role="region">Não. Exige triagem médica e pode ter contraindicações.</p>
+          <p class="faq-ans" role="region">Não. Ela só é indicada após avaliação médica rigorosa e pode não ser adequada para todos; existem contraindicações (por exemplo, alguns problemas cardíacos ou histórico de psicose) que precisam ser considerados.</p>
         </div>
         <div class="faq-item">
           <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
             <span>Como funcionam as sessões?</span>
             <span class="muted">+</span>
           </button>
-          <p class="faq-ans" role="region">Preparação, sessão monitorada e integração pós-sessão.</p>
+          <p class="faq-ans" role="region">As sessões incluem uma preparação prévia, a experiência monitorada em ambiente controlado e uma integração terapêutica após a sessão para dar sentido ao que foi vivenciado.</p>
         </div>
+      </div>
+    </div>
+  </section>
+  <section id="recomendado" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Conteúdo Recomendado</h2>
+        <p class="muted" style="margin:0">Dicas de mídia e materiais sobre psicodélicos</p>
+      </div>
+      <div class="card reveal" style="max-width:800px;margin:0 auto">
+        <ul style="margin:0;padding:0 0 0 20px;line-height:1.6">
+          <li><strong><a href="https://www.netflix.com/title/80229847" target="_blank" rel="noopener noreferrer">Como Mudar sua Mente</a></strong> – série documental (Netflix, 2022). O autor Michael Pollan explora a história e o uso terapêutico de psicodélicos (LSD, psilocibina, MDMA e mescalina) em quatro episódios envolventes.</li>
+        </ul>
       </div>
     </div>
   </section>
@@ -893,7 +936,7 @@ Diretivas finais:
         ambiente confortável (olhos vendados e música); seguida de integração estruturada por algumas semanas.`,
         sensacoes: `Alterações perceptuais (visuais e auditivas), emoções intensas, insights autobiográficos profundos, possível ansiedade
         em momentos de pico. Duração total de efeitos em torno de 4–6 horas.`,
-        seguranca: `Evitar em pacientes com histórico pessoal ou familiar de esquizofrenia ou transtorno bipolar (risco de psicose/manias).
+        seguranca: `Evitar em pacientes com histórico pessoal ou familiar de esquizofrênia ou transtorno bipolar (risco de psicose/manias).
         Necessário acompanhamento por equipe treinada para minimizar riscos como ansiedade aguda durante a experiência.`,
         legal: `No Brasil, o uso religioso da ayahuasca (que contém DMT) é regulamentado, mas a psilocibina permanece ilegal fora de contextos
         de pesquisa acadêmica. Clínicas privadas devem aderir às normas éticas e regulatórias vigentes.`,
@@ -955,7 +998,7 @@ Diretivas finais:
         legal: `Não aprovado para uso clínico amplo no Brasil; apenas em protocolos experimentais aprovados por comitês de ética. Em outros países (como EUA),
         a aprovação para TEPT está em análise avançada, mas ainda restrita a pesquisa.`,
         riscos: `Elevação de PA/FC e temperatura corporal (risco de hipertermia se ambiente inadequado), desequilíbrio eletrolítico se ingestão excessiva de água,
-        \"comedown\" (cansaço, humor baixo no dia seguinte), insônia na noite da sessão. Uso recreativo sem controle aumenta todos esses riscos.`,
+        "comedown" (cansaço, humor baixo no dia seguinte), insônia na noite da sessão. Uso recreativo sem controle aumenta todos esses riscos.`,
         preparacao: `Durma bem e alimente-se levemente antes da sessão. Confirme com o médico se deve suspender antidepressivos dias antes. Hidrate-se
         nas horas anteriores de forma moderada. Estabeleça junto ao terapeuta quais memórias ou traumas serão foco, para aproveitar ao máximo a abertura emocional do MDMA.`,
         integracao: `Após cada sessão, participe de sessões de terapia para processar quaisquer lembranças ou emoções surgidas. Pratique técnicas de regulação emocional
@@ -1001,12 +1044,12 @@ Diretivas finais:
         resumo: `Alcaloide extraído da raiz da iboga (Tabernanthe iboga). Relatos e séries de casos indicam que pode interromper
         sintomas de abstinência e reduzir o craving em dependência de opioides e outras substâncias, porém com riscos cardiológicos significativos.`,
         mecanismo: `Atua em múltiplos sistemas: interage com receptores opioides (efeito atenuador da abstinência), NMDA (neuroplasticidade),
-        sigma e nicotínicos, entre outros. Pode \"reiniciar\" padrões neuroquímicos associados à dependência, mas requer suporte psicossocial para sustentar a mudança de comportamento.`,
+        sigma e nicotínicos, entre outros. Pode "reiniciar" padrões neuroquímicos associados à dependência, mas requer suporte psicossocial para sustentar a mudança de comportamento.`,
         evidencia: `A evidência é majoritariamente observacional (relatos clínicos e estudos abertos). Ensaios controlados são escassos devido a preocupações éticas e de segurança.
         Apesar de relatos de alta taxa de sucesso na detoxificação de opioides, os riscos médicos demandam protocolos hospitalares estritos.`,
         protocolo: `Seleção rigorosa: avaliação cardiológica (ECG, ecocardiograma se possível), exames hepáticos, suspensão/ajuste de fármacos que prolonguem QT (metadona, alguns antidepressivos) antes.
         Internação com monitorização contínua (telemetria cardíaca, oximetria) por pelo menos 24–48h após dose. Equipe treinada em ACLS presente. Suporte emocional intenso durante a experiência (que pode durar 12–36h acordado).`,
-        sensacoes: `Início gradual (1–3h para começar a perceber efeitos), ataxia (dificuldade de coordenação motora), náusea e vômitos frequentes (a \"purga\" física),
+        sensacoes: `Início gradual (1–3h para começar a perceber efeitos), ataxia (dificuldade de coordenação motora), náusea e vômitos frequentes (a "purga" física),
         visões oníricas intensas (muitas vezes introspectivas ou de natureza autobiográfica) que podem durar horas. Após o pico, geralmente segue-se um período de reflexão calmo porém com fadiga intensa.`,
         seguranca: `Contraindicada se há doenças cardíacas prévias (arrítmias, insuficiência cardíaca, angina), intervalo QT prolongado congênito, ou uso recente de substâncias que afetam o ritmo cardíaco.
         Desequilíbrios eletrolíticos (potássio, magnésio baixos) devem ser corrigidos antes. Histórico de problemas hepáticos graves também pode contraindicar (metabolismo da ibogaína ocorre no fígado).`,
@@ -1014,7 +1057,7 @@ Diretivas finais:
         riscos: `Arritmia cardíaca potencialmente fatal (torsades de pointes, fibrilação) devido ao prolongamento do intervalo QT, convulsões (raras), neurotoxicidade em altas doses, interação perigosa com drogas depressoras do SNC. Devido à longa meia-vida, requer observação prolongada.`,
         preparacao: `Correção de eventuais alterações eletrolíticas antes do tratamento (suplementar potássio, magnésio). Redução gradual e segura de opioides ou outras drogas em uso, para não chegar à sessão em overdose.
         Consentimento informado muito detalhado, discutindo todos os riscos. Jejum controlado de cerca de 6–8h (evitar aspiração em caso de vômitos, mas não prolongado a ponto de desidratação).`,
-        integracao: `Psicoterapia motivacional intensiva e reabilitação após alta (a ibogaína não \"cura\" sozinha; precisa-se trabalhar novos hábitos). Participar de grupos de apoio (ex. NA) pode ajudar a manter a abstinência.
+        integracao: `Psicoterapia motivacional intensiva e reabilitação após alta (a ibogaína não "cura" sozinha; precisa-se trabalhar novos hábitos). Participar de grupos de apoio (ex. NA) pode ajudar a manter a abstinência.
         Atenção continuada à saúde física (checagens cardiológicas, hepáticas) nas semanas seguintes. Planejamento de prevenção de recaídas, com estratégias claras para lidar com gatilhos de uso.`,
         referencias: [
           "Revisões e artigos sobre segurança cardiológica da ibogaína (prolongamento de QT)",
@@ -1127,7 +1170,7 @@ Diretivas finais:
           "Guias de segurança e listas de interações para participantes de rituais com ayahuasca"
         ],
         mitos: [
-          { myth: "Ayahuasca causa esquizofrenia ou deixa a pessoa louca permanentemente.", truth: "Para a grande maioria das pessoas, não há evidência de efeitos psiquiátricos permanentes. Casos de psicose prolongada são raríssimos e geralmente envolvem predisposição. Em um ambiente estruturado, a ayahuasca não \"enlouquece\" o participante médio." },
+          { myth: "Ayahuasca causa esquizofrenia ou deixa a pessoa louca permanentemente.", truth: "Para a grande maioria das pessoas, não há evidência de efeitos psiquiátricos permanentes. Casos de psicose prolongada são raríssimos e geralmente involve predisposição. Em um ambiente estruturado, a ayahuasca não \"enlouquece\" o participante médio." },
           { myth: "Todo mundo vomita sempre e passa mal com ayahuasca, sem exceção.", truth: "A purgação é comum, mas a intensidade varia muito. Algumas pessoas não vomitam em certas sessões. Mesmo quando ocorre, o mal-estar geralmente dura pouco e dá lugar a sensações mais agradáveis depois. O preparo (dieta) influencia na experiência física." }
         ],
         perguntas: [
@@ -1178,6 +1221,7 @@ Diretivas finais:
     "/galeria": () => navigateTo("/#galeria"),
     "/sobre": () => navigateTo("/#sobre"),
     "/faq": () => navigateTo("/#faq"),
+    "/recomendado": () => navigateTo("/#recomendado"),
     "/contato": () => navigateTo("/#contato"),
     "/d/:id": renderDrugPage
   };
@@ -1267,7 +1311,7 @@ Diretivas finais:
     const heroLogo = document.getElementById("heroLogo");
     if(heroLogo) heroLogo.src = LOGO_URL;
     const mailto = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Quero aliviar meu sofrimento")}`;
-    ["ctaHeader", "ctaHero", "ctaMensagem", "ctaFloat", "footerMail", "ctaHomeStart"].forEach(id => {
+    ["footerMail", "ctaHomeStart"].forEach(id => {
       const el = document.getElementById(id);
       if(el){
         el.href = mailto;
@@ -1380,7 +1424,7 @@ Diretivas finais:
     });
     // Scrollspy (destacar seção ativa no menu)
     const spyLinks = Array.from(document.querySelectorAll('.nav-links a'));
-    const sectionIds = ["hero", "mensagem", "mapa", "posts", "conhecimento", "galeria", "sobre", "faq", "contato"];
+    const sectionIds = ["hero", "mensagem", "mapa", "posts", "conhecimento", "galeria", "sobre", "faq", "recomendado", "contato"];
     const sections = sectionIds.map(id => document.getElementById(id));
     function onScrollSpy(){
       let activeLink = spyLinks[0];
@@ -1467,7 +1511,7 @@ Diretivas finais:
           <li><strong>Entropia cortical:</strong> Medida de desordem nas atividades neurais do cérebro; psicodélicos clássicos aumentam a entropia cortical, permitindo que o cérebro explore estados menos rígidos de funcionamento.</li>
           <li><strong>Receptor 5-HT2A:</strong> Principal alvo dos psicodélicos clássicos (como LSD, psilocibina); receptor de serotonina envolvido na modulação da percepção e cognição.</li>
           <li><strong>BDNF:</strong> Brain-Derived Neurotrophic Factor (Fator Neurotrófico Derivado do Cérebro); proteína que promove a sobrevivência e crescimento de neurônios, importante para neuroplasticidade e possivelmente mediadora dos efeitos antidepressivos de tratamentos como cetamina.</li>
-          <li><strong>Dissociação:</strong> Estado de desconexão do corpo ou da realidade; com cetamina, pode incluir sensação de estar \"fora do corpo\" ou com percepção reduzida da dor e das emoções, geralmente passageiro.</li>
+          <li><strong>Dissociação:</strong> Estado de desconexão do corpo ou da realidade; com cetamina, pode incluir sensação de estar "fora do corpo" ou com percepção reduzida da dor e das emoções, geralmente passageiro.</li>
           <li><strong>Neuroplasticidade:</strong> Capacidade do cérebro de se reorganizar formando novas conexões e vias; fundamental para a recuperação em transtornos mentais, e possivelmente intensificada por terapias psicodélicas, facilitando novas aprendizagens emocionais.</li>
           <li><strong>IMAO:</strong> Inibidor da Monoamina Oxidase; classe de substâncias que bloqueiam a enzima que degrada neurotransmissores. No contexto da ayahuasca, as beta-carbolinas do cipó atuam como IMAO, permitindo que a DMT permaneça ativa no organismo tempo suficiente para efeito psicodélico.</li>
           <li><strong>Oxitocina:</strong> Hormônio associado ao vínculo social e à empatia; liberado em maior quantidade sob efeito do MDMA, contribuindo para sensação de conexão interpessoal e redução do medo social.</li>
@@ -1546,7 +1590,7 @@ Diretivas finais:
   (function globalInit(){
     document.getElementById("logo").src = LOGO_URL;
     const mailto = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Quero aliviar meu sofrimento")}`;
-    ["ctaHeader", "ctaFloat", "footerMail"].forEach(id => {
+    ["footerMail"].forEach(id => {
       const el = document.getElementById(id);
       if(el) el.href = mailto;
     });
@@ -1635,7 +1679,3 @@ Diretivas finais:
 </script>
 </body>
 </html>
-
-
-
-

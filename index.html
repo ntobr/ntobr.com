@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -11,504 +12,278 @@
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="NTO – Brasil" />
 <meta name="twitter:description" content="Ciência, ética e cuidado." />
-<meta name="theme-color" content="#10b981" />
+<meta name="theme-color" content="#000000" />
 <link rel="canonical" id="canonical" href="https://ntobr.com/" />
 <link rel="preload" as="image" href="./logo.png" />
+
 <style>
-  /* UX: Design tokens e paleta de cores */
-  :root{
-    --ink: #0f172a;        /* cor do texto principal (tinta) */
-    --muted: #475569;      /* cor do texto secundário (muted) */
-    --bg: #f8fafc;         /* fundo da página */
-    --card: #fff;          /* fundo de cartões */
-    --line: #e2e8f0;       /* cor de bordas e linhas divisórias */
-    --grad: linear-gradient(90deg, #34d399, #06b6d4, #3b82f6, #8b5cf6, #ec4899); /* gradiente iridescente multicolor para elementos de destaque */
-    --ring: #22d3ee;       /* cor do contorno de foco (ciano) */
-    --brand: #10b981;      /* cor de marca/acento (verde) */
-    --danger: #ef4444;     /* cor de erro/perigo (vermelho) */
-    --ok: #059669;         /* cor de sucesso/ok (verde) */
+/* =========================================================
+   NTO V5 — Dark Psy Experience
+   Changelog (2025-09-13)
+   - Etapa 1: Removidos botões de contraste/animação; consertado Home; removido “Imprimir mensagem”.
+   - Guia rápido (Conhecimento): desktop não redireciona; mobile não cobre texto.
+   - Etapa 2: Reorganização de drogas (Cetamina, Ayahuasca, Ibogaína em destaque); tags “Em pesquisa”; conteúdo ampliado; FAQ expandido; Recomendações ampliadas.
+   - Etapa 3: Tema escuro com espectros psicodélicos, transições suaves e interlúdios full-bleed sem enquadramento rígido.
+   - Etapa 4: Seção “Projetos” (Observatório, Cartilhas, Livros, Pós-graduação, Centro de Pesquisa) e CTA Alívio com popup (dados básicos) antes do mapa.
+
+   Como manter:
+   - Atualize o array KNOWLEDGE e os campos 'status' e 'order' para reorganizar/rotular substâncias.
+   - Ajuste imagens dos interlúdios na seção .interlude (URLs) conforme a estética da marca.
+   - Eventos de analytics podem ser ouvidos pelos data-attributes (data-event).
+   - O popup de “Quero Alívio” salva dados em localStorage e navega para o mapa.
+
+   QA rápido:
+   - [ ] Home volta à página inicial.
+   - [ ] “Imprimir mensagem” não existe.
+   - [ ] Guia rápido em Conhecimento filtra sem mudar rota; no mobile não cobre o conteúdo.
+   - [ ] CTA “Quero Alívio” abre popup → submete → vai ao mapa.
+   - [ ] Cartões mostram “Em pesquisa” quando aplicável.
+   - [ ] Tema escuro presente em todo o site; textos legíveis (contraste AA).
+========================================================= */
+
+/* ========== Design tokens (dark) ========== */
+:root{
+  --ink: #e5e7eb;          /* texto principal */
+  --muted: #9aa4b2;        /* texto secundário */
+  --bg: #090b12;           /* fundo base escuro */
+  --card: #0f1420;         /* fundos de cartões */
+  --line: #1c2433;         /* linhas/bordas */
+  --brand: #10b981;        /* verde NTO */
+  --ok: #10b981;
+  --danger: #ef4444;
+  --ring: #22d3ee;
+
+  /* espectro psicodélico (animado) */
+  --grad: conic-gradient(from 0deg at 50% 50%,
+      #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);
+}
+
+*{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+  .reveal, .toast{ transition: none !important; }
+}
+
+body{
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, sans-serif;
+  background: radial-gradient(1200px 800px at 20% -10%, #0d1220 0%, transparent 55%),
+              radial-gradient(1000px 700px at 120% 30%, #0b1020 0%, transparent 50%),
+              var(--bg);
+  color: var(--ink);
+}
+a{ color: inherit; }
+img{ max-width: 100%; display: block; }
+:focus-visible{ outline: 3px solid var(--ring); outline-offset: 2px; border-radius: 6px; }
+.visually-hidden{
+  position: absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+.visually-hidden:focus{
+  position: static; width:auto; height:auto; margin:0; clip:auto; white-space:normal; background:#1e293b; padding:8px; border-radius:4px;
+}
+
+/* Layout base */
+.container{ max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.section{ padding: 72px 0; }
+.center{ text-align: center; }
+.muted{ color: var(--muted); }
+
+/* Cards/Buttons */
+.card{
+  background: #0f1420e6;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.03);
+}
+.btn{
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0.85rem 1.35rem; border-radius: 999px; font-weight: 700;
+  text-decoration: none; color: #0a0a0a; background: #fff;
+  border: 0; cursor: pointer;
+}
+.btn.primary{
+  color:#fff; background: linear-gradient(90deg, #34d399, #06b6d4, #3b82f6, #8b5cf6, #ec4899);
+  background-size: 200% 100%; animation: swipe 6s linear infinite;
+}
+@keyframes swipe{ 0%{background-position:0% 0} 100%{background-position:200% 0} }
+.btn.ghost{ background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.btn.small{ padding: 0.55rem 1rem; font-size: 0.95rem; }
+
+/* Chips/Tags */
+.chip, .pill{
+  display: inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
+  border:1px solid var(--line); background:#0b1020; font-size:12px; color:var(--muted);
+}
+.tag{
+  display:inline-flex; padding:4px 8px; border-radius:999px; border:1px solid var(--line);
+  background:#0b1020; color:#9ad0ff; font-size:12px;
+}
+.tag.research{ color:#ffd28a; border-color:#3a2a10; background:#1b1406; }
+
+/* Header sticky escuro */
+header{
+  position: sticky; top: 0; z-index: 70;
+  background: rgba(7,10,18,0.72);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: saturate(1.3) blur(10px);
+}
+.nav{
+  display: flex; align-items: center; justify-content: space-between; padding: 14px 0;
+}
+.brand{ display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit; }
+.brand span{ letter-spacing: .06em; font-weight:700; }
+.nav-links{ display:flex; gap:14px; font-size:14px; flex-wrap:wrap; }
+.nav-links a{
+  text-decoration:none; color:#cbd5e1; padding:6px 8px; border-radius:10px;
+}
+.nav-links a.active{ background:#182033; color:#fff; }
+.hamb{ display:none; }
+@media (max-width: 900px){
+  .nav-links{ display:none; }
+  .hamb{
+    display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line);
+    border-radius:10px; padding:8px 10px; background:#0f1420; color:#e5e7eb;
   }
-  *{ box-sizing: border-box; }
-  html{ scroll-behavior: smooth; }
-  @media (prefers-reduced-motion: reduce){
-    html{ scroll-behavior: auto; }
-    .reveal, .toast{ transition: none !important; }
-  }
-  body{
-    margin: 0;
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, sans-serif;
-    background: var(--bg);
-    color: var(--ink);
-  }
-  a{ color: inherit; }
-  img{ max-width: 100%; display: block; }
-  /* Foco visível para acessibilidade */
-  :focus-visible{ outline: 3px solid var(--ring); outline-offset: 2px; border-radius: 6px; }
-  .visually-hidden{
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0,0,0,0);
-    white-space: nowrap;
-    border: 0;
-  }
-  .visually-hidden:focus{
-    position: static;
-    width: auto;
-    height: auto;
-    margin: 0;
-    clip: auto;
-    white-space: normal;
-    background: #e5e7eb;
-    padding: 8px;
-    border-radius: 4px;
-  }
-  /* Layout base */
-  .container{ max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-  .section{ padding: 64px 0; }
-  .center{ text-align: center; }
-  .muted{ color: var(--muted); }
-  .card{
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 24px;
-    padding: 24px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
-  }
-  .btn{
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.85rem 1.35rem;
-    border-radius: 999px;
-    font-weight: 600;
-    text-decoration: none;
-    background: var(--grad);
-    color: #fff;
-    border: 0;
-    cursor: pointer;
-  }
-  .btn.secondary{ background: #111827; }
-  .btn.ghost{
-    background: #fff;
-    color: #0f172a;
-    border: 1px solid var(--line);
-  }
-  .btn.small{ padding: 0.55rem 1rem; font-size: 0.95rem; }
-  .btn.link{ background: transparent; border: 0; color: #0ea5e9; padding: 0; }
-  .btn:disabled{ opacity: 0.6; cursor: not-allowed; }
-  .chip{
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    border: 1px solid var(--line);
-    padding: 6px 10px;
-    border-radius: 999px;
-    font-size: 12px;
-    background: #fff;
-  }
-  /* Header fixo com transparência */
-  header{
-    position: sticky;
-    top: 0;
-    z-index: 70;
-    background: #ffffffcc;
-    border-bottom: 1px solid var(--line);
-    backdrop-filter: saturate(1.2) blur(8px);
-  }
-  .nav{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 0;
-  }
-  .brand{
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-    color: inherit;
-  }
-  .brand span{ letter-spacing: 0.06em; }
-  .nav-links{
-    display: flex;
-    gap: 14px;
-    font-size: 14px;
-    flex-wrap: wrap;
-  }
-  .nav-links a{
-    text-decoration: none;
-    color: #334155;
-    padding: 6px 8px;
-    border-radius: 10px;
-  }
-  .nav-links a.active{ background: #e2e8f0; }
-  .hamb{ display: none; }
-  @media (max-width: 900px){
-    .nav-links{ display: none; }
-    .hamb{
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 8px 10px;
-      background: #fff;
-    }
-    #mobile{ display: none; }
-    #mobile.open{
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding: 14px 0;
-    }
-    #mobile a{
-      padding: 10px;
-      border-radius: 10px;
-      text-decoration: none;
-      color: #334155;
-    }
-  }
-  /* Hero (cabeçalho principal) */
-  .hero{
-    padding: 72px 0 24px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::before{
-    content: "";
-    position: absolute;
-    inset: -20% -10%;
-    z-index: -1;
-    /* UX: Gradientes radiais para fundo suave e acolhedor */
-    background:
-      radial-gradient(1000px 500px at 10% -10%, #dcfce7 0%, transparent 60%),
-      radial-gradient(800px 450px at 110% 30%, #e9d5ff 0%, transparent 55%),
-      radial-gradient(600px 380px at 50% 120%, #bae6fd 0%, transparent 60%);
-  }
-  .hero-grid{
-    display: grid;
-    gap: 20px;
-    grid-template-columns: 1.2fr 0.8fr;
-  }
-  .hero-panel{
-    background: #ffffffb3;
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    padding: 18px;
-  }
-  @media(max-width: 900px){ .hero-grid{ grid-template-columns: 1fr; } }
-  /* Grids utilitários */
-  .grid{ display: grid; gap: 16px; }
-  @media(min-width: 768px){ .cols-2{ grid-template-columns: repeat(2, 1fr); } }
-  @media(min-width: 1024px){ .cols-3{ grid-template-columns: repeat(3, 1fr); } }
-  /* Animação de revelação ao rolar */
-  .reveal{
-    opacity: 0;
-    transform: translateY(14px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-  .reveal.is-visible{ opacity: 1; transform: none; }
-  /* FAQ (perguntas frequentes) */
-  .faq-item{ border-bottom: 1px solid var(--line); }
-  .faq-btn{
-    width: 100%;
-    text-align: left;
-    padding: 14px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: none;
-    border: 0;
-    cursor: pointer;
-    font-weight: 600;
-  }
-  .faq-ans{
-    margin: 0 0 14px;
-    color: var(--muted);
-    display: none;
-  }
-  .faq-ans.open{ display: block; }
-  /* Inputs (campo de busca) */
-  .input{
-    display: block;
-    width: 100%;
-    max-width: 640px;
-    margin: 0 auto 16px;
-    padding: 12px 16px;
-    border: 1px solid #cbd5e1;
-    border-radius: 999px;
-  }
-  /* Skeleton (esqueleto de carregamento) */
-  .skeleton{
-    position: relative;
-    overflow: hidden;
-    background: #eef2f7;
-    border-radius: 16px;
-    border: 1px solid var(--line);
-  }
-  .skeleton::after{
-    content: "";
-    position: absolute;
-    inset: 0;
-    transform: translateX(-100%);
-    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
-    animation: shimmer 1.6s infinite;
-  }
-  @keyframes shimmer{ 100%{ transform: translateX(100%); } }
-  /* Toast (notificação) */
-  .toast{
-    position: fixed;
-    left: 50%;
-    bottom: 24px;
-    transform: translateX(-50%) translateY(20px);
-    opacity: 0;
-    background: #111827;
-    color: #fff;
-    border-radius: 14px;
-    padding: 10px 14px;
-    z-index: 80;
-    box-shadow: 0 16px 40px rgba(0,0,0,0.25);
-    transition: 0.35s;
-  }
-  .toast.show{ opacity: 1; transform: translateX(-50%) translateY(0); }
-  /* Botão voltar ao topo */
-  #toTop{
-    position: fixed;
-    right: 24px;
-    bottom: 88px;
-    z-index: 75;
-    display: none;
-  }
-  /* Barra de ajuda imediata (mobile) */
-  .help-bar{
-    display: none;
-    position: fixed;
-    left: 24px;
-    right: 24px;
-    bottom: 24px;
-    padding: 10px;
-    font-size: 14px;
-    text-align: center;
-    background: #fee2e2;
-    color: #b91c1c;
-    border: 1px solid #fca5a5;
-    border-radius: 8px;
-    z-index: 90;
-  }
-  .help-bar a{
-    color: #b91c1c;
-    font-weight: 600;
-    text-decoration: underline;
-  }
-  @media(max-width: 600px){
-    .help-bar{ display: block; }
-    #ctaFloat{ bottom: 88px; }
-  }
-  /* Footer */
-  footer{
-    padding: 32px 0;
-    border-top: 1px solid var(--line);
-    background: #fff;
-  }
-  .footer-cols{
-    display: grid;
-    gap: 16px;
-  }
-  @media(min-width: 768px){ .footer-cols{ grid-template-columns: 2fr 1fr 1fr; } }
-  /* Páginas do router / layout de página de substância */
-  .page{ display: none; }
-  .page.active{ display: block; }
-  .subgrid{
-    display: grid;
-    gap: 20px;
-    grid-template-columns: 280px 1fr;
-  }
-  @media(max-width: 980px){ .subgrid{ grid-template-columns: 1fr; } }
-  .toc{ position: sticky; top: 84px; }
-  .toc a{
-    display: block;
-    padding: 8px 10px;
-    border-radius: 10px;
-    text-decoration: none;
-    color: #334155;
-  }
-  .toc a:hover{ background: #f1f5f9; }
-  @media(max-width: 980px){ .toc{ position: static !important; top: auto !important; } }
-  .breadcrumb{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    align-items: center;
-    font-size: 14px;
-  }
-  .tag{
-    display: inline-flex;
-    padding: 3px 8px;
-    border-radius: 999px;
-    background: #e8f5ff;
-    border: 1px solid #cfe8ff;
-    color: #0369a1;
-    font-size: 12px;
-  }
-  .note{ border-left: 4px solid var(--ok); padding-left: 12px; }
-  .warning{ border-left: 4px solid var(--danger); padding-left: 12px; }
-  /* Lista de pills */
-  .pill-list{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .pill{
-    padding: 6px 10px;
-    border-radius: 999px;
-    border: 1px solid var(--line);
-    background: #fff;
-    font-size: 12px;
-  }
-  /* Tema alto contraste (alternativo) */
-  .high-contrast{
-    --bg: #000;
-    --card: #000;
-    --ink: #fff;
-    --muted: #ccc;
-    --line: #fff;
-  }
-  .high-contrast .card{ border-color: #fff; }
-  .high-contrast .btn.ghost{
-    background: #000;
-    color: #fff;
-    border: 2px solid #fff;
-  }
-  .high-contrast a{ color: #0bf; }
-  .high-contrast :focus-visible{ outline-color: #ff0; }
-  /* Redução de animações via classe */
-  html.reduce-motion{ scroll-behavior: auto !important; }
-  html.reduce-motion .reveal, html.reduce-motion .toast{ transition: none !important; }
-  @media(max-width: 600px){
-    .nav { flex-wrap: wrap; gap: 8px; }
-  }
-  .high-contrast .hero::before{ background: none !important; }
-  .high-contrast header{ background: #000 !important; }
-  .high-contrast footer{ background: #000 !important; }
-  .high-contrast .help-bar{
-    background: #000 !important;
-    color: #fff !important;
-    border-color: #fff !important;
-  }
+  #mobile{ display:none; }
+  #mobile.open{ display:flex; flex-direction:column; gap:10px; padding:14px 0; }
+  #mobile a{ padding:10px; border-radius:10px; text-decoration:none; color:#cbd5e1; background:#0f1420; }
+}
+
+/* Hero psicodélico */
+.hero{
+  padding: 96px 0 24px; text-align:center; position:relative; overflow:hidden;
+}
+.hero::before{
+  content:""; position:absolute; inset:-20% -10%; z-index:-1;
+  background:
+    radial-gradient(1200px 650px at 10% -10%, rgba(88,101,242,.28) 0%, transparent 60%),
+    radial-gradient(900px 520px at 120% 30%, rgba(16,185,129,.25) 0%, transparent 55%),
+    radial-gradient(650px 420px at 50% 120%, rgba(56,189,248,.20) 0%, transparent 60%),
+    radial-gradient(1000px 1000px at 50% 50%, rgba(0,0,0,.6) 0%, transparent 60%);
+  filter: saturate(1.2);
+}
+.hero .halo{
+  position:absolute; inset:-40% -10%; z-index:-2; opacity:.25;
+  background: var(--grad);
+  animation: spin 16s linear infinite;
+}
+@keyframes spin{ to{ transform: rotate(360deg);} }
+
+/* Grids utilitários */
+.grid{ display:grid; gap:16px; }
+@media(min-width:768px){ .cols-2{ grid-template-columns:repeat(2,1fr);} }
+@media(min-width:1024px){ .cols-3{ grid-template-columns:repeat(3,1fr);} }
+
+/* Reveal */
+.reveal{ opacity:0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.is-visible{ opacity:1; transform:none; }
+
+/* FAQ */
+.faq-item{ border-bottom:1px solid var(--line); }
+.faq-btn{
+  width:100%; text-align:left; padding:14px 0; display:flex; justify-content:space-between; align-items:center;
+  background:none; border:0; cursor:pointer; font-weight:700; color:#e2e8f0;
+}
+.faq-ans{ margin:0 0 14px; color:var(--muted); display:none; }
+.faq-ans.open{ display:block; }
+
+/* Inputs */
+.input{
+  display:block; width:100%; max-width:640px; margin:0 auto 16px; padding:12px 16px;
+  border:1px solid #22304a; border-radius:999px; color:#fff; background:#0b1020;
+}
+
+/* Skeleton */
+.skeleton{ position:relative; overflow:hidden; background:#0d1322; border-radius:16px; border:1px solid var(--line); }
+.skeleton::after{
+  content:""; position:absolute; inset:0; transform: translateX(-100%);
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100%);
+  animation: shimmer 1.6s infinite;
+}
+@keyframes shimmer{ 100%{ transform: translateX(100%);} }
+
+/* Toast */
+.toast{
+  position:fixed; left:50%; bottom:24px; transform: translateX(-50%) translateY(20px); opacity:0;
+  background:#0f1420; color:#fff; border:1px solid var(--line); border-radius:14px;
+  padding:10px 14px; z-index:90; box-shadow:0 16px 40px rgba(0,0,0,.45); transition:.35s;
+}
+.toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
+
+/* Back to top */
+#toTop{ position:fixed; right:24px; bottom:88px; z-index:75; display:none; }
+#toTop.show{ display:inline-flex; }
+.help-bar{
+  display:none; position:fixed; left:24px; right:24px; bottom:24px; padding:10px; font-size:14px; text-align:center;
+  background:#3a0d0d; color:#fecaca; border:1px solid #7f1d1d; border-radius:8px; z-index:90;
+}
+.help-bar a{ color:#fecaca; font-weight:700; text-decoration:underline; }
+@media(max-width:600px){ .help-bar{ display:block; } #ctaFloat{ bottom:88px; }}
+
+/* Footer */
+footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
+
+/* Subpáginas & TOC */
+.page{ display:none; }
+.page.active{ display:block; }
+.subgrid{ display:grid; gap:20px; grid-template-columns: 280px 1fr; }
+@media(max-width:980px){ .subgrid{ grid-template-columns:1fr; } }
+.toc{ position: sticky; top: 84px; }
+@media(max-width:980px){ .toc{ position:static !important; } }
+.toc a, .toc button{
+  display:block; width:100%; text-align:left; padding:8px 10px; border-radius:10px;
+  text-decoration:none; color:#cbd5e1; background:transparent; border:0; cursor:pointer;
+}
+.toc a:hover, .toc button:hover{ background:#111a2b; }
+
+/* Conhecimento: layout com guia rápido lateral */
+#knowledgeLayout{ display:grid; gap:20px; grid-template-columns: 260px 1fr; }
+@media(max-width:980px){
+  #knowledgeLayout{ grid-template-columns:1fr; }
+  #quickGuide{ position:static; top:auto; }
+}
+
+/* Interlúdios full-bleed */
+.interlude{
+  position:relative; min-height:40vh; display:block; overflow:hidden;
+  background-size:cover; background-position:center center; background-attachment:fixed;
+  border-top:1px solid #0b0b0b; border-bottom:1px solid #0b0b0b;
+  box-shadow: inset 0 -80px 120px rgba(0,0,0,.45), inset 0 80px 120px rgba(0,0,0,.45);
+}
+.interlude .veil{
+  position:absolute; inset:0; background: radial-gradient(800px 400px at 10% 10%, rgba(0,0,0,.3), transparent 60%),
+                                 radial-gradient(800px 400px at 90% 80%, rgba(0,0,0,.25), transparent 60%);
+}
+
+/* Float CTA */
+#ctaFloat{ position:fixed; right:24px; bottom:24px; z-index:74; }
+
+/* Small utilities */
+.toolbar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.breadcrumb{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; font-size:14px; color:#a7b0bd; }
+
+/* Fancy gradient border */
+.fancy{
+  position:relative; border-radius:24px; padding:1px; background: var(--grad); background-size: 200% 200%;
+  animation: swipe 10s linear infinite;
+}
+.fancy > .inner{ background:#0f1420; border-radius:22px; padding:20px; }
+
+/* Header logo text hide on small */
+@media(max-width:520px){ .brand span{ display:none; } }
 </style>
-<!-- 
-  Changelog (2025-09-13):
-  - Refinado tom de voz (mais empático, claro, sem jargões).
-  - Melhorias de acessibilidade (alto contraste, reduzir animações, navegação por teclado, skip link).
-  - CTA de ajuda imediata adicionada (recursos de crise).
-  - Conteúdo clínico expandido (evidências, mecanismos, riscos, preparação, integração, mitos & verdades, perguntas frequentes).
-  - Sumário fixo em páginas de substâncias (TOC) e navegação aprimorada.
-  - Feedbacks visuais (toasts, skeletons de carregamento) e suporte à impressão.
-  - Metadados SEO adicionados (meta dinâmicos, JSON-LD, Open Graph/Twitter Cards).
-  - Hooks de analytics via data-attributes em elementos-chave.
-  Como manter:
-  - Atualize o array KNOWLEDGE para modificar conteúdo ou adicionar novas substâncias (incluindo referências, mitos, perguntas, checklists, glossário).
-  - Ajuste variáveis CSS em :root para alterar tema/paleta de cores.
-  - Monitore eventos via data-event para integração com analytics (cta_click, page_view, etc.).
-  QA Checklist:
-  - [ ] Contraste de cores verificado (WCAG AA mínimo para texto sobre fundo).
-  - [ ] Navegação por teclado testada (tabindex e foco visível) em menus, links e botões.
-  - [ ] Comportamento responsivo validado em mobile (menus, CTA flutuante, barra de ajuda, layout das seções).
-  - [ ] Funcionalidades interativas testadas: menu mobile, scrollspy, toasts, cópia de email, impressão de página.
-  - [ ] Conteúdo das páginas de substâncias revisado (sem erros, linguagem acessível, disclaimers presentes).
-  - [ ] SEO: títulos/descrições por rota, JSON-LD e meta tags conferidos.
-REQUISITOS ORIGINAIS:
-Contexto rápido:
-- Marca: NTO – Brasil (ciência, ética, cuidado, acolhimento).
-- Público: pessoas em sofrimento (depressão resistente, ideação suicida, TEPT), familiares e profissionais aliados.
-- Objetivo: reduzir fricção emocional e cognitiva; aumentar sensação de segurança; facilitar contato; educar com responsabilidade; fortalecer confiança na marca.
-
-Entrada:
-- Receba o arquivo `index.html` atual (SPA com hash-router, páginas para cada substância e home com seções).
-- O código contém: layout, conteúdo educativo, FAQ, catálogo com rotas /d/:id (cetamina, psilocibina, MDMA, ibogaína, LSD, ayahuasca), CTAs e microinterações.
-
-SEU TRABALHO — ENTREGUE UMA NOVA VERSÃO DO `index.html` PRONTA PARA PRODUÇÃO, MANTENDO O QUE FUNCIONA E MELHORANDO TUDO MAIS:
-
-1) VOZ, PERSONALIDADE & HUMANIDADE
-- Reescreva microcopys para aumentar empatia, clareza e antijargão (sem promessas indevidas).
-- Use tom caloroso, respeitoso, informativo, com frases curtas e escaneáveis.
-        Evite “marketing duro”.
-- Inclua mensagens que validam o sofrimento sem julgamentos, reforçam autonomia e explicam limites com transparência.
-- Mantenha linguagem inclusiva e acessível (WCAG), evitando gatilhos desnecessários.
-        Ofereça ajuda imediata com diretrizes de crise (sem substituir serviços de emergência).
-
-2) UX & FLUXOS DE AJUDA
-- Faça “primeiro passo” cristalino, com CTAs consistentes (email/agenda) e redundância de acesso (header, hero, rodapé, seções).
-- Adicione uma barra de “Ajuda agora” persistente em mobile com CTA e link de recursos de crise (visual discreto).
-- Crie “modo foco” para leitura de páginas de substâncias (TOC fixo/ancoras; progresso de leitura; voltar ao catálogo).
-- Simplifique navegação (hierarquia, estado ativo, rota ao voltar).
-        Mantenha hash-router.
-
-3) CONTEÚDO CLÍNICO (PÁGINAS DE SUBSTÂNCIAS)
-- Para cada substância, amplie: mecanismos, evidências (nível/força), indicações/limitações, preparo, sessão, integração, riscos/contraindicações, interações comuns (antidepressivos, IMAO, cardiológicos), diferenças legais no Brasil, leituras úteis (formato de referência curto).
-- Estruture com sumário ancorado, cartões de “atenção” (warning), “nota” (note), “mitos & verdades”, e “perguntas para conversar com seu médico/terapeuta”.
-- Inclua checklists imprimíveis (preparo/integração) e uma versão “resumo em 1 minuto”.
-- Traga um mini-glossário no final (entropia cortical, 5-HT2A, BDNF, dissociação etc).
-
-4) ACESSIBILIDADE & COMFORTO
-- Contraste AA/AAA, tamanhos e alturas confortáveis, foco visível, aria-labels, navegação por teclado, “pular para conteúdo”.
-- Preferências do usuário: respeitar prefers-reduced-motion; oferecer “reduzir animações” e “alto contraste” no header.
-- Texto legível em devices de baixa densidade e largura reduzida.
-
-5) SISTEMA VISUAL & CORES
-- Preserve a base, mas refine paleta (cores de feedback claras: ok, alerta, risco).
-- Introduza “Design Tokens” no :root (spacing, radius, sombras, gradientes), compondo estilo coeso.
-- Melhorar estados (hover/active/focus), skeletons e microanimações (discretas).
-
-6) MICROINTERAÇÕES & CONFIANÇA
-- Toasts e feedbacks verbosos (ex.: “Email copiado. Estamos aqui com você.”).
-- Indicadores de carregamento dos iframes (mapa, IG, YouTube) com fallback.
-- Conteúdo offline-friendly básico: mensagens quando embeds falham.
-
-7) SEO, SHARE & ANALYTICS
-- Melhorar metas (title/description por rota), Open Graph e Twitter Cards por substância (nome + resumo).
-- Schema.org: MedicalEntity/Drug (resumo educativo), Organization.
-- Incluir JSON-LD mínimo e atualização da URL canonical (mesmo em hash-router).
-- Inserir hooks de analytics (padrão: data-attrs) sem amarrar a libs específicas.
-        Mapear eventos: cta_click, page_view, faq_toggle, knowledge_search.
-
-8) PERFORMANCE
-- Preload/decodificação do logo; `loading="lazy"` em imagens fora de viewport; CSS crítico inline + minificação simples; JS de interação sem frameworks.
-- Evitar layout shift (dimensões fixas nos iframes/imagens).
-- Debounce na busca do catálogo.
-        Armazenar última consulta em localStorage para continuidade.
-
-9) TEXTO DE SEGURANÇA & LIMITES
-- Avisos claros de que material é educativo e não substitui consulta médica; destacar quando algo é “em pesquisa”.
-- “Se estiver em perigo imediato, procure emergência local”.
-        Inclua link configurável de recursos de crise no Brasil.
-
-10) ENTREGÁVEL
-- ENTREGUE **UM ARQUIVO ÚNICO** `index.html`, autônomo (sem dependências externas além dos embeds).
-- O código deve permanecer vanilla JS/CSS/HTML.
-        Mantenha roteamento hash.
-- Não remova seções existentes; reorganize e melhore com comentários `// UX:` explicando decisões.
-- Comentários no topo: changelog e “como manter”.
-- Inclua testes manuais: checklist de QA (acessibilidade, navegação, CTAs, impressão).
-- Garanta que todo conteúdo novo esteja em português claro, com ortografia consistente.
-
-Diretivas finais:
-- Respeite o rigor ético: sem recomendações individuais, sem promessas de cura, sem linguagem sensacionalista.
-- Otimize para mobile primeiro.
-- Mantenha a experiência acolhedora end-to-end, com ênfase em “pequenos passos fáceis”.
--->
 </head>
+
 <body>
 <a href="#hero" class="visually-hidden">Pular para conteúdo</a>
+
 <header>
   <div class="container nav">
     <a href="#/" class="brand" data-link>
       <img id="logo" alt="Logo NTO" width="56" height="56" style="object-fit:contain" />
+      <span>NTO — Brasil</span>
     </a>
     <nav class="nav-links" id="navLinks">
       <a href="#/" data-link>Home</a>
@@ -517,26 +292,29 @@ Diretivas finais:
       <a href="#/posts" data-link>Posts</a>
       <a href="#/conhecimento" data-link>Conhecimento</a>
       <a href="#/galeria" data-link>Galeria</a>
+      <a href="#/projetos" data-link>Projetos</a>
       <a href="#/sobre" data-link>Sobre</a>
       <a href="#/faq" data-link>FAQ</a>
       <a href="#/recomendado" data-link>Recomendações</a>
       <a href="#/contato" data-link>Contato</a>
     </nav>
-    <button id="toggleContrast" class="btn ghost small" type="button">Contraste</button>
-    <button id="toggleMotion" class="btn ghost small" type="button">Reduzir animação</button>
+    <!-- Botões de contraste/animação removidos conforme checklist -->
     <button class="hamb" id="hamb" aria-controls="mobile" aria-expanded="false">☰ Menu</button>
-    <a id="ctaHeader" class="btn small" href="#/mapa" data-link data-event="cta_click">QUERO ALÍVIO 🫶</a>
+    <a id="ctaHeader" class="btn small primary" href="#/mapa" data-link data-event="cta_click">QUERO ALÍVIO 🫶</a>
   </div>
   <div class="container" id="mobile" aria-hidden="true"></div>
 </header>
+
 <main id="app" tabindex="-1" aria-live="polite"></main>
+
 <!-- CTA flutuante + topo + barra de ajuda -->
-<a id="ctaFloat" class="btn small" style="position:fixed;right:24px;bottom:24px;z-index:74" href="#/mapa" data-link data-event="cta_click">🫶 Quero Alívio</a>
+<a id="ctaFloat" class="btn small primary" href="#/mapa" data-link data-event="cta_click">🫶 Quero Alívio</a>
 <div class="help-bar" id="helpBar">Em crise suicida ou perigo imediato? <a href="tel:188">Ligue 188 (CVV)</a> ou <a href="tel:192">192 (SAMU)</a>.</div>
-<button id="toTop" class="btn small" aria-label="Voltar ao topo">↑ Topo</button>
+<button id="toTop" class="btn small ghost" aria-label="Voltar ao topo">↑ Topo</button>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
 <footer>
-  <div class="container footer-cols">
+  <div class="container footer-cols" style="display:grid;gap:16px;grid-template-columns:2fr 1fr 1fr">
     <div>
       <div style="display:flex;align-items:center;gap:12px">
         <img src="./logo.png" alt="" width="40" height="40" />
@@ -563,26 +341,28 @@ Diretivas finais:
     </div>
   </div>
 </footer>
+
 <!-- ========================= TEMPLATES ========================= -->
 <template id="tpl-home">
   <section class="hero" id="hero">
+    <div class="halo"></div>
     <div class="container">
       <div class="reveal center">
-        <img id="heroLogo" alt="NTO Brasil" style="height:160px;width:auto;margin:0 auto 24px" />
+        <img id="heroLogo" alt="NTO Brasil" style="height:160px;width:auto;margin:0 auto 24px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.6))" />
         <h1 style="font-size:36px;margin:0 0 12px">Ciência, ética e cuidado</h1>
-        <p class="muted" style="max-width:780px;margin:0 auto 20px;font-size:18px;line-height:1.6">
+        <p class="muted" style="max-width:780px;margin:0 auto 20px;font-size:18px;line-height:1.7">
           Se você está carregando um peso que parece impossível, <strong>você não está só</strong>. Aqui, acolhemos a sua dor
           com respeito e ciência. Nosso compromisso é <strong>reduzir o sofrimento rapidamente</strong>, com segurança clínica e
           responsabilidade, para que você recupere o fôlego e a esperança. Estamos com você — no seu ritmo, no seu tempo.
         </p>
         <div class="toolbar" style="gap:10px;justify-content:center">
-          <a id="ctaHero" class="btn" href="#/mapa" data-link data-event="cta_click">QUERO ALÍVIO 🫶</a>
-          <a class="btn secondary" href="#/conhecimento" data-link>Conhecimento</a>
+          <button id="ctaHero" class="btn primary" data-event="cta_click">QUERO ALÍVIO 🫶</button>
+          <a class="btn ghost" href="#/conhecimento" data-link>Conhecimento</a>
           <a class="btn ghost" href="#/faq" data-link>FAQ</a>
         </div>
       </div>
-      <div class="hero-grid" style="margin-top:28px">
-        <div class="hero-panel reveal">
+      <div class="grid cols-2" style="margin-top:28px">
+        <div class="card reveal fancy"><div class="inner">
           <div style="display:flex;gap:10px;flex-wrap:wrap">
             <span class="chip">Triagem clínica séria</span>
             <span class="chip">Ambiente seguro</span>
@@ -594,23 +374,23 @@ Diretivas finais:
             Em momentos de crise, <strong>esperar semanas</strong> é cruel. A cetamina, quando indicada, pode oferecer
             redução de sintomas em horas/dias. Não prometemos milagres — prometemos <strong>cuidado responsável</strong>.
           </p>
-          <div class="pill-list" style="margin-top:8px">
+          <div class="toolbar" style="margin-top:8px; flex-wrap:wrap">
             <span class="pill">Depressão resistente</span>
             <span class="pill">Urgência suicida</span>
             <span class="pill">TEPT</span>
             <span class="pill">Ansiedade grave</span>
             <span class="pill">Uso problemático de substâncias</span>
           </div>
-        </div>
-        <div class="hero-panel reveal">
+        </div></div>
+        <div class="card reveal">
           <h3 style="margin:6px 0 6px">Primeiro passo</h3>
-          <ol class="muted" style="margin:0;padding-left:20px;line-height:1.6">
+          <ol class="muted" style="margin:0;padding-left:20px;line-height:1.7">
             <li>Escreva um email curto com sua necessidade atual.</li>
             <li>Agendamos triagem para entender histórico e segurança.</li>
             <li>Se indicado, combinamos sessões + integração terapêutica.</li>
           </ol>
           <div class="toolbar" style="margin-top:12px">
-            <a class="btn" id="ctaHomeStart" href="#">Começar agora</a>
+            <a class="btn primary" id="ctaHomeStart" href="#">Começar agora</a>
             <button class="btn ghost" id="copyEmail">Copiar email</button>
           </div>
           <p class="muted" style="margin-top:8px;font-size:12px">Evite dados sensíveis fora de canais seguros.</p>
@@ -618,13 +398,19 @@ Diretivas finais:
       </div>
     </div>
   </section>
+
+  <!-- Interlúdio visual sem texto (full-bleed) -->
+  <section class="interlude" style="background-image:url('https://images.unsplash.com/photo-1495427513693-3f80f06a46b1?q=80&w=1800&auto=format&fit=crop');">
+    <span class="veil" aria-hidden="true"></span>
+  </section>
+
   <section id="mensagem" class="section">
     <div class="container">
       <div class="reveal center" style="margin-bottom:20px">
         <h2 style="font-size:28px;margin:0 0 8px">Mensagem da NTO – Brasil</h2>
         <p class="muted" style="margin:0">Carinho, ciência e responsabilidade</p>
       </div>
-      <div class="card reveal" style="color:#334155;line-height:1.68">
+      <div class="card reveal" style="color:#cbd5e1;line-height:1.78">
         <p>
           A NTO acredita que psicodélicos, quando usados com ciência, ética e carinho, podem abrir uma janela real de alívio — especialmente para quem já tentou “de tudo” e continua carregando um peso insuportável.
           <strong> Não é fuga. É cuidado.</strong>
@@ -641,15 +427,14 @@ Diretivas finais:
           <li><strong>Integração pós-sessão</strong> para transformar a experiência em mudança de vida.</li>
           <li><strong>Plano personalizado</strong>, combinando psicoterapia e ajustes quando indicado.</li>
         </ul>
-        <h3>O que você pode esperar</h3>
-        <p>Podem ocorrer sensações dissociativas que passam rápido. Resultados variam; nossa promessa é cuidado sério, transparente e humano.</p>
         <div class="toolbar">
-          <a id="ctaMensagem" class="btn" href="#/mapa" data-link data-event="cta_click">QUERO ALÍVIO 🫶</a>
-          <button id="printMsg" class="btn ghost">Imprimir Mensagem</button>
+          <button id="ctaMensagem" class="btn primary" data-event="cta_click">QUERO ALÍVIO 🫶</button>
+          <!-- “Imprimir Mensagem” removido conforme checklist -->
         </div>
       </div>
     </div>
   </section>
+
   <section id="mapa" class="section">
     <div class="container">
       <div class="reveal center" style="margin-bottom:20px">
@@ -663,6 +448,12 @@ Diretivas finais:
       </div>
     </div>
   </section>
+
+  <!-- Interlúdio visual sem texto (full-bleed) -->
+  <section class="interlude" style="background-image:url('https://images.unsplash.com/photo-1520975922284-9f786f2de3aa?q=80&w=1800&auto=format&fit=crop');">
+    <span class="veil" aria-hidden="true"></span>
+  </section>
+
   <section id="posts" class="section">
     <div class="container">
       <div class="reveal center" style="margin-bottom:20px">
@@ -681,44 +472,98 @@ Diretivas finais:
       </div>
     </div>
   </section>
+
   <section id="conhecimento" class="section">
     <div class="container">
       <div class="reveal center" style="margin-bottom:20px">
         <h2 style="font-size:28px;margin:0 0 8px">Conhecimento</h2>
         <p class="muted" style="margin:0">Resumo responsável + links — escolha uma substância para saber mais</p>
       </div>
-      <input id="searchInp" class="input" placeholder="Buscar psicodélico (ex: Cetamina)" aria-label="Buscar psicodélico" data-event="knowledge_search" />
-      <div id="cards" class="grid cols-3"></div>
+
+      <!-- Layout com guia rápido (sem redirecionamento de rota; usa botões) -->
+      <div id="knowledgeLayout">
+        <aside id="quickGuide" class="toc card reveal" aria-label="Guia rápido de filtros">
+          <strong style="display:block;margin-bottom:8px">Filtrar</strong>
+          <button type="button" data-filter="all">Todas</button>
+          <button type="button" data-filter="clinico">Uso clínico</button>
+          <button type="button" data-filter="pesquisa">Em pesquisa</button>
+          <div style="margin-top:16px"><strong style="display:block;margin-bottom:6px">Atalhos</strong>
+            <button type="button" data-jump="cetamina">Cetamina</button>
+            <button type="button" data-jump="ayahuasca">Ayahuasca</button>
+            <button type="button" data-jump="ibogaina">Ibogaína</button>
+          </div>
+        </aside>
+
+        <div>
+          <input id="searchInp" class="input" placeholder="Buscar psicodélico (ex: Cetamina)" aria-label="Buscar psicodélico" data-event="knowledge_search" />
+          <div id="cards" class="grid cols-3"></div>
+        </div>
+      </div>
     </div>
   </section>
+
+  <!-- Interlúdio visual sem texto (full-bleed) -->
+  <section class="interlude" style="background-image:url('https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1800&auto=format&fit=crop');">
+    <span class="veil" aria-hidden="true"></span>
+  </section>
+
   <section id="galeria" class="section">
     <div class="container">
       <div class="reveal center" style="margin-bottom:20px">
         <h2 style="font-size:28px;margin:0 0 8px">Imagens</h2>
-        <p class="muted" style="margin:0">Fotos de alto impacto visual</p>
+        <p class="muted" style="margin:0">Planos de fundo imersivos (sem moldura rígida)</p>
       </div>
       <div class="grid cols-3">
-        <figure class="card reveal" style="overflow:hidden;padding:0">
-          <img src="https://images.unsplash.com/photo-1520975922284-9f786f2de3aa?q=80&w=1400&auto=format&fit=crop" alt="Floresta amazônica" style="height:256px;width:100%;object-fit:cover" />
-          <figcaption class="muted center" style="padding:12px">Floresta amazônica</figcaption>
-        </figure>
-        <figure class="card reveal" style="overflow:hidden;padding:0">
-          <img src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1400&auto=format&fit=crop" alt="Céu estrelado" style="height:256px;width:100%;object-fit:cover" />
-          <figcaption class="muted center" style="padding:12px">Céu estrelado</figcaption>
-        </figure>
-        <figure class="card reveal" style="overflow:hidden;padding:0">
-          <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1400&auto=format&fit=crop" alt="Montanhas" style="height:256px;width:100%;object-fit:cover" />
-          <figcaption class="muted center" style="padding:12px">Montanhas</figcaption>
-        </figure>
+        <div class="card reveal fancy"><div class="inner" style="padding:0;overflow:hidden">
+          <img loading="lazy" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1400&auto=format&fit=crop" alt="Montanhas" style="width:100%;height:256px;object-fit:cover" />
+        </div></div>
+        <div class="card reveal fancy"><div class="inner" style="padding:0;overflow:hidden">
+          <img loading="lazy" src="https://images.unsplash.com/photo-1520975922284-9f786f2de3aa?q=80&w=1400&auto=format&fit=crop" alt="Floresta amazônica" style="width:100%;height:256px;object-fit:cover" />
+        </div></div>
+        <div class="card reveal fancy"><div class="inner" style="padding:0;overflow:hidden">
+          <img loading="lazy" src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1400&auto=format&fit=crop" alt="Céu estrelado" style="width:100%;height:256px;object-fit:cover" />
+        </div></div>
       </div>
     </div>
   </section>
+
+  <section id="projetos" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Projetos NTO</h2>
+        <p class="muted" style="margin:0">Expansões e iniciativas</p>
+      </div>
+      <div class="grid cols-3">
+        <article class="card reveal">
+          <h3>Observatório dos Enteógenos</h3>
+          <p class="muted">NTO Brasil — Chapada dos Veadeiros, Alto Paraíso de Goiás. Centro de dados, relatos e pesquisa de campo.</p>
+        </article>
+        <article class="card reveal">
+          <h3>Cartilhas oficiais</h3>
+          <p class="muted">Materiais práticos em saúde mental, com linguagem clara e responsabilidade clínica.</p>
+        </article>
+        <article class="card reveal">
+          <h3>Livros e E-books</h3>
+          <p class="muted">Coleções educativas da NTO em saúde mental. <em>(Em breve)</em></p>
+        </article>
+        <article class="card reveal">
+          <h3>Pós-graduação</h3>
+          <p class="muted">Psicofarmacoterapia dos Psicodélicos para profissionais de saúde. <em>(Em breve)</em></p>
+        </article>
+        <article class="card reveal">
+          <h3>Centro de Pesquisas</h3>
+          <p class="muted">Serviços de pesquisa em enteógenos com rigor ético e metodológico.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <section id="sobre" class="section">
     <div class="container">
       <div class="reveal center" style="margin-bottom:20px">
         <h2 style="font-size:28px;margin:0 0 8px">Sobre</h2>
       </div>
-      <div class="card reveal" style="color:#334155">
+      <div class="card reveal" style="color:#cbd5e1">
         <p><strong>Somos Produtora, Editora, Tradutora.</strong> Instituto médico e multidisciplinar de pesquisa, estudo e promoção de enteógenos para fins de proteção à vida.</p>
         <ul>
           <li><strong>Valores</strong>: Ciência, Espiritualidade, Sabedoria, Transcendência.</li>
@@ -728,84 +573,92 @@ Diretivas finais:
       </div>
     </div>
   </section>
+
   <section id="faq" class="section">
     <div class="container">
       <div class="reveal center" style="margin-bottom:20px">
         <h2 style="font-size:28px;margin:0 0 8px">Perguntas Frequentes</h2>
       </div>
-      <div class="card reveal" style="max-width:820px;margin:0 auto">
+      <div class="card reveal" style="max-width:880px;margin:0 auto">
+        <!-- FAQ original + expandido -->
         <div class="faq-item">
           <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
             <span>Quais tratamentos psicodélicos já estão disponíveis no Brasil?</span>
             <span class="muted">+</span>
           </button>
-          <p class="faq-ans" role="region">Atualmente, apenas a cetamina (e a esketamina nasal) é utilizada em tratamentos médicos, principalmente para depressão resistente. A ayahuasca também ocorre no Brasil, mas apenas em contextos religiosos (não como terapia médica formal).</p>
+          <p class="faq-ans" role="region">Atualmente, a cetamina (e a esketamina nasal) é utilizada em tratamentos médicos, principalmente para depressão resistente. A ayahuasca ocorre em contextos religiosos regulamentados (não é terapia médica formal).</p>
         </div>
         <div class="faq-item">
           <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
-            <span>Quais psicodélicos ainda não podem ser usados clinicamente?</span>
+            <span>Psilocibina, MDMA e LSD estão liberados clinicamente?</span>
             <span class="muted">+</span>
           </button>
-          <p class="faq-ans" role="region">Substâncias como psilocibina, MDMA, LSD e ibogaína ainda não têm aprovação para uso terapêutico fora de pesquisas no Brasil. Elas só podem ser acessadas legalmente em estudos científicos autorizados; fora isso, seu uso clínico não é permitido por enquanto.</p>
+          <p class="faq-ans" role="region">Não. Essas substâncias permanecem restritas a pesquisas. Fora desses estudos, seu uso clínico não é permitido no Brasil por enquanto.</p>
         </div>
         <div class="faq-item">
           <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
-            <span>Preciso tentar outros tratamentos antes de recorrer à cetamina?</span>
+            <span>Planos de saúde cobrem cetamina?</span>
             <span class="muted">+</span>
           </button>
-          <p class="faq-ans" role="region">Em geral, sim. As terapias com psicodélicos (como a cetamina) são consideradas quando tratamentos tradicionais (medicações, terapia) não trouxeram melhora suficiente. Elas não são a primeira opção e fazem parte de um plano de cuidado mais amplo.</p>
+          <p class="faq-ans" role="region">A cobertura varia por operadora e indicação. Em geral, requer justificativa clínica robusta, protocolos e auditoria. Oriente-se com seu médico e verifique diretamente com a operadora.</p>
         </div>
         <div class="faq-item">
           <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
-            <span>A terapia com cetamina substitui meu tratamento atual?</span>
+            <span>Quem não deve fazer terapia com cetamina?</span>
             <span class="muted">+</span>
           </button>
-          <p class="faq-ans" role="region">Não. A cetamina age como um complemento para alívio rápido; os tratamentos de base (como antidepressivos ou terapia contínua) geralmente continuam. Qualquer mudança nos medicamentos deve ser feita com orientação médica.</p>
+          <p class="faq-ans" role="region">Pessoas com hipertensão grave não controlada, cardiopatia instável, psicose ativa, mania, gravidez, entre outras condições, geralmente não são candidatas. Avaliação médica é obrigatória.</p>
         </div>
         <div class="faq-item">
           <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
-            <span>Terapia psicodélica é segura?</span>
+            <span>O que levar para a sessão?</span>
             <span class="muted">+</span>
           </button>
-          <p class="faq-ans" role="region">Quando realizada com avaliação médica e acompanhamento profissional, a terapia assistida por psicodélicos tem um perfil de segurança aceitável. Existem riscos específicos, mas equipes treinadas seguem protocolos para minimizá-los durante e após as sessões.</p>
+          <p class="faq-ans" role="region">Roupas confortáveis, um agasalho leve, fones de ouvido (se a clínica permitir) e um contato para retorno seguro. Evite dirigir após a sessão.</p>
         </div>
         <div class="faq-item">
           <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
-            <span>Quantas sessões de cetamina vou precisar?</span>
+            <span>Efeitos colaterais comuns e duração?</span>
             <span class="muted">+</span>
           </button>
-          <p class="faq-ans" role="region">Depende de cada caso. Algumas pessoas melhoram após 1–2 sessões; outras podem precisar de várias sessões ao longo de semanas. O número de sessões é ajustado conforme a resposta individual e decidido em conjunto com a equipe clínica.</p>
+          <p class="faq-ans" role="region">Dissociação, alteração de percepção, leve náusea e aumento transitório de pressão/FC. Em geral, passam entre 30–90 minutos após o fim da aplicação.</p>
         </div>
         <div class="faq-item">
           <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
-            <span>Cetamina é para todo mundo?</span>
+            <span>O que é integração e por que importa?</span>
             <span class="muted">+</span>
           </button>
-          <p class="faq-ans" role="region">Não. Ela só é indicada após avaliação médica rigorosa e pode não ser adequada para todos; existem contraindicações (por exemplo, alguns problemas cardíacos ou histórico de psicose) que precisam ser considerados.</p>
+          <p class="faq-ans" role="region">É o processo de transformar a experiência em mudanças concretas de vida (psicoterapia, hábitos, suporte). Sem integração, parte dos ganhos pode se perder.</p>
         </div>
         <div class="faq-item">
           <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
-            <span>Como funcionam as sessões?</span>
+            <span>Diferença entre uso religioso (ayahuasca) e uso clínico?</span>
             <span class="muted">+</span>
           </button>
-          <p class="faq-ans" role="region">As sessões incluem uma preparação prévia, a experiência monitorada em ambiente controlado e uma integração terapêutica após a sessão para dar sentido ao que foi vivenciado.</p>
+          <p class="faq-ans" role="region">No Brasil, o uso religioso é regulamentado em tradições específicas e não equivale a terapia médica. O uso clínico exige protocolos, equipe de saúde e regulamentação própria.</p>
         </div>
       </div>
     </div>
   </section>
+
   <section id="recomendado" class="section">
     <div class="container">
       <div class="reveal center" style="margin-bottom:20px">
         <h2 style="font-size:28px;margin:0 0 8px">Conteúdo Recomendado</h2>
-        <p class="muted" style="margin:0">Dicas de mídia e materiais sobre psicodélicos</p>
+        <p class="muted" style="margin:0">Documentários, leituras e podcasts</p>
       </div>
-      <div class="card reveal" style="max-width:800px;margin:0 auto">
-        <ul style="margin:0;padding:0 0 0 20px;line-height:1.6">
-          <li><strong><a href="https://www.netflix.com/title/80229847" target="_blank" rel="noopener noreferrer">Como Mudar sua Mente</a></strong> – série documental (Netflix, 2022). O autor Michael Pollan explora a história e o uso terapêutico de psicodélicos (LSD, psilocibina, MDMA e mescalina) em quatro episódios envolventes.</li>
+      <div class="card reveal" style="max-width:880px;margin:0 auto">
+        <ul style="margin:0;padding:0 0 0 20px;line-height:1.7">
+          <li><strong><a href="https://www.netflix.com/title/80229847" target="_blank" rel="noopener noreferrer">Como Mudar sua Mente</a></strong> — série documental (Netflix, 2022).</li>
+          <li><strong><a href="https://fantasticfungi.com/" target="_blank" rel="noopener noreferrer">Fantastic Fungi</a></strong> — documentário sobre fungos e psilocibina.</li>
+          <li><strong><a href="https://maps.org/" target="_blank" rel="noopener noreferrer">MAPS</a></strong> — recursos sobre MDMA-AT e ciência psicodélica.</li>
+          <li><strong><a href="https://www.who.int/standards/classifications/frequently-asked-questions/icd-11" target="_blank" rel="noopener noreferrer">OMS / ICD-11</a></strong> — classificação e referências clínicas.</li>
+          <li><strong>Livros</strong>: “The Psychedelic Renaissance” (Carhart-Harris et al.), “How to Change Your Mind” (Michael Pollan).</li>
         </ul>
       </div>
     </div>
   </section>
+
   <section id="contato" class="section">
     <div class="container">
       <div class="reveal center" style="margin-bottom:20px">
@@ -818,807 +671,755 @@ Diretivas finais:
     </div>
   </section>
 </template>
+
 <template id="tpl-drug-page">
   <section class="section">
     <div class="container">
-      <nav class="breadcrumb muted">
-        <a href="#/" data-link>Início</a>
-        <span>›</span>
-        <a href="#/conhecimento" data-link>Conhecimento</a>
-        <span>›</span>
+      <nav class="breadcrumb">
+        <a href="#/" data-link>Início</a> <span>›</span>
+        <a href="#/conhecimento" data-link>Conhecimento</a> <span>›</span>
         <span id="crumbDrug"></span>
       </nav>
       <div class="subgrid" style="margin-top:16px">
-        <aside class="toc card reveal">
+        <aside class="toc card reveal" id="drugToc">
           <strong style="display:block;margin-bottom:8px">Conteúdo</strong>
           <div id="tocLinks"></div>
           <div style="margin-top:16px">
             <strong style="display:block;margin-bottom:6px">Navegação</strong>
-            <div class="pill-list" id="neighborLinks"></div>
+            <div class="toolbar" id="neighborLinks"></div>
           </div>
         </aside>
-        <article class="card reveal" id="drugArticle" style="line-height:1.72;color:#334155"></article>
+        <article class="card reveal" id="drugArticle" style="line-height:1.78;color:#cbd5e1"></article>
       </div>
     </div>
   </section>
 </template>
+
+<!-- Popup “Quero Alívio” -->
+<div id="leadModal" style="position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:95;">
+  <div class="card" style="width:min(560px,92vw);position:relative">
+    <button id="leadClose" class="btn ghost" style="position:absolute;right:12px;top:12px">×</button>
+    <h3 style="margin-top:0">Antes de prosseguir</h3>
+    <p class="muted" style="margin-top:-8px">Conte rapidamente quem é você e qual a sua necessidade. Vamos te responder.</p>
+    <form id="leadForm" class="grid" style="gap:12px">
+      <input class="input" id="leadNome" name="nome" placeholder="Nome completo" required />
+      <input class="input" id="leadEmail" name="email" placeholder="Email" type="email" required />
+      <select class="input" id="leadAssunto" name="assunto" required>
+        <option value="">Selecione um assunto…</option>
+        <option>Depressão resistente</option>
+        <option>Urgência suicida</option>
+        <option>TEPT</option>
+        <option>Ansiedade grave</option>
+        <option>Outros</option>
+      </select>
+      <button class="btn primary" type="submit">Enviar e abrir o mapa</button>
+    </form>
+    <p class="muted" style="font-size:12px;margin-top:8px">Se estiver em perigo imediato, procure o serviço de emergência local.</p>
+  </div>
+</div>
+
 <!-- ========================= SCRIPT ========================= -->
 <script>
-  // ===== CONFIG =====
-  const SITE_NAME = "NTO – Brasil";
-  const DEFAULT_DESC = "NTO Brasil — Alívio com dignidade para quem carrega um peso insuportável: ciência, ética e cuidado incluindo cetamina em contexto clínico.";
-  const DEFAULT_OG_TITLE = SITE_NAME;
-  const DEFAULT_OG_DESC = "Ciência, ética e cuidado.";
-  const LOGO_URL = "./logo.png";
-  const CONTACT_EMAIL = "admn@ntobr.com";
-  const SOCIAL = {
-    instagramEmbedUrl: "https://www.instagram.com/p/Ck000000000/embed", // substitua pelo embed real
-    youtubeEmbedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"      // substitua por vídeo/playlist real
-  };
-  const MAP_URL = "https://www.google.com/maps/d/embed?mid=1KD5QHhxyVWlFX7BDM0aoNufixLILENU&usp=sharing";
-  // Base de conhecimento EXTENDIDA
-  const KNOWLEDGE = [
-    {
-      id: "cetamina",
-      title: "Cetamina",
-      short: "Alívio rápido em depressão resistente. Infusão/spray supervisionado.",
-      aliases: [
-          "esketamina",
-          "ketamina"
-        ],
-      topics: {
-        resumo: `A cetamina é um anestésico dissociativo com propriedades antidepressivas rápidas em subdoses. Em
-        contexto clínico, pode reduzir marcadamente ideação suicida e sintomas depressivos em horas ou poucos dias, servindo
-        como “janela de respiro” para retomada do plano terapêutico.`,
-        mecanismo: `Antagonista de receptores NMDA do glutamato, modulando circuitos excitatórios e aumentando a liberação de
-        BDNF. Favorece plasticidade sináptica e reconsolidação de memórias, o que pode facilitar mudanças terapêuticas quando
-        acompanhadas de psicoterapia de integração.`,
-        evidencia: `Evidência robusta para depressão resistente; benefício de curto prazo mais consistente, com necessidade de
-        manutenção/integração. Estudos também investigam dor crônica e TEPT.`,
-        protocolo: `Triagem médica (histórico cardiológico, psiquiátrico, uso de substâncias, gravidez). Sessões em ambiente calmo,
-        monitorizadas (PA, FC, oximetria). Doses tituladas por peso e resposta. Integração nas 24–72h posteriores. Ajuste/cessação se
-        eventos adversos relevantes.`,
-        sensacoes: `Dissociação, alteração de percepção corporal e de tempo, leve náusea, visão turva, aumento transitório da pressão
-        arterial/FC. Normalmente passam em 30–90 min.`,
-        seguranca: `Contraindicações relativas/absolutas: hipertensão não controlada, cardiopatia instável, psicose ativa, mania, gravidez,
-        glaucoma descompensado, uso indevido de dissociativos.`,
-        legal: `Uso médico permitido no Brasil (anestesia; esketamina intranasal aprovada sob protocolos específicos).`,
-        riscos: `Elevação transitória de PA/FC, náusea, cefaleia, confusão; potencial de uso problemático fora de contexto clínico.`,
-        preparacao: `Evitar jejum prolongado, mas seguir orientação médica. Combine expectativas, defina uma intenção e organize apoio
-        pós-sessão (por exemplo, carona para casa).`,
-        integracao: `Agende uma sessão de integração para traduzir insights em passos concretos (sono, rotina, terapia, suporte social).
-        Acompanhe regularmente seu bem-estar e ajuste o plano com a equipe médica conforme necessário.`,
-        referencias: [
-          "Diretrizes clínicas internacionais sobre cetamina/esketamina para depressão resistente",
-          "Revisões sistemáticas sobre antagonismo NMDA e neuroplasticidade",
-          "Protocolos clínicos com monitorização cardiovascular"
-        ],
-        mitos: [
-          { myth: "Cetamina vicia tanto quanto outras drogas recreativas.", truth: "Quando utilizada em ambiente controlado e por curto período, o risco de dependência é baixo. O uso clínico é feito com acompanhamento para minimizar potencial de abuso." },
-          { myth: "Cetamina é um \"tranquilizante de cavalo\" sem utilidade em humanos.", truth: "Embora usada como anestésico veterinário, a cetamina em doses baixas demonstrou eficácia em humanos para aliviar sintomas depressivos agudos, sob supervisão médica." }
-        ],
-        perguntas: [
-          "Quais efeitos vou sentir durante a infusão e quanto tempo eles duram?",
-          "Preciso interromper algum medicamento atual antes de usar cetamina?",
-          "Quantas sessões normalmente são recomendadas para depressão resistente?",
-          "Como vocês monitoram minha segurança durante e após a sessão de cetamina?"
-        ],
-        checkPrep: [
-          "Informe o médico sobre todos os medicamentos em uso (especialmente benzodiazepínicos ou anticonvulsivantes).",
-          "Evite cafeína e álcool no dia da sessão de cetamina.",
-          "Organize transporte seguro para volta (não dirija após a infusão).",
-          "Separe itens de conforto (máscara de olhos, música relaxante com fones) se preferir usar durante a sessão."
-        ],
-        checkIntegracao: [
-          "Descanse por algumas horas após a sessão; evite atividades extenuantes até o dia seguinte.",
-          "Anote seus sentimentos e pensamentos nas 24 horas seguintes em um diário.",
-          "Agende e participe da sessão de integração terapêutica nos dias posteriores.",
-          "Mantenha pessoas de confiança informadas sobre como está se sentindo para apoio."
-        ]
-      }
-    },
-    {
-      id: "psilocibina",
-      title: "Psilocibina",
-      short: "Investigada em depressão, ansiedade e fim de vida; sessões assistidas com integração.",
-      aliases: [
-          "cogumelos mágicos",
-          "psilocybe"
-        ],
-      topics: {
-        resumo: `Alcaloide triptamínico presente em fungos do gênero Psilocybe. Em ambientes controlados, sessões psicoterapêuticas
-        assistidas mostraram reduções de sintomas depressivos e ansiosos em estudos de fase 2.`,
-        mecanismo: `Agonismo parcial 5-HT2A, aumentando a entropia cortical e a flexibilidade de redes neurais, com potenciais
-        “experiências de pico” que, bem integradas, podem catalisar mudanças duradouras na perspectiva do paciente.`,
-        evidencia: `Estudos controlados sugerem eficácia potencial em depressão resistente, ansiedade associada a doenças
-        terminais e transtorno por uso de álcool; entretanto, a psilocibina ainda não é um tratamento aprovado (fora de pesquisas) no Brasil.`,
-        protocolo: `Triagem rigorosa; preparação psicoeducativa; 1–3 sessões de dose moderada/alta com dois profissionais presentes;
-        ambiente confortável (olhos vendados e música); seguida de integração estruturada por algumas semanas.`,
-        sensacoes: `Alterações perceptuais (visuais e auditivas), emoções intensas, insights autobiográficos profundos, possível ansiedade
-        em momentos de pico. Duração total de efeitos em torno de 4–6 horas.`,
-        seguranca: `Evitar em pacientes com histórico pessoal ou familiar de esquizofrênia ou transtorno bipolar (risco de psicose/manias).
-        Necessário acompanhamento por equipe treinada para minimizar riscos como ansiedade aguda durante a experiência.`,
-        legal: `No Brasil, o uso religioso da ayahuasca (que contém DMT) é regulamentado, mas a psilocibina permanece ilegal fora de contextos
-        de pesquisa acadêmica. Clínicas privadas devem aderir às normas éticas e regulatórias vigentes.`,
-        riscos: `Ansiedade aguda (“bad trip”), náusea durante o início dos efeitos, possível dor de cabeça após. Evitar combinações com
-        outras substâncias sem supervisão.`,
-        preparacao: `Estabeleça uma intenção clara para a sessão e alinhe expectativas com a equipe. Organize uma rede de apoio para após a sessão
-        e libere sua agenda no dia seguinte para processamento e descanso.`,
-        integracao: `Mantenha um diário para registrar pensamentos e sonhos nos dias seguintes. Participe de psicoterapia de suporte e adote
-        hábitos saudáveis (sono, alimentação, exercícios leves) enquanto reflete sobre a experiência.`,
-        referencias: [
-          "Pesquisas clínicas fase 2/3 em depressão e ansiedade com psilocibina",
-          "Modelos neuropsicológicos de entropia cerebral e receptor 5-HT2A",
-          "Guias modernos de preparação e integração em terapia assistida por psicodélicos"
-        ],
-        mitos: [
-          { myth: "Psilocibina deixa \"buracos no cérebro\" ou causa danos permanentes.", truth: "Não há evidências de danos cerebrais permanentes por uso controlado de psilocibina em estudos clínicos. Quando administrada com segurança, seus efeitos adversos tendem a ser psicológicos de curto prazo (ansiedade transitória, confusão) sem lesão física ao cérebro." },
-          { myth: "Os efeitos da psilocibina são imprevisíveis e a pessoa perde totalmente o controle.", truth: "Embora a experiência seja intensa e parcialmente imprevisível, a preparação adequada e a presença de profissionais reduzem drasticamente riscos. O participante geralmente permanece consciente do contexto terapêutico e pode comunicar desconforto." }
-        ],
-        perguntas: [
-          "Preciso parar meu antidepressivo antes de uma sessão com psilocibina?",
-          "Posso \"surtar\" ou ficar preso em um estado alterado permanentemente?",
-          "Quanto tempo após a sessão vou me sentir normal novamente?",
-          "O que acontece se eu tiver uma experiência negativa (\"bad trip\") durante a sessão?"
-        ],
-        checkPrep: [
-          "Converse com o médico sobre a necessidade de suspender temporariamente antidepressivos (ex: ISRS) antes da sessão.",
-          "Durma bem na noite anterior e chegue descansado, evitando uso de álcool ou outras drogas na véspera.",
-          "Vista roupas confortáveis e leve agasalho leve (a temperatura corporal pode variar durante a experiência).",
-          "Combine com alguém de confiança para levá-lo para casa após a sessão (você pode se sentir cansado emocionalmente)."
-        ],
-        checkIntegracao: [
-          "Participe das sessões de integração pós-experiência oferecidas (individuais ou em grupo) para processar sentimentos e insights.",
-          "Mantenha um diário dos dias seguintes para anotar sonhos, mudanças de humor ou novas perspectivas.",
-          "Evite tomar decisões importantes nos dias imediatamente após a sessão, dando tempo para as emoções se acomodarem.",
-          "Procure passar algum tempo na natureza ou em atividades artísticas calmantes para ajudar na reflexão pós-experiência."
-        ]
-      }
-    },
-    {
-      id: "mdma",
-      title: "MDMA (terapia assistida)",
-      short: "Estudada para TEPT; combina psicoterapia direcionada com sessões assistidas.",
-      aliases: [
-          "ecstasy (contexto clínico)"
-        ],
-      topics: {
-        resumo: `MDMA não é um psicodélico clássico; atua como um empatógeno/entactógeno. Em contexto clínico, reduz o medo e a
-        hipervigilância, além de ampliar o acesso a memórias traumáticas com menor carga emocional, facilitando o processamento terapêutico.`,
-        mecanismo: `Aumenta a liberação de serotonina, noradrenalina e dopamina; eleva hormônios pró-sociais como oxitocina e prolactina;
-        reduz a atividade da amígdala (centro do medo); e facilita a extinção de respostas de medo quando aliado a psicoterapia focada no trauma.`,
-        evidencia: `Resultados promissores em TEPT (transtorno de estresse pós-traumático) em estudos controlados, especialmente sob protocolos
-        da MAPS. A aprovação e regulamentação variam por país; envolve treinamento especializado de equipes e critérios de seleção rigorosos.`,
-        protocolo: `Triagem extensa (avaliação cardiovascular, psiquiátrica e revisão de medicações como IMAO/ISRS). Múltiplas sessões preparatórias sem a substância;
-        2–3 sessões assistidas com MDMA (duração de 6–8h cada, com dois terapeutas presentes); e sessões de integração posteriores para consolidar progressos.`,
-        sensacoes: `Aumento de empatia e conexão, redução da ansiedade e evitação, surge confiança; fisicamente: calor corporal, sudorese,
-        tensão mandibular (bruxismo), aumento de frequência cardíaca/PA e, raramente, náusea leve.`,
-        seguranca: `Risco cardiovascular exige triagem (excluir hipertensão grave, problemas cardíacos). Deve-se evitar se o paciente estiver usando
-        antidepressivos (ISRS, IMAO) ou outras substâncias serotoninérgicas, para prevenir síndrome serotoninérgica. Contraindicado em gravidez e glaucoma de ângulo fechado.`,
-        legal: `Não aprovado para uso clínico amplo no Brasil; apenas em protocolos experimentais aprovados por comitês de ética. Em outros países (como EUA),
-        a aprovação para TEPT está em análise avançada, mas ainda restrita a pesquisa.`,
-        riscos: `Elevação de PA/FC e temperatura corporal (risco de hipertermia se ambiente inadequado), desequilíbrio eletrolítico se ingestão excessiva de água,
-        "comedown" (cansaço, humor baixo no dia seguinte), insônia na noite da sessão. Uso recreativo sem controle aumenta todos esses riscos.`,
-        preparacao: `Durma bem e alimente-se levemente antes da sessão. Confirme com o médico se deve suspender antidepressivos dias antes. Hidrate-se
-        nas horas anteriores de forma moderada. Estabeleça junto ao terapeuta quais memórias ou traumas serão foco, para aproveitar ao máximo a abertura emocional do MDMA.`,
-        integracao: `Após cada sessão, participe de sessões de terapia para processar quaisquer lembranças ou emoções surgidas. Pratique técnicas de regulação emocional
-        (respiração, mindfulness) para lidar com eventuais oscilações de humor nos dias seguintes. Mantenha rotina saudável (sono, alimentação) já que o corpo pode ficar fatigado após o MDMA.`,
-        referencias: [
-          "Ensaios clínicos (fases 2 e 3) de MDMA-AT para TEPT (publicações MAPS)",
-          "Diretrizes de segurança: cuidados cardiovasculares e manejo de interação com medicamentos",
-          "Manuais terapêuticos padronizados para terapia assistida por MDMA"
-        ],
-        mitos: [
-          { myth: "O MDMA usado em terapia é igual ao ecstasy de festa, cheio de impurezas.", truth: "No contexto clínico, utiliza-se MDMA de grau farmacêutico, com dose precisa e monitoramento, diferentemente do ecstasy de rua que pode conter adulterantes. A pureza e o ambiente controlado aumentam a segurança." },
-          { myth: "MDMA vai 'queimar' meus neurônios de serotonina permanentemente.", truth: "Doses moderadas usadas ocasionalmente, sob supervisão, não demonstram neurotoxicidade significativa. O uso frequente e abusivo de MDMA pode causar adaptações neuroquímicas, mas em contexto terapêutico o intervalo entre sessões é grande e os riscos são minimizados." }
-        ],
-        perguntas: [
-          "Preciso interromper antidepressivos antes de fazer a terapia com MDMA?",
-          "Quais são os cuidados para evitar efeitos colaterais como desidratação ou aumento de pressão?",
-          "Posso ter algum insight ou memória dolorosa que eu não consiga lidar durante a sessão?",
-          "Como é o acompanhamento depois das sessões com MDMA? Preciso de terapia contínua?"
-        ],
-        checkPrep: [
-          "Siga orientação médica sobre suspender antidepressivos (ISRS) por um período antes da sessão para evitar interação.",
-          "Hidrate-se bem no dia anterior e no dia da sessão, mas evite excessos de água imediatamente antes para prevenir hiponatremia.",
-          "Use roupas leves e em camadas - MDMA pode alterar a percepção de temperatura corporal.",
-          "Combine com a equipe quais traumas/memórias serão trabalhados, para ter clareza de propósito durante a experiência."
-        ],
-        checkIntegracao: [
-          "Evite exercícios físicos intensos ou exposição prolongada ao sol no dia seguinte, pois seu corpo pode precisar de recuperação.",
-          "Converse com alguém de confiança na noite após a sessão, caso sinta necessidade de apoio emocional (é comum sentir-se vulnerável).",
-          "Participe de todas as sessões de psicoterapia de integração agendadas nas semanas seguintes.",
-          "Mantenha boa higiene do sono; você pode ter dificuldade para dormir imediatamente após a sessão, então priorize repouso nos dias posteriores."
-        ]
-      }
-    },
-    {
-      id: "ibogaina",
-      title: "Ibogaína",
-      short: "Investigada em dependência; exige monitorização multiprofissional intensa.",
-      aliases: [
-          "tabernanthe iboga",
-          "TA"
-        ],
-      topics: {
-        resumo: `Alcaloide extraído da raiz da iboga (Tabernanthe iboga). Relatos e séries de casos indicam que pode interromper
-        sintomas de abstinência e reduzir o craving em dependência de opioides e outras substâncias, porém com riscos cardiológicos significativos.`,
-        mecanismo: `Atua em múltiplos sistemas: interage com receptores opioides (efeito atenuador da abstinência), NMDA (neuroplasticidade),
-        sigma e nicotínicos, entre outros. Pode "reiniciar" padrões neuroquímicos associados à dependência, mas requer suporte psicossocial para sustentar a mudança de comportamento.`,
-        evidencia: `A evidência é majoritariamente observacional (relatos clínicos e estudos abertos). Ensaios controlados são escassos devido a preocupações éticas e de segurança.
-        Apesar de relatos de alta taxa de sucesso na detoxificação de opioides, os riscos médicos demandam protocolos hospitalares estritos.`,
-        protocolo: `Seleção rigorosa: avaliação cardiológica (ECG, ecocardiograma se possível), exames hepáticos, suspensão/ajuste de fármacos que prolonguem QT (metadona, alguns antidepressivos) antes.
-        Internação com monitorização contínua (telemetria cardíaca, oximetria) por pelo menos 24–48h após dose. Equipe treinada em ACLS presente. Suporte emocional intenso durante a experiência (que pode durar 12–36h acordado).`,
-        sensacoes: `Início gradual (1–3h para começar a perceber efeitos), ataxia (dificuldade de coordenação motora), náusea e vômitos frequentes (a "purga" física),
-        visões oníricas intensas (muitas vezes introspectivas ou de natureza autobiográfica) que podem durar horas. Após o pico, geralmente segue-se um período de reflexão calmo porém com fadiga intensa.`,
-        seguranca: `Contraindicada se há doenças cardíacas prévias (arrítmias, insuficiência cardíaca, angina), intervalo QT prolongado congênito, ou uso recente de substâncias que afetam o ritmo cardíaco.
-        Desequilíbrios eletrolíticos (potássio, magnésio baixos) devem ser corrigidos antes. Histórico de problemas hepáticos graves também pode contraindicar (metabolismo da ibogaína ocorre no fígado).`,
-        legal: `Não aprovada como tratamento médico no Brasil; seu uso se restringe a contextos de pesquisa aprovada. Há clínicas em outros países oferecendo tratamento com ibogaína, mas viajantes devem ter cautela e checar legalidade/local. Qualquer uso deve respeitar as normas éticas e legais.`,
-        riscos: `Arritmia cardíaca potencialmente fatal (torsades de pointes, fibrilação) devido ao prolongamento do intervalo QT, convulsões (raras), neurotoxicidade em altas doses, interação perigosa com drogas depressoras do SNC. Devido à longa meia-vida, requer observação prolongada.`,
-        preparacao: `Correção de eventuais alterações eletrolíticas antes do tratamento (suplementar potássio, magnésio). Redução gradual e segura de opioides ou outras drogas em uso, para não chegar à sessão em overdose.
-        Consentimento informado muito detalhado, discutindo todos os riscos. Jejum controlado de cerca de 6–8h (evitar aspiração em caso de vômitos, mas não prolongado a ponto de desidratação).`,
-        integracao: `Psicoterapia motivacional intensiva e reabilitação após alta (a ibogaína não "cura" sozinha; precisa-se trabalhar novos hábitos). Participar de grupos de apoio (ex. NA) pode ajudar a manter a abstinência.
-        Atenção continuada à saúde física (checagens cardiológicas, hepáticas) nas semanas seguintes. Planejamento de prevenção de recaídas, com estratégias claras para lidar com gatilhos de uso.`,
-        referencias: [
-          "Revisões e artigos sobre segurança cardiológica da ibogaína (prolongamento de QT)",
-          "Relatos clínicos de tratamento de dependência de opioides com ibogaína (outcomes e acompanhamento)",
-          "Guias de consentimento informado e protocolos hospitalares para ibogaína"
-        ],
-        mitos: [
-          { myth: "Ibogaína cura a dependência em uma única dose, garantido.", truth: "Embora possa interromper a abstinência e reduzir craving agudo, a manutenção da sobriedade depende de suporte contínuo (terapia, grupo, mudanças de vida). Não é garantia de \"cura\" sem esforço pós-tratamento." },
-          { myth: "Qualquer pessoa com dependência pode tomar ibogaína com segurança.", truth: "Não. O tratamento com ibogaína é arriscado e indicado apenas após avaliação médica minuciosa. Certas condições de saúde tornam seu uso extremamente perigoso." }
-        ],
-        perguntas: [
-          "Quais exames preciso fazer antes de considerar tratamento com ibogaína?",
-          "Quais são os riscos cardíacos reais e como vocês lidam se ocorrer algo durante a sessão?",
-          "Quanto tempo ficarei no hospital ou clínica ao todo para esse tratamento?",
-          "Que tipo de acompanhamento terei depois da ibogaína para garantir que eu não recaia?"
-        ],
-        checkPrep: [
-          "Faça todos os exames solicitados (ECG, exames de sangue) e compartilhe resultados completos com a equipe médica.",
-          "Siga rigorosamente as orientações de reduzir ou suspender substâncias antes da sessão (por exemplo, metadona, álcool), conforme plano médico.",
-          "Estar preparado para internar-se: leve documentos, itens de higiene pessoal e avise um familiar sobre o procedimento e duração aproximada.",
-          "Esteja ciente de que a experiência pode ser longa e difícil; pratique técnicas de relaxamento antecipadamente (respiração profunda, por exemplo) para ajudar durante o processo."
-        ],
-        checkIntegracao: [
-          "Envolva familiares próximos no seu processo de recuperação, explicando o que esperar após seu retorno para casa.",
-          "Participe de terapia ou aconselhamento especializado em dependência nas semanas seguintes (ex.: sessões semanais).",
-          "Considere juntar-se a grupos de apoio (NA ou similares) para compartilhar sua jornada e ouvir de outros em recuperação.",
-          "Evite, nos primeiros meses, situações de alto risco de recaída (lugares, pessoas ou atividades que você associa ao uso)."
-        ]
-      }
-    },
-    {
-      id: "lsd",
-      title: "LSD",
-      short: "Pesquisa em ansiedade e cefaleia em salvas; set & setting estruturados.",
-      aliases: [
-          "ácido lisérgico"
-        ],
-      topics: {
-        resumo: `Psicodélico clássico potente; estudos modernos retomam aplicações em transtornos de ansiedade e cefaleia em salvas. Duração longa (8–12h) exige preparação e suporte atento.`,
-        mecanismo: `Agonismo do receptor 5-HT2A e de outras vias serotoninérgicas; promove maior comunicação entre áreas cerebrais
-        que normalmente não dialogam tanto (aumenta a entropia neural). Pode induzir estados intensos de consciência, com visões e pensamentos simbólicos, potencialmente catalisadores de insight.`,
-        evidencia: `A evidência clínica é emergente; necessidade de ensaios maiores. Protocolos clínicos priorizam segurança e integração.`,
-        protocolo: `Triagem completa (saúde mental e física). Sessões com equipe treinada em ambiente confortável e seguro; dosagem medida em microgramas; participante geralmente de olhos fechados com música para interiorização; sessões de 8h ou mais, com acompanhamento contínuo. Integração nas semanas seguintes para extrair significado das vivências.`,
-        sensacoes: `Alterações sensoriais marcantes: visuais (padrões geométricos, intensificação de cores), sinestesia (mistura de sentidos),
-        percepção de tempo distorcida, emoções amplificadas (podem oscilar de euforia a ansiedade). Possíveis períodos de introspecção profunda. Fisicamente, pouca alteração significativa além de dilatação pupilar e leve aumento de frequência cardíaca.`,
-        seguranca: `Não indicado para quem tem histórico de transtornos psicóticos ou predisposição familiar significativa a eles (risco de gatilho).
-        Deve-se evitar em caso de hipertensão grave ou não controlada. Interações farmacológicas: certos antidepressivos podem atenuar ou intensificar efeitos, por isso o médico pode ajustar medicações antes da sessão.`,
-        legal: `LSD é substância proibida para uso não científico no Brasil (lista F2 - psicodélicos). Somente estudos aprovados e institutos de pesquisa credenciados podem manuseá-lo legalmente. Participar de pesquisa requer consentimento informado e acompanhamento rígido.`,
-        riscos: `Ansiedade ou pânico agudo durante o efeito (controlado com técnicas de grounding ou medicação ansiolítica de resgate se necessário),
-        possível desencadeamento de sintomas psicóticos em indivíduos vulneráveis, e fenômeno raro mas documentado de flashbacks (retornos breves de percepção alterada dias ou semanas depois).`,
-        preparacao: `Defina uma intenção para a sessão (por exemplo, trabalhar um medo específico). Evite cafeína no dia e tenha uma boa noite de sono antes.
-        Planeje não ter compromissos no dia seguinte (tempo para repouso). Escolha uma playlist ou músicas sugeridas pela equipe para o acompanhamento da sessão, se preferir.`,
-        integracao: `Converse com seu terapeuta nos dias seguintes para analisar quaisquer imagens ou ideias marcantes que surgiram. Mantenha rotina de sono e alimentação, pois a sessão pode ser fisicamente e mentalmente exaustiva.
-        Atividades criativas (desenhar, pintar, escrever) podem ajudar a expressar sentimentos vivenciados de forma simbólica. Não busque outra experiência psicodélica imediatamente; dê tempo ao cérebro para processar.`,
-        referencias: [
-          "Ensaios clínicos modernos sobre LSD em ansiedade (ex.: Gasser et al. 2014)",
-          "Estudos de caso e pesquisas em cefaleia em salvas com psicodélicos",
-          "Manuais de segurança e integração para terapia assistida por LSD"
-        ],
-        mitos: [
-          { myth: "LSD pode prender a pessoa permanentemente em um \"estado de viagem\" (psicose permanente).", truth: "Apesar de o LSD desencadear experiências intensas, casos de efeitos permanentes são extremamente raros e geralmente ligados a predisposição prévia. Com seleção adequada e supervisão, o risco de efeitos psiquiátricos duradouros é mínimo." },
-          { myth: "Quem usa LSD fica viciado ou tolerante para sempre.", truth: "LSD não provoca dependência química e, na verdade, gera tolerância aguda (se usado em dias seguidos, quase não faz efeito). Em contexto terapêutico, as sessões são únicas ou muito espaçadas, evitando qualquer hábito frequente." }
-        ],
-        perguntas: [
-          "Vou perder completamente a noção de quem sou durante a sessão com LSD?",
-          "É seguro pra mim, dado meu histórico (por exemplo, ansiedade severa)?",
-          "Preciso ficar o tempo todo de olhos fechados ouvindo música? Posso interagir durante a experiência?",
-          "Quanto tempo após a sessão posso retomar minhas atividades normais (trabalho, dirigir, etc.)?"
-        ],
-        checkPrep: [
-          "Escolha um dia sem compromissos urgentes ou estressantes, e idealmente tenha o dia seguinte livre para descansar.",
-          "Evite consumir álcool ou outras drogas recreativas na semana da sessão; mantenha corpo e mente o mais saudáveis possível.",
-          "Converse com a equipe sobre quaisquer medos específicos que você tenha, para que possam ajudar caso alguma dificuldade emocional surja.",
-          "Traga itens que lhe tragam conforto, se desejar (uma foto especial, um pequeno objeto pessoal). Eles podem servir de âncora positiva se você se sentir ansioso durante a experiência."
-        ],
-        checkIntegracao: [
-          "Durma bastante após a sessão; mesmo que demore para pegar no sono devido aos estímulos mentais, priorize repousar no dia seguinte.",
-          "Anote quaisquer pensamentos ou memórias importantes assim que puder, pois detalhes podem se dissipar com o tempo.",
-          "Marque sessões de acompanhamento terapêutico para discutir a experiência assim que se sentir apto.",
-          "Evite avaliar ou julgar demais as revelações nos primeiros dias; deixe as impressões \"assentarem\" um pouco antes de tomar decisões de vida baseadas nelas."
-        ]
-      }
-    },
-    {
-      id: "ayahuasca",
-      title: "Ayahuasca (contexto religioso/tradicional)",
-      short: "Uso religioso protegido no Brasil; requer respeito cultural e segurança.",
-      aliases: [
-          "daime",
-          "vegetal"
-        ],
-      topics: {
-        resumo: `Decocção amazônica tradicional (Banisteriopsis caapi + Psychotria viridis). Uso religioso é protegido
-        no Brasil, com contextos ritualísticos específicos e lideranças responsáveis.`,
-        mecanismo: `Harmalinas (IMAO reversível) + DMT (agonismo serotoninérgico). Em contexto adequado, pode propiciar
-        experiências de significado, revisão de vida e coesão comunitária.`,
-        evidencia: `Estudos observacionais sugerem benefícios em bem-estar e redução de uso de substâncias em certos grupos;
-        há variação por contexto e preparo.`,
-        protocolo: `Respeito às normas da casa/igreja; triagem para interações perigosas (ISRS, IMAO, tricíclicos). Alimentação leve,
-        acompanhamento por padrinhos/madrinhas experientes.`,
-        sensacoes: `Náusea/vômito (purga), visões, música/rezas, vivências emocionais; duração ~4h.`,
-        seguranca: `Evitar combinações com antidepressivos/IMAO, hipertensão não controlada, história de psicose/mania.`,
-        legal: `Uso religioso regulamentado no Brasil; uso fora desse contexto exige atenção legal/ética.`,
-        riscos: `Interações medicamentosas, desidratação, vulnerabilidade emocional. Necessita de redes de apoio.`,
-        preparacao: `Dieta orientada, abstinência de certas substâncias antes/depois, alinhamento de expectativa.`,
-        integracao: `Rodas de conversa, diário, serviço à comunidade, psicoterapia quando necessário.`,
-        referencias: [
-          "Resoluções do CONAD sobre uso religioso da ayahuasca",
-          "Estudos observacionais brasileiros sobre saúde mental em usuários de ayahuasca",
-          "Guias de segurança e listas de interações para participantes de rituais com ayahuasca"
-        ],
-        mitos: [
-          { myth: "Ayahuasca causa esquizofrenia ou deixa a pessoa louca permanentemente.", truth: "Para a grande maioria das pessoas, não há evidência de efeitos psiquiátricos permanentes. Casos de psicose prolongada são raríssimos e geralmente involve predisposição. Em um ambiente estruturado, a ayahuasca não \"enlouquece\" o participante médio." },
-          { myth: "Todo mundo vomita sempre e passa mal com ayahuasca, sem exceção.", truth: "A purgação é comum, mas a intensidade varia muito. Algumas pessoas não vomitam em certas sessões. Mesmo quando ocorre, o mal-estar geralmente dura pouco e dá lugar a sensações mais agradáveis depois. O preparo (dieta) influencia na experiência física." }
-        ],
-        perguntas: [
-          "Preciso seguir mesmo a dieta recomendada? O que acontece se eu não seguir à risca?",
-          "Posso tomar ayahuasca se estou tomando antidepressivos ou ansiolíticos?",
-          "Como saber se um grupo ou igreja de ayahuasca é confiável e seguro?",
-          "O que devo fazer se durante o ritual eu ficar muito angustiado ou com medo?"
-        ],
-        checkPrep: [
-          "Respeite a dieta recomendada pelo grupo (evitando alimentos pesados, álcool e eventualmente carne e temperos fortes alguns dias antes). Isso reduz náuseas e melhora a experiência.",
-          "Se estiver em tratamento médico, consulte seu médico sobre parar ou ajustar remédios (NUNCA suspenda antidepressivos por conta própria; faça sob orientação).",
-          "Converse com alguém experiente do grupo sobre suas expectativas e medos antes do ritual, para receber orientação e tranquilidade.",
-          "Vá com espírito de aprendizado e humildade, sem buscar apenas visões \"bonitas\". Esteja disposto a enfrentar emoções se elas vierem, sabendo que estará em um ambiente de apoio."
-        ],
-        checkIntegracao: [
-          "Participe das conversas pós-ritual (se a organização oferecer) para ouvir outras experiências e compartilhar a sua, caso se sinta confortável.",
-          "Nos dias após, mantenha hábitos saudáveis e evite álcool ou drogas recreativas; isso ajuda a prolongar eventuais benefícios de humor e reflexão.",
-          "Se alguma visão ou mensagem foi confusa, tente expressá-la desenhando ou escrevendo, e revisite depois para ver se ganha clareza com o tempo.",
-          "Lembre-se de que a ayahuasca, como experiência espiritual, pode motivar mudanças - mas faça-as gradualmente. Por exemplo, se decidiu melhorar algo na vida, comece com passos pequenos e concretos."
-        ]
-      }
+/* ===== CONFIG ===== */
+const SITE_NAME = "NTO – Brasil";
+const DEFAULT_DESC = "NTO Brasil — Alívio com dignidade para quem carrega um peso insuportável: ciência, ética e cuidado incluindo cetamina em contexto clínico.";
+const DEFAULT_OG_TITLE = SITE_NAME;
+const DEFAULT_OG_DESC = "Ciência, ética e cuidado.";
+const LOGO_URL = "./logo.png";
+const CONTACT_EMAIL = "admn@ntobr.com";
+const SOCIAL = {
+  instagramEmbedUrl: "https://www.instagram.com/p/Ck000000000/embed", // substitua pelo embed real
+  youtubeEmbedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"      // substitua por vídeo/playlist real
+};
+const MAP_URL = "https://www.google.com/maps/d/embed?mid=1KD5QHhxyVWlFX7BDM0aoNufixLILENU&usp=sharing";
+
+/* ===== Base de conhecimento (reorganizada) =====
+   status: 'clinico' → destaque; 'pesquisa' → exibir tag “Em pesquisa”
+*/
+const KNOWLEDGE = [
+  /* Destaque clínico atual */
+  { id:"cetamina", status:"clinico", order:1, title:"Cetamina", short:"Alívio rápido em depressão resistente. Infusão/spray supervisionado.", aliases:["esketamina","ketamina"],
+    topics:{
+      resumo:`A cetamina é um anestésico dissociativo com propriedades antidepressivas rápidas em subdoses. Em
+      contexto clínico, pode reduzir ideação suicida e sintomas depressivos em horas ou poucos dias, funcionando como “janela de respiro”.`,
+      mecanismo:`Antagonismo NMDA → modulação glutamatérgica, ↑BDNF e plasticidade sináptica; facilita reconsolidação de memórias.`,
+      evidencia:`Evidência robusta para depressão resistente; maior efeito no curto prazo; manutenção/integração são cruciais.`,
+      protocolo:`Triagem médica (cardio/psiquiátrica), monitorização (PA, FC, SatO₂), ambiente calmo, doses tituladas por peso/resposta, integração em 24–72h.`,
+      sensacoes:`Dissociação, alteração de tempo/corpo, náusea leve, visão turva, ↑PA/FC transitórios (30–90 min).`,
+      seguranca:`Evitar em hipertensão não controlada, cardiopatia instável, psicose/mania ativas, gravidez, glaucoma descompensado.`,
+      legal:`Uso médico permitido no Brasil (anestesia; esketamina intranasal aprovada sob protocolos).`,
+      riscos:`Elevação transitória de PA/FC, náusea, cefaleia; potencial de uso problemático fora de contexto clínico.`,
+      preparacao:`Alinhar expectativas, intenção da sessão e apoio pós; jejum leve conforme orientação; transporte seguro.`, 
+      integracao:`Sessão de integração para traduzir insights; monitorar bem-estar; ajustes com equipe.`,
+      referencias:[
+        "Diretrizes clínicas internacionais (cetamina/esketamina) para depressão resistente",
+        "Revisões sobre antagonismo NMDA e neuroplasticidade"
+      ],
+      mitos:[
+        { myth:"É só 'tranquilizante de cavalo'.", truth:"Em doses subanestésicas, mostrou eficácia antidepressiva rápida sob supervisão." },
+        { myth:"Vicia facilmente em contexto clínico.", truth:"Com uso protocolar e monitorado, o risco de dependência é baixo." }
+      ],
+      perguntas:[
+        "Quais efeitos vou sentir e quanto duram?",
+        "Preciso ajustar meus medicamentos atuais?",
+        "Quantas sessões são esperadas para depressão resistente?",
+        "Como é feita a monitorização de segurança?"
+      ],
+      checkPrep:[
+        "Reveja todas as medicações em uso (ex.: benzos).",
+        "Evite álcool/cafeína no dia.",
+        "Organize retorno seguro (não dirija).",
+        "Separe itens de conforto (opcionais)."
+      ],
+      checkIntegracao:[
+        "Descanse após a sessão.",
+        "Anote sentimentos e pensamentos nas 24h.",
+        "Participe da integração terapêutica.",
+        "Mantenha rede de apoio."
+      ]
     }
-  ];
-  // Índices rápidos por ID para navegação vizinha
-  const DRUG_INDEX = KNOWLEDGE.reduce((acc, d, i) => { acc[d.id] = i; return acc; }, {});
-  const DRUG_IDS = KNOWLEDGE.map(d => d.id);
-  // =================== INICIALIZAÇÃO COMUM ===================
-  document.title = SITE_NAME + " — Psicodélicos com ciência, ética e cuidado";
-  (function(){
-    let l = document.querySelector("link[rel='icon']");
-    if(!l){
-      l = document.createElement("link");
-      l.rel = "icon";
-      document.head.appendChild(l);
+  },
+  { id:"ayahuasca", status:"clinico", order:2, title:"Ayahuasca (contexto religioso/tradicional)", short:"Uso religioso protegido no Brasil; requer respeito cultural e segurança.", aliases:["daime","vegetal"],
+    topics:{
+      resumo:`Decocção amazônica (B. caapi + P. viridis). Uso religioso protegido no Brasil, com lideranças e rituais próprios.`,
+      mecanismo:`Harmalinas (IMAO reversível) + DMT (agonismo serotoninérgico) → vivências de significado e coesão.`,
+      evidencia:`Observacionais sugerem benefícios em bem-estar e redução de uso de substâncias em grupos específicos.`,
+      protocolo:`Respeito às normas da casa; triagem para interações (ISRS/IMAO/tricíclicos); alimentação leve.`,
+      sensacoes:`Purga (náusea/vômitos), visões, músicas/rezas; ~4h de duração.`,
+      seguranca:`Evitar combinações perigosas (IMAO + ISRS); atenção a histórico de psicose/mania; hidratação e suporte.`,
+      legal:`Uso religioso regulamentado; fora desse contexto exige atenção legal/ética.`,
+      riscos:`Interações medicamentosas, desidratação, vulnerabilidade emocional.`,
+      preparacao:`Dieta orientada e abstinência de certas substâncias dias antes/depois.`,
+      integracao:`Rodas de conversa, diário, apoio comunitário e/ou psicoterapia.`,
+      referencias:[
+        "Resoluções CONAD (uso religioso da ayahuasca)",
+        "Estudos brasileiros observacionais"
+      ],
+      mitos:[
+        { myth:"Sempre causa dano psiquiátrico permanente.", truth:"Casos prolongados são raros e geralmente ligados à predisposição; contexto adequado reduz riscos." },
+        { myth:"Todo mundo passa mal inevitavelmente.", truth:"A purgação é variável; preparo influencia." }
+      ],
+      perguntas:[
+        "Posso usar tomando antidepressivos?",
+        "Como identificar um grupo seguro?",
+        "O que fazer se ficar angustiado durante o ritual?",
+        "Qual dieta seguir na véspera?"
+      ],
+      checkPrep:[
+        "Respeite a dieta recomendada.",
+        "Converse sobre medicações com seu médico.",
+        "Fale com lideranças sobre expectativas/medos.",
+        "Vá com espírito de aprendizado."
+      ],
+      checkIntegracao:[
+        "Participe das conversas pós-ritual.",
+        "Mantenha hábitos saudáveis.",
+        "Registre sonhos/insights.",
+        "Implemente mudanças de forma gradual."
+      ]
     }
-    l.href = LOGO_URL;
-  })();
-  // Atualiza ano no rodapé
-  document.getElementById("year").textContent = new Date().getFullYear();
-  // ====== Router SPA simples (baseado em hash) ======
-  const app = document.getElementById("app");
-  const routes = {
-    "/": renderHome,
-    "/mensagem": () => navigateTo("/#mensagem"),
-    "/mapa": () => navigateTo("/#mapa"),
-    "/posts": () => navigateTo("/#posts"),
-    "/conhecimento": () => navigateTo("/#conhecimento"),
-    "/galeria": () => navigateTo("/#galeria"),
-    "/sobre": () => navigateTo("/#sobre"),
-    "/faq": () => navigateTo("/#faq"),
-    "/recomendado": () => navigateTo("/#recomendado"),
-    "/contato": () => navigateTo("/#contato"),
-    "/d/:id": renderDrugPage
-  };
-  function parseLocation(){
-    const hash = location.hash.replace(/^#/, "");
-    const parts = hash.split("/").filter(Boolean);
-    if(parts.length === 0) return { path: "/" };
-    if(parts[0] === "d" && parts[1]) return { path: "/d/:id", params: { id: parts[1] } };
-    const path = "/" + parts[0];
-    return { path };
-  }
-  async function router(){
-    const { path, params } = parseLocation();
-    const handler = routes[path] || renderHome;
-    await handler(params);
-    // UX: registrar evento de page_view (analytics)
-    document.body.setAttribute("data-page", path);
-  }
-  window.addEventListener("hashchange", router);
-  document.addEventListener("DOMContentLoaded", router);
-  // ===== Helpers =====
-  function navigateTo(anchor){
-    renderHome().then(() => {
-      const id = anchor.split("#")[1];
-      if(id){
-        const el = document.getElementById(id);
-        if(el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    });
-  }
-  function htmlToEl(html){
-    const t = document.createElement("template");
-    t.innerHTML = html.trim();
-    return t.content;
-  }
-  function loadIframe(id, url){
-    const iframe = document.getElementById(id);
-    if(!iframe) return;
-    iframe.src = url;
-    iframe.addEventListener('load', () => {
-      iframe.style.opacity = 1;
-      iframe.parentElement.classList.remove('skeleton');
-    });
-    iframe.addEventListener('error', () => {
-      iframe.parentElement.innerHTML = `<p class="muted" style="padding:12px">Não foi possível carregar este conteúdo no momento.</p>`;
-    });
-  }
-  function toast(msg){
-    const el = document.getElementById("toast");
-    el.textContent = msg;
-    el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), 2000);
-  }
-  // Revelação de elementos ao rolar
-  function applyReveal(root = document){
-    const nodes = root.querySelectorAll(".reveal");
-    if(!("IntersectionObserver" in window)){
-      nodes.forEach(el => el.classList.add("is-visible"));
-      return;
+  },
+  { id:"ibogaina", status:"clinico", order:3, title:"Ibogaína", short:"Investigada em dependência; exige monitorização multiprofissional intensa.", aliases:["tabernanthe iboga","TA"],
+    topics:{
+      resumo:`Alcaloide da raiz da iboga. Relatos indicam interrupção de abstinência e redução de craving, com riscos cardiológicos relevantes.`,
+      mecanismo:`Interação com receptores opioides, NMDA, sigma e nicotínicos; possível “reinício” de padrões neuroquímicos.`,
+      evidencia:`Maior parte observacional; ensaios controlados escassos por questões de segurança.`,
+      protocolo:`Seleção rigorosa (ECG, eletrólitos, função hepática), suspensão de fármacos que prolongam QT, internação com telemetria 24–48h.`,
+      sensacoes:`Ataxia, náuseas/vômitos (purga), visões oníricas prolongadas; fadiga no pós-pico.`,
+      seguranca:`Contraindicada em cardiopatias/intervalo QT longo; corrigir eletrólitos antes; atenção a hepatopatias.`,
+      legal:`Não aprovada como tratamento médico no Brasil; apenas pesquisa aprovada.`,
+      riscos:`Arritmias (torsades), convulsões raras, interações perigosas; observação prolongada necessária.`,
+      preparacao:`Correção de eletrólitos; redução segura de opioides; consentimento detalhado; jejum controlado.`,
+      integracao:`Psicoterapia motivacional, reabilitação, NA, prevenção de recaídas, seguimento cardio/hepático.`,
+      referencias:[
+        "Segurança cardiológica (prolongamento de QT) na ibogaína",
+        "Relatos clínicos em dependência de opioides"
+      ],
+      mitos:[
+        { myth:"Cura a dependência em uma dose para todos.", truth:"Pode ajudar no início; manutenção depende de suporte contínuo." },
+        { myth:"É segura para qualquer pessoa com dependência.", truth:"Riscos são significativos e requerem protocolos hospitalares." }
+      ],
+      perguntas:[
+        "Quais exames são obrigatórios antes?",
+        "Como é tratada uma arritmia se ocorrer?",
+        "Tempo total de internação?",
+        "Como é o plano de prevenção de recaída?"
+      ],
+      checkPrep:[
+        "Faça os exames solicitados (ECG e sangue).",
+        "Siga orientações de reduzir/suspender substâncias.",
+        "Prepare-se para internação e comunique família.",
+        "Pratique técnicas de relaxamento previamente."
+      ],
+      checkIntegracao:[
+        "Envolva familiares de confiança.",
+        "Faça terapia especializada nas semanas seguintes.",
+        "Participe de grupos de apoio.",
+        "Evite gatilhos de recaída no início."
+      ]
     }
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if(e.isIntersecting){
-          e.target.classList.add("is-visible");
-          io.unobserve(e.target);
-        }
-      });
-    }, { rootMargin: "0px 0px -10% 0px", threshold: 0.05 });
-    nodes.forEach(el => {
-      const r = el.getBoundingClientRect(), vh = innerHeight || document.documentElement.clientHeight;
-      if(r.top < vh * 0.9 && r.bottom > 0){
-        el.classList.add("is-visible");
-      } else {
-        io.observe(el);
-      }
-    });
-    // failsafe: revela todos após 1.5s
-    setTimeout(() => nodes.forEach(el => el.classList.add("is-visible")), 1500);
+  },
+  /* Em pesquisa */
+  { id:"psilocibina", status:"pesquisa", order:4, title:"Psilocibina", short:"Investigada em depressão/ansiedade e fim de vida; sessões assistidas + integração.", aliases:["cogumelos mágicos","psilocybe"],
+    topics:{
+      resumo:`Triptamina presente em fungos Psilocybe; estudos de fase 2 mostram redução de sintomas depressivos/ansiosos em ambiente controlado.`,
+      mecanismo:`Agonismo parcial 5-HT2A → ↑entropia cortical e flexibilidade de redes; experiências de pico com potencial terapêutico.`,
+      evidencia:`Sinais promissores em depressão resistente/ansiedade de fim de vida/uso de álcool; ainda não aprovado fora de pesquisa no Brasil.`,
+      protocolo:`Triagem rigorosa; preparação; 1–3 sessões com 2 profissionais; ambiente seguro; integração por semanas.`,
+      sensacoes:`Alterações perceptuais/emocionais intensas; ansiedade possível em picos; 4–6h de duração.`,
+      seguranca:`Evitar em risco de psicose/mania; equipe treinada minimiza ansiedade aguda.`,
+      legal:`Ilegal fora de pesquisa no Brasil.`,
+      riscos:`Ansiedade aguda, náusea inicial, cefaleia pós.`,
+      preparacao:`Intenção clara; apoio pós; agenda livre no dia seguinte.`,
+      integracao:`Diário, psicoterapia de suporte, hábitos saudáveis.`,
+      referencias:[
+        "Ensaios fase 2/3 em depressão resistente",
+        "Modelos 5-HT2A/entropia"
+      ],
+      mitos:[
+        { myth:"Deixa 'buracos no cérebro'.", truth:"Sem evidência de dano permanente em uso clínico controlado." },
+        { myth:"A pessoa perde totalmente o controle.", truth:"Preparação e equipe reduzem drasticamente riscos; o participante se comunica." }
+      ],
+      perguntas:[
+        "Preciso suspender ISRS antes?",
+        "Posso ficar preso em 'estado alterado'?",
+        "Quanto tempo para voltar ao normal?",
+        "Como lidar com uma 'bad trip'?"
+      ],
+      checkPrep:[
+        "Alinhe suspensão de antidepressivos com seu médico.",
+        "Durma bem; evite álcool/drogas na véspera.",
+        "Roupas confortáveis; agasalho leve.",
+        "Combine retorno seguro."
+      ],
+      checkIntegracao:[
+        "Participe das sessões de integração.",
+        "Diário de sonhos/afetos nos dias seguintes.",
+        "Evite decisões importantes imediatamente.",
+        "Atividades criativas/natureza ajudam."
+      ]
+    }
+  },
+  { id:"mdma", status:"pesquisa", order:5, title:"MDMA (terapia assistida)", short:"Estudada para TEPT; psicoterapia focada + sessões assistidas.", aliases:["ecstasy (contexto clínico)"],
+    topics:{
+      resumo:`Empatógeno/entactógeno; reduz medo/hipervigilância e facilita processamento de memórias traumáticas.`,
+      mecanismo:`↑Serotonina/NA/DA; ↑oxitocina; ↓atividade da amígdala; facilita extinção de medo com psicoterapia.`,
+      evidencia:`Resultados promissores em TEPT (MAPS). Aprovação varia por país; no Brasil, restrita a pesquisa.`,
+      protocolo:`Triagem cardio/psiquiátrica; várias sessões preparatórias; 2–3 sessões assistidas (6–8h cada) + integração.`,
+      sensacoes:`Empatia/conexão; calor, sudorese, bruxismo; ↑FC/PA; náusea ocasional.`,
+      seguranca:`Cuidado com interações serotoninérgicas (ISRS/IMAO); evitar em cardiopatia/gravidez/glaucoma ângulo fechado.`,
+      legal:`Não aprovado para uso clínico amplo no Brasil.`,
+      riscos:`Hipertermia/hiponatremia (se manejo inadequado), “comedown”, insônia.`,
+      preparacao:`Dormir bem; alimentação leve; hidratação moderada; definir foco terapêutico.`,
+      integracao:`Terapia de integração; higiene do sono; rotinas saudáveis.`,
+      referencias:[
+        "Ensaios fases 2/3 MDMA-AT (MAPS)",
+        "Diretrizes cardiovasculares/interações"
+      ],
+      mitos:[
+        { myth:"É igual ao ecstasy de rua.", truth:"Em clínica, usa-se grau farmacêutico padronizado e monitorizado." },
+        { myth:"Queima neurônios para sempre.", truth:"Doses espaçadas sob supervisão não mostram neurotoxicidade significativa." }
+      ],
+      perguntas:[
+        "Suspender ISRS antes?",
+        "Cuidados para evitar efeitos colaterais?",
+        "Vou lidar com memórias difíceis?",
+        "Necessidade de terapia contínua?"
+      ],
+      checkPrep:[
+        "Siga orientação sobre ISRS/IMAO.",
+        "Hidrate-se sem excessos.",
+        "Roupas leves (alteração térmica).",
+        "Defina objetivos terapêuticos."
+      ],
+      checkIntegracao:[
+        "Evite esforço/sol intenso no dia seguinte.",
+        "Converse com pessoa de confiança.",
+        "Participe das sessões de integração.",
+        "Priorize sono nas noites seguintes."
+      ]
+    }
+  },
+  { id:"lsd", status:"pesquisa", order:6, title:"LSD", short:"Pesquisa em ansiedade/cefaleia em salvas; set & setting estruturados.", aliases:["ácido lisérgico"],
+    topics:{
+      resumo:`Psicodélico clássico potente; duração longa (8–12h) exige preparação e suporte.`,
+      mecanismo:`Agonismo 5-HT2A; ↑entropia neural; estados intensos com potencial de insight.`,
+      evidencia:`Evidência emergente; protocolos priorizam segurança/integração.`,
+      protocolo:`Triagem ampla; sessão longa com equipe e música; integração posterior.`,
+      sensacoes:`Visuais marcantes, sinestesia, distorção temporal, emoções amplificadas.`,
+      seguranca:`Evitar em risco de psicose; atenção a hipertensão grave; interações com antidepressivos variam.`,
+      legal:`Proibido para uso não científico no Brasil; apenas estudos aprovados.`,
+      riscos:`Ansiedade/pânico agudo; gatilho de psicose em vulneráveis; raros flashbacks.`,
+      preparacao:`Intenção clara; evitar cafeína; descanso adequado; dia seguinte livre.`,
+      integracao:`Sessões de acompanhamento; higiene do sono; expressão criativa.`,
+      referencias:[
+        "Ensaios modernos em ansiedade (ex.: Gasser 2014)",
+        "Relatos em cefaleia em salvas"
+      ],
+      mitos:[
+        { myth:"Prende a pessoa permanentemente em 'viagem'.", truth:"Eventos duradouros são raros e ligados à predisposição; seleção adequada reduz risco." },
+        { myth:"Causa dependência química.", truth:"Não há dependência química; há tolerância aguda com uso repetido." }
+      ],
+      perguntas:[
+        "Perco noção de identidade?",
+        "É seguro com meu histórico?",
+        "Preciso ficar sempre de olhos fechados?",
+        "Quando retomo atividades?"
+      ],
+      checkPrep:[
+        "Dia sem compromissos urgentes.",
+        "Evite álcool/drogas recreativas na semana.",
+        "Combine manejo de medos com equipe.",
+        "Itens de conforto opcionais."
+      ],
+      checkIntegracao:[
+        "Durma bastante após a sessão.",
+        "Registre pensamentos/memórias.",
+        "Marque terapia de acompanhamento.",
+        "Dê tempo para processar."
+      ]
+    }
   }
-  // ====== Render: HOME & seções principais ======
-  async function renderHome(){
-    app.innerHTML = "";
-    const tpl = document.getElementById("tpl-home").content.cloneNode(true);
-    app.appendChild(tpl);
-    // Logos e CTAs
-    document.getElementById("logo").src = LOGO_URL;
-    const heroLogo = document.getElementById("heroLogo");
-    if(heroLogo) heroLogo.src = LOGO_URL;
-    const mailto = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Quero aliviar meu sofrimento")}`;
-    ["footerMail", "ctaHomeStart"].forEach(id => {
+].sort((a,b)=>a.order-b.order);
+
+/* Índices */
+const DRUG_INDEX = KNOWLEDGE.reduce((acc, d, i) => (acc[d.id]=i, acc), {});
+const DRUG_IDS   = KNOWLEDGE.map(d=>d.id);
+
+/* ===== SPA Router ===== */
+const app = document.getElementById("app");
+const routes = {
+  "/": renderHome,
+  "/mensagem": () => navigateTo("/#mensagem"),
+  "/mapa":      () => navigateTo("/#mapa"),
+  "/posts":     () => navigateTo("/#posts"),
+  "/conhecimento": () => navigateTo("/#conhecimento"),
+  "/galeria":   () => navigateTo("/#galeria"),
+  "/projetos":  () => navigateTo("/#projetos"),
+  "/sobre":     () => navigateTo("/#sobre"),
+  "/faq":       () => navigateTo("/#faq"),
+  "/recomendado": () => navigateTo("/#recomendado"),
+  "/contato":   () => navigateTo("/#contato"),
+  "/d/:id": renderDrugPage
+};
+function parseLocation(){
+  const hash = location.hash.replace(/^#/, "");
+  const parts = hash.split("/").filter(Boolean);
+  if(parts.length === 0) return { path: "/" };
+  if(parts[0] === "d" && parts[1]) return { path: "/d/:id", params: { id: parts[1] } };
+  const path = "/" + parts[0];
+  return { path };
+}
+async function router(){
+  const { path, params } = parseLocation();
+  const handler = routes[path] || renderHome;
+  await handler(params);
+  document.body.setAttribute("data-page", path);
+}
+window.addEventListener("hashchange", router);
+document.addEventListener("DOMContentLoaded", router);
+
+/* ===== Helpers ===== */
+function navigateTo(anchor){
+  renderHome().then(() => {
+    const id = anchor.split("#")[1];
+    if(id){
       const el = document.getElementById(id);
-      if(el){
-        el.href = mailto;
-        el.setAttribute("data-event", "cta_click");
-      }
-    });
-    const emailLink = document.getElementById("emailLink");
-    if(emailLink){
-      emailLink.href = `mailto:${CONTACT_EMAIL}`;
-      emailLink.textContent = CONTACT_EMAIL;
-    }
-    // Menu mobile (hambúrguer)
-    const hamb = document.getElementById("hamb");
-    const mobile = document.getElementById("mobile");
-    if(hamb && mobile){
-      hamb.onclick = () => {
-        const open = !mobile.classList.contains("open");
-        mobile.classList.toggle("open", open);
-        mobile.setAttribute("aria-hidden", String(!open));
-        hamb.setAttribute("aria-expanded", String(open));
-        if(open){
-          mobile.innerHTML = document.getElementById("navLinks").innerHTML;
-        }
-      };
-    }
-    // Botão voltar ao topo (visibilidade dinâmica)
-    const toTopBtn = document.getElementById('toTop');
-    window.addEventListener('scroll', () => {
-      if(window.scrollY > 600) toTopBtn.classList.add('show');
-      else toTopBtn.classList.remove('show');
-    }, { passive: true });
-    toTopBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
-    // Copiar email (CTA)
-    const copyEmailBtn = document.getElementById('copyEmail');
-    if(copyEmailBtn){
-      copyEmailBtn.onclick = async () => {
-        try {
-          await navigator.clipboard.writeText(CONTACT_EMAIL);
-          toast('Email copiado. Estamos aqui com você.');
-        } catch {
-          toast('Não foi possível copiar');
-        }
-      };
-    }
-    // Imprimir mensagem institucional
-    const printBtn = document.getElementById('printMsg');
-    if(printBtn){
-      printBtn.onclick = () => window.print();
-    }
-    // Carregar embeds (mapa, Instagram, YouTube)
-    loadIframe('mapEmbed', MAP_URL);
-    loadIframe('igEmbed', SOCIAL.instagramEmbedUrl);
-    loadIframe('ytEmbed', SOCIAL.youtubeEmbedUrl);
-    // Renderizar cartões de Conhecimento
-    const cardsWrap = document.getElementById("cards");
-    function renderCards(list){
-      cardsWrap.innerHTML = "";
-      list.forEach((k, i) => {
-        const art = document.createElement("article");
-        art.className = "card reveal";
-        art.style.transitionDelay = (i * 50) + "ms";
-        art.innerHTML = `
-          <h3 style="margin:0 0 8px">${k.title}</h3>
-          <p class="muted" style="margin:0 0 10px">${k.short}</p>
-          <div class="toolbar" style="justify-content:space-between">
-            <span class="muted" style="font-size:12px">${(k.aliases || []).slice(0,2).join(" · ")}</span>
-            <a class="btn small" href="#/d/${k.id}" data-link>Saiba mais</a>
-          </div>
-        `;
-        cardsWrap.appendChild(art);
-      });
-      applyReveal(cardsWrap);
-    }
-    renderCards(KNOWLEDGE);
-    // Busca no catálogo de conhecimento
-    const searchInput = document.getElementById("searchInp");
-    if(searchInput){
-      const lastQuery = localStorage.getItem('lastSearch') || "";
-      if(lastQuery){
-        searchInput.value = lastQuery;
-        const filtered = KNOWLEDGE.filter(k => {
-          const allText = [k.title, k.short, ...(k.aliases || [])].join(" ").toLowerCase();
-          return allText.includes(lastQuery.toLowerCase());
-        });
-        renderCards(filtered);
-      }
-      let searchTimeout;
-      searchInput.oninput = (e) => {
-        const q = e.target.value.trim().toLowerCase();
-        localStorage.setItem('lastSearch', q);
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-          const filtered = !q ? KNOWLEDGE : KNOWLEDGE.filter(k => {
-            const all = [k.title, k.short, ...(k.aliases || [])].join(" ").toLowerCase();
-            return all.includes(q);
-          });
-          renderCards(filtered);
-        }, 200);
-      };
-    }
-    // Toggle FAQ (acordeão)
-    app.querySelectorAll(".faq-item").forEach(row => {
-      const btn = row.querySelector(".faq-btn");
-      const ans = row.querySelector(".faq-ans");
-      btn.addEventListener("click", () => {
-        const open = ans.classList.toggle("open");
-        btn.setAttribute("aria-expanded", String(open));
-        btn.lastElementChild.textContent = open ? "−" : "+";
-      });
-    });
-    // Scrollspy (destacar seção ativa no menu)
-    const spyLinks = Array.from(document.querySelectorAll('.nav-links a'));
-    const sectionIds = ["hero", "mensagem", "mapa", "posts", "conhecimento", "galeria", "sobre", "faq", "recomendado", "contato"];
-    const sections = sectionIds.map(id => document.getElementById(id));
-    function onScrollSpy(){
-      let activeLink = spyLinks[0];
-      const y = window.scrollY + 120;
-      sections.forEach((sec, i) => {
-        if(sec && sec.offsetTop <= y) activeLink = spyLinks[i] || activeLink;
-      });
-      spyLinks.forEach(a => a.classList.remove('active'));
-      activeLink && activeLink.classList.add('active');
-    }
-    window.addEventListener('scroll', onScrollSpy, { passive: true });
-    onScrollSpy();
-    // Restaurar meta tags padrão (SEO)
-    document.title = SITE_NAME + " — Psicodélicos com ciência, ética e cuidado";
-    const canonical = document.getElementById('canonical');
-    if(canonical) canonical.setAttribute('href', location.origin + location.pathname);
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if(metaDesc) metaDesc.content = DEFAULT_DESC;
-    const ogTitleMeta = document.querySelector('meta[property="og:title"]');
-    if(ogTitleMeta) ogTitleMeta.content = DEFAULT_OG_TITLE;
-    const ogDescMeta = document.querySelector('meta[property="og:description"]');
-    if(ogDescMeta) ogDescMeta.content = DEFAULT_OG_DESC;
-    const twitterTitleMeta = document.querySelector('meta[name="twitter:title"]');
-    if(twitterTitleMeta) twitterTitleMeta.content = DEFAULT_OG_TITLE;
-    const twitterDescMeta = document.querySelector('meta[name="twitter:description"]');
-    if(twitterDescMeta) twitterDescMeta.content = DEFAULT_OG_DESC;
-    // Animações de revelação
-    applyReveal(app);
-  }
-  // ====== Render: Página de substância ======
-  async function renderDrugPage(params){
-    app.innerHTML = "";
-    const tpl = document.getElementById("tpl-drug-page").content.cloneNode(true);
-    app.appendChild(tpl);
-    const drug = KNOWLEDGE.find(d => d.id === params.id);
-    const titleEl = document.getElementById("crumbDrug");
-    const article = document.getElementById("drugArticle");
-    const tocLinks = document.getElementById("tocLinks");
-    const neighbor = document.getElementById("neighborLinks");
-    if(!drug){
-      article.innerHTML = `<h2>Não encontrado</h2><p class="muted">A substância solicitada não existe no catálogo.</p>`;
-      applyReveal(app);
-      return;
-    }
-    titleEl.textContent = drug.title;
-    // Conteúdo das seções
-    const sections = [
-      ["visao-geral", "Visão geral", `
-        <p class="muted">${drug.topics.resumo}</p>
-        <div class="pill-list" style="margin:8px 0">
-          ${(drug.aliases || []).map(a => `<span class="pill">${a}</span>`).join("")}
-        </div>
-        <p class="note"><strong>Empatia em primeiro lugar:</strong> cada pessoa é única. Nosso papel é acolher sem julgamento,
-        reduzir riscos e construir, junto com você, um caminho de cuidado seguro.</p>
-      `],
-      ["mecanismo", "Mecanismo de ação", `<p>${drug.topics.mecanismo}</p>`],
-      ["evidencia", "Evidência científica", `<p>${drug.topics.evidencia}</p>`],
-      ["protocolo", "Protocolo clínico", `<p>${drug.topics.protocolo}</p>`],
-      ["experiencia", "Como pode ser a experiência", `<p>${drug.topics.sensacoes}</p>`],
-      ["seguranca", "Segurança e triagem", `<p>${drug.topics.seguranca}</p>`],
-      ["legal", "Situação legal (Brasil)", `<p>${drug.topics.legal}</p>`],
-      ["riscos", "Riscos e efeitos adversos", `<p class="warning">${drug.topics.riscos}</p>`],
-      ["preparacao", "Preparação", `<p>${drug.topics.preparacao}</p>${
-        (drug.topics.checkPrep || []).length ? `<ul>${drug.topics.checkPrep.map(item => `<li>${item}</li>`).join("")}</ul>` : ""
-      }`],
-      ["integracao", "Integração", `<p>${drug.topics.integracao}</p>${
-        (drug.topics.checkIntegracao || []).length ? `<ul>${drug.topics.checkIntegracao.map(item => `<li>${item}</li>`).join("")}</ul>` : ""
-      }`],
-      ["mitos", "Mitos & Verdades", `<ul>${
-        (drug.topics.mitos || []).map(m => `<li><strong>Mito:</strong> ${m.myth}<br><strong>Verdade:</strong> ${m.truth}</li>`).join("")
-      }</ul>`],
-      ["perguntas", "Perguntas para conversar com seu médico/terapeuta", `<ul>${
-        (drug.topics.perguntas || []).map(q => `<li>${q}</li>`).join("")
-      }</ul>`],
-      ["recursos", "Leituras e recursos", `
-        <ul>${(drug.topics.referencias || []).map(r => `<li>${r}</li>`).join("")}</ul>
-        <div class="toolbar" style="margin-top:12px">
-          <a class="btn small" href="#/contato" data-link>Tenho dúvidas → Falar com a NTO</a>
-          <a class="btn ghost small" href="#/conhecimento" data-link>Voltar ao catálogo</a>
-        </div>
-      `],
-      ["glossario", "Glossário", `
-        <ul>
-          <li><strong>Entropia cortical:</strong> Medida de desordem nas atividades neurais do cérebro; psicodélicos clássicos aumentam a entropia cortical, permitindo que o cérebro explore estados menos rígidos de funcionamento.</li>
-          <li><strong>Receptor 5-HT2A:</strong> Principal alvo dos psicodélicos clássicos (como LSD, psilocibina); receptor de serotonina envolvido na modulação da percepção e cognição.</li>
-          <li><strong>BDNF:</strong> Brain-Derived Neurotrophic Factor (Fator Neurotrófico Derivado do Cérebro); proteína que promove a sobrevivência e crescimento de neurônios, importante para neuroplasticidade e possivelmente mediadora dos efeitos antidepressivos de tratamentos como cetamina.</li>
-          <li><strong>Dissociação:</strong> Estado de desconexão do corpo ou da realidade; com cetamina, pode incluir sensação de estar "fora do corpo" ou com percepção reduzida da dor e das emoções, geralmente passageiro.</li>
-          <li><strong>Neuroplasticidade:</strong> Capacidade do cérebro de se reorganizar formando novas conexões e vias; fundamental para a recuperação em transtornos mentais, e possivelmente intensificada por terapias psicodélicas, facilitando novas aprendizagens emocionais.</li>
-          <li><strong>IMAO:</strong> Inibidor da Monoamina Oxidase; classe de substâncias que bloqueiam a enzima que degrada neurotransmissores. No contexto da ayahuasca, as beta-carbolinas do cipó atuam como IMAO, permitindo que a DMT permaneça ativa no organismo tempo suficiente para efeito psicodélico.</li>
-          <li><strong>Oxitocina:</strong> Hormônio associado ao vínculo social e à empatia; liberado em maior quantidade sob efeito do MDMA, contribuindo para sensação de conexão interpessoal e redução do medo social.</li>
-        </ul>
-      `]
-    ];
-    // Monta links do TOC
-    tocLinks.innerHTML = sections.map(s => `<a href="#sec-${s[0]}">${s[1]}</a>`).join("");
-    // Monta conteúdo no artigo
-    article.innerHTML = `
-      <header style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px">
-        <h1 style="margin:0">${drug.title}</h1>
-        <p class="muted" style="margin:0">${drug.short}</p>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
-          <span class="tag">Conteúdo educativo</span>
-          <span class="tag">Triagem obrigatória</span>
-          <span class="tag">Integração</span>
-        </div>
-      </header>
-      ${sections.map(([id, label, html]) => `
-        <section id="sec-${id}" class="reveal" style="padding-top:10px;margin-top:10px;border-top:1px solid var(--line)">
-          <h2 style="margin:8px 0 6px">${label}</h2>
-          ${html}
-        </section>
-      `).join("")}
-      <footer style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap">
-        <a class="btn" href="mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Quero conversar sobre " + drug.title)}" data-event="cta_click">Falar por email</a>
-        <button class="btn ghost" id="btnPrintDrug">Imprimir</button>
-      </footer>
-      <p class="muted" style="font-size:13px;margin-top:16px">
-        Nota: Este material é informativo e não substitui consulta médica. Se estiver em crise ou em perigo imediato, procure ajuda emergencial.
-      </p>
-    `;
-    // Navegação vizinha (anterior/próxima substância)
-    const idx = DRUG_INDEX[drug.id];
-    const prevId = DRUG_IDS[idx - 1];
-    const nextId = DRUG_IDS[idx + 1];
-    neighbor.innerHTML = `
-      ${prevId ? `<a class="btn small" href="#/d/${prevId}" data-link>← ${KNOWLEDGE[DRUG_INDEX[prevId]].title}</a>` : ""}
-      <a class="btn ghost small" href="#/conhecimento" data-link>Catálogo</a>
-      ${nextId ? `<a class="btn small" href="#/d/${nextId}" data-link>${KNOWLEDGE[DRUG_INDEX[nextId]].title} →</a>` : ""}
-    `;
-    // Ações: imprimir página
-    const btnPrint = document.getElementById("btnPrintDrug");
-    if(btnPrint){
-      btnPrint.onclick = () => window.print();
-    }
-    // Rolagem suave para âncoras internas
-    article.querySelectorAll('a[href^="#sec-"]').forEach(a => {
-      a.addEventListener("click", (e) => {
-        e.preventDefault();
-        const target = document.querySelector(a.getAttribute("href"));
-        if(target) target.scrollIntoView({ behavior: "smooth" });
-      });
-    });
-    // Atualiza meta tags para esta substância (SEO dinâmico)
-    document.title = `${drug.title} — ${SITE_NAME}`;
-    const canonicalEl = document.getElementById('canonical');
-    if(canonicalEl) canonicalEl.setAttribute('href', location.origin + location.pathname + '#/d/' + drug.id);
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if(metaDesc) metaDesc.content = `${drug.short} — ${SITE_NAME}`;
-    const ogTitleMeta = document.querySelector('meta[property="og:title"]');
-    if(ogTitleMeta) ogTitleMeta.content = `${drug.title} — ${SITE_NAME}`;
-    const ogDescMeta = document.querySelector('meta[property="og:description"]');
-    if(ogDescMeta) ogDescMeta.content = drug.short || DEFAULT_OG_DESC;
-    const twitterTitleMeta = document.querySelector('meta[name="twitter:title"]');
-    if(twitterTitleMeta) twitterTitleMeta.content = `${drug.title} — ${SITE_NAME}`;
-    const twitterDescMeta = document.querySelector('meta[name="twitter:description"]');
-    if(twitterDescMeta) twitterDescMeta.content = drug.short || DEFAULT_OG_DESC;
-    // Revelar elementos
-    applyReveal(app);
-    // Rolagem para topo ao entrar na página
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-  // ====== Inicialização global (CTAs e preferências) ======
-  (function globalInit(){
-    document.getElementById("logo").src = LOGO_URL;
-    const mailto = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Quero aliviar meu sofrimento")}`;
-    ["footerMail"].forEach(id => {
-      const el = document.getElementById(id);
-      if(el) el.href = mailto;
-    });
-    // Botões de acessibilidade (alto contraste, reduzir animação)
-    const contrastBtn = document.getElementById("toggleContrast");
-    const motionBtn = document.getElementById("toggleMotion");
-    if(contrastBtn){
-      contrastBtn.onclick = () => {
-        const hc = document.documentElement.classList.toggle("high-contrast");
-        contrastBtn.textContent = hc ? "Contraste normal" : "Contraste";
-      };
-    }
-    if(motionBtn){
-      motionBtn.onclick = () => {
-        const rm = document.documentElement.classList.toggle("reduce-motion");
-        motionBtn.textContent = rm ? "Ativar animação" : "Reduzir animação";
-      };
-    }
-  })();
-  // Delegação de cliques (links internos com data-link)
-  document.addEventListener("click", (e) => {
-    const anchor = e.target.closest('a[data-link]');
-    if(anchor && anchor.getAttribute("href") && anchor.getAttribute("href").startsWith("#/")){
-      e.preventDefault();
-      location.hash = anchor.getAttribute("href").replace(/^#/, "");
+      if(el) el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   });
+}
+function htmlToEl(html){
+  const t = document.createElement("template");
+  t.innerHTML = html.trim();
+  return t.content;
+}
+function loadIframe(id, url){
+  const iframe = document.getElementById(id);
+  if(!iframe) return;
+  iframe.src = url;
+  iframe.addEventListener('load', () => {
+    iframe.style.opacity = 1;
+    iframe.parentElement.classList.remove('skeleton');
+  });
+  iframe.addEventListener('error', () => {
+    iframe.parentElement.innerHTML = `<p class="muted" style="padding:12px">Não foi possível carregar este conteúdo no momento.</p>`;
+  });
+}
+function toast(msg){
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2200);
+}
+function applyReveal(root = document){
+  const nodes = root.querySelectorAll(".reveal");
+  if(!("IntersectionObserver" in window)){
+    nodes.forEach(el => el.classList.add("is-visible"));
+    return;
+  }
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.classList.add("is-visible");
+        io.unobserve(e.target);
+      }
+    });
+  }, { rootMargin: "0px 0px -10% 0px", threshold: 0.05 });
+  nodes.forEach(el => {
+    const r = el.getBoundingClientRect(), vh = innerHeight || document.documentElement.clientHeight;
+    if(r.top < vh * 0.9 && r.bottom > 0){
+      el.classList.add("is-visible");
+    } else {
+      io.observe(el);
+    }
+  });
+  setTimeout(() => nodes.forEach(el => el.classList.add("is-visible")), 1500);
+}
+
+/* ===== Render: HOME & seções ===== */
+async function renderHome(){
+  app.innerHTML = "";
+  const tpl = document.getElementById("tpl-home").content.cloneNode(true);
+  app.appendChild(tpl);
+
+  // Logos/CTAs
+  document.getElementById("logo").src = LOGO_URL;
+  const heroLogo = document.getElementById("heroLogo");
+  if(heroLogo) heroLogo.src = LOGO_URL;
+
+  const mailto = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Quero aliviar meu sofrimento")}`;
+  ["footerMail","ctaHomeStart"].forEach(id => {
+    const el = document.getElementById(id);
+    if(el){ el.href = mailto; el.setAttribute("data-event","cta_click"); }
+  });
+  const emailLink = document.getElementById("emailLink");
+  if(emailLink){ emailLink.href = `mailto:${CONTACT_EMAIL}`; emailLink.textContent = CONTACT_EMAIL; }
+
+  // Menu mobile
+  const hamb = document.getElementById("hamb");
+  const mobile = document.getElementById("mobile");
+  if(hamb && mobile){
+    hamb.onclick = () => {
+      const open = !mobile.classList.contains("open");
+      mobile.classList.toggle("open", open);
+      mobile.setAttribute("aria-hidden", String(!open));
+      hamb.setAttribute("aria-expanded", String(open));
+      if(open){ mobile.innerHTML = document.getElementById("navLinks").innerHTML; }
+    };
+  }
+
+  // Back to top
+  const toTopBtn = document.getElementById('toTop');
+  window.addEventListener('scroll', () => {
+    if(window.scrollY > 600) toTopBtn.classList.add('show'); else toTopBtn.classList.remove('show');
+  }, { passive:true });
+  toTopBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Copiar email
+  const copyEmailBtn = document.getElementById('copyEmail');
+  if(copyEmailBtn){
+    copyEmailBtn.onclick = async () => {
+      try{
+        await navigator.clipboard.writeText(CONTACT_EMAIL);
+        toast('Email copiado. Estamos aqui com você.');
+      }catch{ toast('Não foi possível copiar'); }
+    };
+  }
+
+  // Embed externos
+  loadIframe('mapEmbed', MAP_URL);
+  loadIframe('igEmbed', SOCIAL.instagramEmbedUrl);
+  loadIframe('ytEmbed', SOCIAL.youtubeEmbedUrl);
+
+  // Render cartões de conhecimento
+  const cardsWrap = document.getElementById("cards");
+  function cardTag(d){
+    return d.status === "pesquisa" ? `<span class="tag research" title="Ainda em pesquisa">Em pesquisa</span>` : `<span class="tag" title="Uso atual">Uso atual</span>`;
+  }
+  function renderCards(list){
+    cardsWrap.innerHTML = "";
+    list.forEach((k, i) => {
+      const art = document.createElement("article");
+      art.className = "card reveal";
+      art.style.transitionDelay = (i * 50) + "ms";
+      art.id = "card-"+k.id;
+      art.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px">
+          <h3 style="margin:0">${k.title}</h3>
+          ${cardTag(k)}
+        </div>
+        <p class="muted" style="margin:0 0 10px">${k.short}</p>
+        <div class="toolbar" style="justify-content:space-between">
+          <span class="muted" style="font-size:12px">${(k.aliases || []).slice(0,2).join(" · ")}</span>
+          <a class="btn small primary" href="#/d/${k.id}" data-link>Saiba mais</a>
+        </div>
+      `;
+      cardsWrap.appendChild(art);
+    });
+    applyReveal(cardsWrap);
+  }
+  renderCards(KNOWLEDGE);
+
+  // Busca + Filtros (guia rápido sem mudar rota)
+  const searchInput = document.getElementById("searchInp");
+  const quick = document.getElementById("quickGuide");
+  let currentFilter = localStorage.getItem('knowledgeFilter') || "all";
+  function applyFilter(){
+    const q = (searchInput?.value || "").trim().toLowerCase();
+    let base = KNOWLEDGE.slice();
+    if(currentFilter !== "all") base = base.filter(k => k.status === currentFilter);
+    if(q){
+      base = base.filter(k => {
+        const all = [k.title,k.short,...(k.aliases||[])].join(" ").toLowerCase();
+        return all.includes(q);
+      });
+    }
+    renderCards(base);
+  }
+  if(searchInput){
+    const lastQuery = localStorage.getItem('lastSearch') || "";
+    if(lastQuery){ searchInput.value = lastQuery; }
+    let t; searchInput.oninput = (e)=>{ const v=e.target.value; localStorage.setItem('lastSearch', v); clearTimeout(t); t=setTimeout(applyFilter, 200); };
+  }
+  if(quick){
+    quick.addEventListener('click', (ev)=>{
+      const b = ev.target.closest('button');
+      if(!b) return;
+      if(b.dataset.filter){
+        currentFilter = b.dataset.filter;
+        localStorage.setItem('knowledgeFilter', currentFilter);
+        applyFilter();
+      }
+      if(b.dataset.jump){
+        const target = document.getElementById("card-"+b.dataset.jump);
+        if(target) target.scrollIntoView({behavior:"smooth", block:"center"});
+      }
+    });
+  }
+  applyFilter();
+
+  // FAQ toggle (se presente na home)
+  app.querySelectorAll(".faq-item").forEach(row => {
+    const btn = row.querySelector(".faq-btn");
+    const ans = row.querySelector(".faq-ans");
+    btn.addEventListener("click", () => {
+      const open = ans.classList.toggle("open");
+      btn.setAttribute("aria-expanded", String(open));
+      btn.lastElementChild.textContent = open ? "−" : "+";
+    });
+  });
+
+  // Scrollspy
+  const spyLinks = Array.from(document.querySelectorAll('.nav-links a'));
+  const sectionIds = ["hero","mensagem","mapa","posts","conhecimento","galeria","projetos","sobre","faq","recomendado","contato"];
+  const sections = sectionIds.map(id => document.getElementById(id));
+  function onScrollSpy(){
+    let activeLink = spyLinks[0];
+    const y = window.scrollY + 120;
+    sections.forEach((sec, i) => { if(sec && sec.offsetTop <= y) activeLink = spyLinks[i] || activeLink; });
+    spyLinks.forEach(a => a.classList.remove('active'));
+    activeLink && activeLink.classList.add('active');
+  }
+  window.addEventListener('scroll', onScrollSpy, { passive:true });
+  onScrollSpy();
+
+  // SEO padrão
+  document.title = SITE_NAME + " — Psicodélicos com ciência, ética e cuidado";
+  const canonical = document.getElementById('canonical');
+  if(canonical) canonical.setAttribute('href', location.origin + location.pathname);
+  document.querySelector('meta[name="description"]').content = DEFAULT_DESC;
+  document.querySelector('meta[property="og:title"]').content = DEFAULT_OG_TITLE;
+  document.querySelector('meta[property="og:description"]').content = DEFAULT_OG_DESC;
+  document.querySelector('meta[name="twitter:title"]').content = DEFAULT_OG_TITLE;
+  document.querySelector('meta[name="twitter:description"]').content = DEFAULT_OG_DESC;
+
+  // Animações de revelação
+  applyReveal(app);
+
+  // CTAs “Quero Alívio” → popup
+  ["ctaHeader","ctaFloat","ctaHero","ctaMensagem"].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el){ el.onclick = (e)=>{ e.preventDefault(); openLeadModal(); }; }
+  });
+}
+
+/* ===== Render: Página de substância ===== */
+async function renderDrugPage(params){
+  app.innerHTML = "";
+  const tpl = document.getElementById("tpl-drug-page").content.cloneNode(true);
+  app.appendChild(tpl);
+  const drug = KNOWLEDGE.find(d => d.id === params.id);
+  const titleEl = document.getElementById("crumbDrug");
+  const article = document.getElementById("drugArticle");
+  const tocLinks = document.getElementById("tocLinks");
+  const neighbor = document.getElementById("neighborLinks");
+  if(!drug){
+    article.innerHTML = `<h2>Não encontrado</h2><p class="muted">A substância solicitada não existe no catálogo.</p>`;
+    applyReveal(app); return;
+  }
+  titleEl.textContent = drug.title;
+
+  const sections = [
+    ["visao-geral","Visão geral",`
+      <p class="muted">${drug.topics.resumo}</p>
+      <div class="toolbar" style="gap:8px;flex-wrap:wrap">
+        ${(drug.aliases||[]).map(a=>`<span class="pill">${a}</span>`).join("")}
+        ${drug.status==="pesquisa" ? `<span class="tag research">Em pesquisa</span>` : `<span class="tag">Uso atual</span>`}
+      </div>
+      <p class="fancy" style="margin-top:12px"><span class="inner" style="display:block">
+        <strong>Empatia em primeiro lugar.</strong> Cada pessoa é única. Nosso papel é acolher, reduzir riscos e construir, junto com você, um caminho seguro.
+      </span></p>
+    `],
+    ["mecanismo","Mecanismo de ação",`<p>${drug.topics.mecanismo}</p>`],
+    ["evidencia","Evidência científica",`<p>${drug.topics.evidencia}</p>`],
+    ["protocolo","Protocolo clínico",`<p>${drug.topics.protocolo}</p>`],
+    ["experiencia","Como pode ser a experiência",`<p>${drug.topics.sensacoes}</p>`],
+    ["seguranca","Segurança e triagem",`<p>${drug.topics.seguranca}</p>`],
+    ["legal","Situação legal (Brasil)",`<p>${drug.topics.legal}</p>`],
+    ["riscos","Riscos e efeitos adversos",`<p class="fancy"><span class="inner">${drug.topics.riscos}</span></p>`],
+    ["preparacao","Preparação",`
+      <p>${drug.topics.preparacao}</p>
+      ${(drug.topics.checkPrep||[]).length?`<ul>${drug.topics.checkPrep.map(i=>`<li>${i}</li>`).join("")}</ul>`:""}
+    `],
+    ["integracao","Integração",`
+      <p>${drug.topics.integracao}</p>
+      ${(drug.topics.checkIntegracao||[]).length?`<ul>${drug.topics.checkIntegracao.map(i=>`<li>${i}</li>`).join("")}</ul>`:""}
+    `],
+    ["mitos","Mitos & Verdades",`
+      <ul>${(drug.topics.mitos||[]).map(m=>`<li><strong>Mito:</strong> ${m.myth}<br><strong>Verdade:</strong> ${m.truth}</li>`).join("")}</ul>
+    `],
+    ["perguntas","Perguntas para conversar com seu médico/terapeuta",`
+      <ul>${(drug.topics.perguntas||[]).map(q=>`<li>${q}</li>`).join("")}</ul>
+    `],
+    ["recursos","Leituras e recursos",`
+      <ul>${(drug.topics.referencias||[]).map(r=>`<li>${r}</li>`).join("")}</ul>
+      <div class="toolbar" style="margin-top:12px">
+        <a class="btn primary" href="mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Quero conversar sobre " + drug.title)}" data-event="cta_click">Falar por email</a>
+        <a class="btn ghost" href="#/conhecimento" data-link>Voltar ao catálogo</a>
+      </div>
+    `],
+    ["glossario","Glossário",`
+      <ul>
+        <li><strong>Entropia cortical:</strong> desordem/variedade na atividade neural, ↑ com psicodélicos clássicos.</li>
+        <li><strong>Receptor 5-HT2A:</strong> alvo dos psicodélicos (LSD/psilocibina).</li>
+        <li><strong>BDNF:</strong> fator neurotrófico associado à plasticidade.</li>
+        <li><strong>Dissociação:</strong> desconexão transitória corpo/realidade (com cetamina).</li>
+        <li><strong>IMAO:</strong> inibidores da monoamina oxidase; atenção a interações.</li>
+        <li><strong>Oxitocina:</strong> hormônio pró-social elevado no MDMA.</li>
+      </ul>
+    `]
+  ];
+
+  tocLinks.innerHTML = sections.map(s=>`<a href="#sec-${s[0]}">${s[1]}</a>`).join("");
+  article.innerHTML = `
+    <header style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px">
+      <h1 style="margin:0">${drug.title}</h1>
+      <p class="muted" style="margin:0">${drug.short}</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+        <span class="tag">Conteúdo educativo</span>
+        <span class="tag">Triagem obrigatória</span>
+        <span class="tag">Integração</span>
+      </div>
+    </header>
+    ${sections.map(([id,label,html])=>`
+      <section id="sec-${id}" class="reveal" style="padding-top:10px;margin-top:10px;border-top:1px solid var(--line)">
+        <h2 style="margin:8px 0 6px">${label}</h2>
+        ${html}
+      </section>
+    `).join("")}
+    <p class="muted" style="font-size:13px;margin-top:16px">
+      Nota: Este material é informativo e não substitui consulta médica. Se estiver em crise ou em perigo imediato, procure ajuda emergencial.
+    </p>
+  `;
+
+  // Navegação vizinha
+  const idx = DRUG_INDEX[drug.id];
+  const prevId = DRUG_IDS[idx-1], nextId = DRUG_IDS[idx+1];
+  neighbor.innerHTML = `
+    ${prevId?`<a class="btn small ghost" href="#/d/${prevId}" data-link>← ${KNOWLEDGE[DRUG_INDEX[prevId]].title}</a>`:""}
+    <a class="btn small" href="#/conhecimento" data-link>Catálogo</a>
+    ${nextId?`<a class="btn small ghost" href="#/d/${nextId}" data-link>${KNOWLEDGE[DRUG_INDEX[nextId]].title} →</a>`:""}
+  `;
+
+  // Âncoras internas suaves
+  article.querySelectorAll('a[href^="#sec-"]').forEach(a=>{
+    a.addEventListener("click",(e)=>{ e.preventDefault(); const t=document.querySelector(a.getAttribute("href")); if(t) t.scrollIntoView({behavior:"smooth"}); });
+  });
+
+  // SEO dinâmico
+  document.title = `${drug.title} — ${SITE_NAME}`;
+  const canonicalEl = document.getElementById('canonical');
+  if(canonicalEl) canonicalEl.setAttribute('href', location.origin + location.pathname + '#/d/' + drug.id);
+  document.querySelector('meta[name="description"]').content = `${drug.short} — ${SITE_NAME}`;
+  document.querySelector('meta[property="og:title"]').content = `${drug.title} — ${SITE_NAME}`;
+  document.querySelector('meta[property="og:description"]').content = drug.short || DEFAULT_OG_DESC;
+  document.querySelector('meta[name="twitter:title"]').content = `${drug.title} — ${SITE_NAME}`;
+  document.querySelector('meta[name="twitter:description"]').content = drug.short || DEFAULT_OG_DESC;
+
+  applyReveal(app);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* ===== Inicialização global ===== */
+document.getElementById("logo").src = LOGO_URL;
+document.getElementById("year").textContent = new Date().getFullYear();
+
+// Delegação de cliques (somente para links internos '#/')
+document.addEventListener("click", (e) => {
+  const anchor = e.target.closest('a[data-link]');
+  if(anchor && anchor.getAttribute("href") && anchor.getAttribute("href").startsWith("#/")){
+    e.preventDefault();
+    location.hash = anchor.getAttribute("href").replace(/^#/, "");
+  }
+});
+
+// CTA popup “Quero Alívio”
+const leadModal = document.getElementById("leadModal");
+const leadForm  = document.getElementById("leadForm");
+const leadClose = document.getElementById("leadClose");
+
+function openLeadModal(){ leadModal.style.display = "flex"; }
+function closeLeadModal(){ leadModal.style.display = "none"; }
+
+leadClose.addEventListener("click", closeLeadModal);
+leadModal.addEventListener("click",(e)=>{ if(e.target===leadModal) closeLeadModal(); });
+leadForm.addEventListener("submit",(e)=>{
+  e.preventDefault();
+  const payload = {
+    nome: document.getElementById("leadNome").value.trim(),
+    email: document.getElementById("leadEmail").value.trim(),
+    assunto: document.getElementById("leadAssunto").value,
+    ts: new Date().toISOString()
+  };
+  if(!payload.nome || !payload.email || !payload.assunto){ toast("Preencha todos os campos."); return; }
+  try{
+    const arr = JSON.parse(localStorage.getItem("nto_leads")||"[]");
+    arr.push(payload);
+    localStorage.setItem("nto_leads", JSON.stringify(arr));
+  }catch{}
+  toast("Obrigado! Vamos te responder em breve.");
+  closeLeadModal();
+  // Abre mapa após coleta
+  location.hash = "/mapa";
+});
+
+// Header CTA (caso o conteúdo inicial ainda não esteja renderizado)
+["ctaHeader","ctaFloat"].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el){ el.addEventListener("click",(e)=>{ e.preventDefault(); openLeadModal(); }); }
+});
+
+// Ano e favicon
+(function(){
+  let l = document.querySelector("link[rel='icon']");
+  if(!l){ l = document.createElement("link"); l.rel = "icon"; document.head.appendChild(l); }
+  l.href = LOGO_URL;
+})();
+
 </script>
+
+<!-- JSON-LD básico -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -1628,10 +1429,7 @@ Diretivas finais:
       "name": "NTO Brasil",
       "url": "https://ntobr.com",
       "logo": "https://ntobr.com/logo.png",
-      "address": {
-        "@type": "PostalAddress",
-        "addressCountry": "BR"
-      },
+      "address": { "@type": "PostalAddress", "addressCountry": "BR" },
       "description": "Instituto clínico e multidisciplinar focado em terapias psicodélicas com ciência, ética e cuidado",
       "sameAs": [
         "https://www.instagram.com/nto_oficial",
@@ -1642,36 +1440,12 @@ Diretivas finais:
       "@type": "ItemList",
       "name": "Psicodélicos em estudo",
       "itemListElement": [
-        {
-          "@type": "Drug",
-          "name": "Cetamina",
-          "description": "Alívio rápido em depressão resistente com infusão/spray supervisionado."
-        },
-        {
-          "@type": "Drug",
-          "name": "Psilocibina",
-          "description": "Substância dos 'cogumelos mágicos', em pesquisa para depressão e ansiedade."
-        },
-        {
-          "@type": "Drug",
-          "name": "MDMA",
-          "description": "Empatógeno estudado como coadjuvante em psicoterapia de TEPT."
-        },
-        {
-          "@type": "Drug",
-          "name": "Ibogaína",
-          "description": "Alcaloide africano em estudo para dependência química (desintoxicação assistida)."
-        },
-        {
-          "@type": "Drug",
-          "name": "LSD",
-          "description": "Clássico psicodélico investigado para ansiedade e outras indicações."
-        },
-        {
-          "@type": "Drug",
-          "name": "Ayahuasca",
-          "description": "Decocção tradicional amazônica com uso ritual e potencial terapêutico em depressão."
-        }
+        { "@type": "Drug", "name": "Cetamina", "description": "Alívio rápido em depressão resistente com infusão/spray supervisionado." },
+        { "@type": "Drug", "name": "Ayahuasca", "description": "Decocção tradicional amazônica com uso ritual e potencial impacto em bem-estar." },
+        { "@type": "Drug", "name": "Ibogaína", "description": "Alcaloide africano em estudo para dependência química (desintoxicação assistida)." },
+        { "@type": "Drug", "name": "Psilocibina", "description": "Triptamina investigada para depressão/ansiedade." },
+        { "@type": "Drug", "name": "MDMA", "description": "Empatógeno estudado como coadjuvante em psicoterapia de TEPT." },
+        { "@type": "Drug", "name": "LSD", "description": "Clássico psicodélico investigado para ansiedade/cefaleia em salvas." }
       ]
     }
   ]
@@ -1679,3 +1453,4 @@ Diretivas finais:
 </script>
 </body>
 </html>
+```

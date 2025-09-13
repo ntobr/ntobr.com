@@ -749,12 +749,27 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
 <script>
 
 /* === Paisagens super-realistas (sua foto + sugestões) === */
+/* === Paisagens brasileiras === */
 const LANDSCAPE_URLS = [
-  "./paisagem-hero.jpg", // sua imagem local (mesma pasta do index.html)
-  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1800&auto=format&fit=crop", // amanhecer nas montanhas
-  "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1800&auto=format&fit=crop", // céu dourado e picos
-  "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?q=80&w=1800&auto=format&fit=crop"  // vale com neblina ao pôr do sol
+  // Chapada dos Veadeiros
+  "https://images.unsplash.com/photo-1508780709619-79562169bc64?q=80&w=1800&auto=format&fit=crop",
+  // Amazônia (rio + floresta)
+  "https://images.unsplash.com/photo-1508780709619-79d99c7b6c2e?q=80&w=1800&auto=format&fit=crop",
+  // Litoral nordeste
+  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1800&auto=format&fit=crop",
+  // Cataratas do Iguaçu
+  "https://images.unsplash.com/photo-1589047133183-ff56ad1d3a24?q=80&w=1800&auto=format&fit=crop",
+  // Montanhas de Minas Gerais
+  "https://images.unsplash.com/photo-1626197140255-7a30d89a123f?q=80&w=1800&auto=format&fit=crop",
+  // Pôr do sol no Pantanal
+  "https://images.unsplash.com/photo-1625870160463-1e2c58e445b3?q=80&w=1800&auto=format&fit=crop",
+  // Lençóis Maranhenses
+  "https://images.unsplash.com/photo-1625155696010-3eec19f3af87?q=80&w=1800&auto=format&fit=crop",
+  // Pedra do Baú (SP)
+  "https://images.unsplash.com/photo-1613666750790-9b21e8a4a6f7?q=80&w=1800&auto=format&fit=crop"
 ];
+
+
 
 // Verifica se a imagem carrega
 function probeImage(url){

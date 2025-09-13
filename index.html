@@ -298,13 +298,10 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
       <a href="#/mapa" data-link>Mapa</a>
       <a href="#/posts" data-link>Posts</a>
       <a href="#/conhecimento" data-link>Conhecimento</a>
-      <a href="#/galeria" data-link>Galeria</a>
       <a href="#/projetos" data-link>Projetos</a>
       <a href="#/observatorio" data-link>Observatório</a>
       <a href="#/sobre" data-link>Sobre</a>
       <a href="#/faq" data-link>FAQ</a>
-      <a href="#/recomendado" data-link>Recomendações</a>
-      <a href="#/glossario" data-link>Glossário</a>
       <a href="#/legal" data-link>Legal</a>
       <a href="#/contato" data-link>Contato</a>
     </nav>
@@ -340,7 +337,6 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
         <a href="#/mapa" data-link>Mapa</a>
         <a href="#/conhecimento" data-link>Conhecimento</a>
         <a href="#/faq" data-link>FAQ</a>
-        <a href="#/recomendado" data-link>Recomendações</a>
         <a href="#/contato" data-link>Contato</a>
       </div>
     </div>
@@ -515,26 +511,6 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
     <span class="veil" aria-hidden="true"></span>
   </section>
 
-  <section id="galeria" class="section">
-    <div class="container">
-      <div class="reveal center" style="margin-bottom:20px">
-        <h2 style="font-size:28px;margin:0 0 8px">Imagens</h2>
-        <p class="muted" style="margin:0">Planos de fundo imersivos (sem moldura rígida)</p>
-      </div>
-      <div class="grid cols-3">
-        <div class="card reveal fancy"><div class="inner" style="padding:0;overflow:hidden">
-          <img loading="lazy" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1400&auto=format&fit=crop" alt="Montanhas" style="width:100%;height:256px;object-fit:cover" />
-        </div></div>
-        <div class="card reveal fancy"><div class="inner" style="padding:0;overflow:hidden">
-          <img loading="lazy" src="https://images.unsplash.com/photo-1520975922284-9f786f2de3aa?q=80&w=1400&auto=format&fit=crop" alt="Floresta amazônica" style="width:100%;height:256px;object-fit:cover" />
-        </div></div>
-        <div class="card reveal fancy"><div class="inner" style="padding:0;overflow:hidden">
-          <img loading="lazy" src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1400&auto=format&fit=crop" alt="Céu estrelado" style="width:100%;height:256px;object-fit:cover" />
-        </div></div>
-      </div>
-    </div>
-  </section>
-
   <section id="projetos" class="section">
     <div class="container">
       <div class="reveal center" style="margin-bottom:20px">
@@ -612,36 +588,6 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
       </div>
       <div class="card reveal" style="max-width:880px;margin:0 auto" id="faqWrap">
         <!-- FAQ global renderizada via JS (inclui deep-links) -->
-      </div>
-    </div>
-  </section>
-
-  <section id="recomendado" class="section">
-    <div class="container">
-      <div class="reveal center" style="margin-bottom:20px">
-        <h2 style="font-size:28px;margin:0 0 8px">Conteúdo Recomendado</h2>
-        <p class="muted" style="margin:0">Documentários, leituras e podcasts — com sinopse</p>
-      </div>
-      <div class="card reveal" style="max-width:980px;margin:0 auto">
-        <table class="table">
-          <thead><tr><th>Título</th><th>Tipo</th><th>Sinopse</th></tr></thead>
-          <tbody id="recTable"></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <section id="glossario" class="section">
-    <div class="container">
-      <div class="reveal center" style="margin-bottom:20px">
-        <h2 style="font-size:28px;margin:0 0 8px">Glossário Técnico</h2>
-        <p class="muted" style="margin:0">Termos essenciais (educacional)</p>
-      </div>
-      <div class="card reveal" style="max-width:980px;margin:0 auto">
-        <table class="table">
-          <thead><tr><th>Termo</th><th>Definição</th></tr></thead>
-          <tbody id="glossTable"></tbody>
-        </table>
       </div>
     </div>
   </section>
@@ -739,63 +685,6 @@ const SOCIAL = {
 };
 const MAP_URL = "https://www.google.com/maps/d/embed?mid=1KD5QHhxyVWlFX7BDM0aoNufixLILENU&usp=sharing";
 
-/* ===== Recomendados (com sinopse) ===== */
-const RECOMENDADOS = [
-  { t:"Como Mudar sua Mente", tipo:"Série (Netflix, 2022)", link:"https://www.netflix.com/title/80229847", sin:"Percurso histórico e clínico dos psicodélicos com foco em segurança, ciência e experiências transformadoras." },
-  { t:"Fantastic Fungi", tipo:"Documentário", link:"https://fantasticfungi.com/", sin:"O mundo dos fungos e a psilocibina: ecologia, neurociência e potencial terapêutico." },
-  { t:"MAPS", tipo:"Organização/recursos", link:"https://maps.org/", sin:"Pesquisas e materiais educativos sobre MDMA-AT e psicoterapia assistida por psicodélicos." },
-  { t:"OMS / ICD-11", tipo:"Padrão clínico", link:"https://www.who.int/standards/classifications/frequently-asked-questions/icd-11", sin:"Classificação internacional de doenças e referências clínicas para diagnósticos e protocolos." },
-  { t:"The Psychedelic Renaissance", tipo:"Livro", link:"#", sin:"Panorama contemporâneo da ciência psicodélica; debate ético e regulatório." },
-  { t:"How to Change Your Mind", tipo:"Livro", link:"#", sin:"Narrativa acessível sobre história, usos e cautelas, com relatos e entrevistas." }
-];
-
-/* ===== Glossário (40+) ===== */
-const GLOSS = {
-  "Neuroplasticidade":"Capacidade do cérebro de formar/ajustar conexões sinápticas.",
-  "BDNF":"Fator neurotrófico associado à plasticidade e aprendizado.",
-  "5-HT2A":"Receptor serotoninérgico alvo dos psicodélicos clássicos.",
-  "NMDA":"Receptor glutamatérgico modulado por cetamina.",
-  "Dissociação":"Desconexão transitória de corpo/tempo/ambiente.",
-  "Set & Setting":"Estado interno e contexto externo que influenciam a experiência.",
-  "Integração":"Processo de traduzir vivências em mudanças concretas.",
-  "IMAO":"Inibidores de monoamina oxidase (atenção a interações).",
-  "Oxitocina":"Hormônio pró-social, elevado no MDMA.",
-  "TEPT":"Transtorno de estresse pós-traumático.",
-  "TRD":"Depressão resistente ao tratamento.",
-  "Cefaleia em salvas":"Cefaleia rara e intensa; há pesquisas com psicodélicos.",
-  "Entropia cortical":"Aumento de variabilidade neural sob psicodélicos.",
-  "Flashback/HPPD":"Persistência de alterações perceptivas em raros casos.",
-  "QT longo":"Prolongamento do intervalo QT (risco arrítmico).",
-  "Torsades de pointes":"Taquicardia ventricular polimórfica associada a QT longo.",
-  "Telemetria":"Monitorização contínua do ritmo cardíaco.",
-  "SatO₂":"Saturação periférica de oxigênio (oximetria).",
-  "PA/FC":"Pressão arterial / Frequência cardíaca.",
-  "ISRS":"Inibidores seletivos de recaptação de serotonina.",
-  "Tricíclicos":"Classe de antidepressivos com múltiplas interações.",
-  "Hipertermia":"Elevação de temperatura corporal.",
-  "Hiponatremia":"Sódio baixo; risco com hidratação inadequada.",
-  "Farmacêutico grau clínico":"Padrão de pureza para uso médico.",
-  "Anamnese":"Coleta de histórico clínico detalhado.",
-  "Consentimento informado":"Explicação de riscos/benefícios antes do cuidado.",
-  "Psicose":"Perda de contato com a realidade; contraindicação relativa.",
-  "Mania":"Fase de humor elevado/irritável (transtorno bipolar).",
-  "Titulação de dose":"Ajuste progressivo da dose conforme resposta.",
-  "Reconsolidação":"Atualização de memórias com novas informações.",
-  "Craving":"Fissura forte por substância.",
-  "Purgação":"Náusea/vômito em rituais (ex.: ayahuasca).",
-  "Higiene do sono":"Hábitos saudáveis para dormir melhor.",
-  "Apoio social":"Rede de cuidado (familiares, amigos, grupos).",
-  "Acessibilidade AA":"Critério de contraste/legibilidade (WCAG).",
-  "CLS":"Cumulative Layout Shift (estabilidade visual).",
-  "LCP":"Largest Contentful Paint (desempenho).",
-  "Parallax":"Efeito visual de profundidade com movimento sutil.",
-  "Drawer":"Painel deslizante; aqui evitamos cobrir o texto no mobile.",
-  "Scroll spy":"Destaque do item ativo conforme rolagem.",
-  "Deep-link":"Link direto para seção/pergunta específica.",
-  "LGPD":"Lei Geral de Proteção de Dados (Brasil).",
-  "Redução de danos":"Conjunto de estratégias para reduzir riscos.",
-  "Back to top":"Ação para voltar ao topo da página."
-};
 
 /* ===== Base de conhecimento (ampliada V7) =====
    status: 'clinico' → destaque; 'pesquisa' → “Em pesquisa”
@@ -1034,13 +923,10 @@ const routes = {
   "/mapa":      () => navigateTo("/#mapa"),
   "/posts":     () => navigateTo("/#posts"),
   "/conhecimento": () => navigateTo("/#conhecimento"),
-  "/galeria":   () => navigateTo("/#galeria"),
   "/projetos":  () => navigateTo("/#projetos"),
   "/observatorio": () => navigateTo("/#observatorio"),
   "/sobre":     () => navigateTo("/#sobre"),
   "/faq":       () => navigateTo("/#faq"),
-  "/recomendado": () => navigateTo("/#recomendado"),
-  "/glossario": () => navigateTo("/#glossario"),
   "/legal":     () => navigateTo("/#legal"),
   "/contato":   () => navigateTo("/#contato"),
   "/d/:id": renderDrugPage
@@ -1248,23 +1134,6 @@ async function renderHome(){
 
   // FAQ global (resumo)
   renderGlobalFAQ();
-
-  // Recomendações
-  const recTbody = document.getElementById('recTable');
-  if(recTbody){
-    recTbody.innerHTML = RECOMENDADOS.map(r => `
-      <tr>
-        <td><a href="\${r.link}" target="_blank" rel="noopener noreferrer" data-event="recommended_content_click">\${r.t}</a></td>
-        <td>\${r.tipo}</td>
-        <td class="muted">\${r.sin}</td>
-      </tr>`).join("");
-  }
-
-  // Glossário
-  const glTbody = document.getElementById('glossTable');
-  if(glTbody){
-    glTbody.innerHTML = Object.entries(GLOSS).map(([k,v]) => `<tr><td><strong>\${k}</strong></td><td class="muted">\${v}</td></tr>`).join("");
-  }
 
   // SEO padrão
   document.title = SITE_NAME + " — Psicodélicos com ciência, ética e cuidado";

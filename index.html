@@ -1456,6 +1456,18 @@ async function renderDrugPage(params){
     a.addEventListener("click",(e)=>{ e.preventDefault(); const t=document.querySelector(a.getAttribute("href")); if(t) t.scrollIntoView({behavior:"smooth"}); });
   });
 
+// Habilitar scroll suave também nos links do TOC (aside), sem quebrar a SPA
+if (tocLinks) {
+  tocLinks.querySelectorAll('a[href^="#sec-"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+}
+
+   
   // SEO dinâmico
   document.title = `${drug.title} — ${SITE_NAME}`;
   const canonicalEl = document.getElementById('canonical');

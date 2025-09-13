@@ -2,33 +2,35 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TESTE GITHUB PAGES ✅</title>
-  <style>
-    body { margin:0; font-family:system-ui,Segoe UI,Roboto,sans-serif; background:#0ea5e9; color:white; }
-    main { min-height:100dvh; display:grid; place-items:center; text-align:center; padding:24px; }
-    .tag { font-size:14px; opacity:.85; margin-top:12px }
-    .box { background:rgba(255,255,255,.12); padding:20px 28px; border-radius:16px; backdrop-filter:saturate(1.2) blur(2px); }
-  </style>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>React Teste</title>
 </head>
-<body>
-  <main>
-    <div class="box">
-      <h1>🚀 GitHub Pages: FUNCIONANDO</h1>
-      <p>Se você está vendo esta tela azul, deu bom.</p>
-      <div class="tag" id="build"></div>
-    </div>
-  </main>
-  <script>
-    // Mostra data/hora de build para você saber se atualizou
-    document.getElementById('build').textContent =
-      'Build: ' + new Date().toLocaleString();
+<body style="margin:0;background:#0b1220;color:#e2e8f0;font:16px system-ui">
+  <div id="root" style="min-height:100vh;display:grid;place-items:center"></div>
+
+  <!-- React 18 UMD + Babel -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
+
+  <script type="text/babel" data-presets="env,react">
+    function App() {
+      const [count,setCount] = React.useState(0);
+      return (
+        <div style={{textAlign:"center"}}>
+          <h1 style={{margin:0,fontSize:36}}>React funcionando ✅</h1>
+          <p style={{opacity:.85}}>Build: {new Date().toLocaleString()}</p>
+          <button
+            onClick={()=>setCount(c=>c+1)}
+            style={{marginTop:16,padding:"10px 16px",borderRadius:12,border:"1px solid #334155",background:"#111827",color:"#e2e8f0",cursor:"pointer"}}
+          >
+            Cliquei {count}x
+          </button>
+        </div>
+      );
+    }
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
   </script>
 </body>
 </html>
-
-
-
-
-
-

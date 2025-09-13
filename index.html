@@ -1,266 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>NTO Brasil</title>
-
-    <!-- React 18 UMD + Babel (para JSX no navegador) -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-    <style>
-      body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#f9fafb; color:#111; }
-      .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
-      .btn { display:inline-flex; align-items:center; padding:.8rem 1.4rem; border-radius:999px; background:#10b981; color:#fff; text-decoration:none; font-weight:600; }
-      .card { background:#fff; border:1px solid #e5e7eb; border-radius:24px; padding:24px; box-shadow: 0 1px 2px rgba(0,0,0,.06); }
-      .reveal { opacity:0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
-      .reveal.is-visible { opacity:1; transform:none; }
-      header { position:sticky; top:0; background:#ffffffcc; backdrop-filter: blur(6px); border-bottom:1px solid #e5e7eb; }
-    </style>
-  </head>
-  <body>
-    <div id="root"></div>
-
-    <script type="text/babel" data-presets="env,react">
-      const SITE_NAME = "NTO – Brasil";
-      const LOGO_URL = "https://via.placeholder.com/160x160.png?text=NTO";
-      const CONTACT_EMAIL = "admn@ntobr.com";
-
-      function useSEO() {
-        React.useEffect(() => {
-          document.title = `${SITE_NAME} — Psicodélicos com ciência, ética e cuidado`;
-          let link = document.querySelector("link[rel='icon']");
-          if (!link) { link = document.createElement("link"); link.rel = "icon"; document.head.appendChild(link); }
-          link.href = LOGO_URL;
-        }, []);
-      }
-
-      function Reveal({ children, className="", style }) {
-        const ref = React.useRef(null);
-        React.useEffect(() => {
-          const el = ref.current;
-          if (!el) return;
-          const io = new IntersectionObserver((entries) => {
-            entries.forEach((e) => {
-              if (e.isIntersecting) {
-                e.target.classList.add("is-visible");
-                io.unobserve(e.target);
-              }
-            });
-          }, { rootMargin: "0px 0px -10% 0px", threshold: 0.15 });
-          el.classList.add("reveal");
-          io.observe(el);
-          return () => io.disconnect();
-        }, []);
-        return <div ref={ref} className={className} style={style}>{children}</div>;
-      }
-
-      function CTAButton({ href, children }) {
-        return <a href={href} className="btn">{children}</a>;
-      }
-
-      function Section({ id, title, subtitle, children }) {
-        return (
-          <section id={id} style={{ padding: "64px 0" }}>
-            <div className="container">
-              <Reveal>
-                {title && (
-                  <div style={{ marginBottom: 20, textAlign: "center" }}>
-                    <h2 style={{ fontSize: 28, margin: "0 0 8px" }}>{title}</h2>
-                    {subtitle && <p style={{ color: "#475569", margin: 0 }}>{subtitle}</p>}
-                  </div>
-                )}
-                {children}
-              </Reveal>
-            </div>
-          </section>
-        );
-      }
-
-      function Hero() {
-        return (
-          <section id="home" style={{ padding: "72px 0" }}>
-            <div className="container" style={{ textAlign: "center" }}>
-              <Reveal>
-                <img src={LOGO_URL} alt="NTO Brasil" style={{ height: 160, width: "auto", marginBottom: 24 }} />
-                <h1 style={{ fontSize: 36, margin: "0 0 12px" }}>Ciência, ética e cuidado</h1>
-                <p style={{ color: "#334155", margin: "0 auto 20px", maxWidth: 720 }}>
-                  Alívio com dignidade para quem carrega um peso insuportável. A NTO caminha com você.
-                </p>
-                <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-                  <CTAButton href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Quero aliviar meu sofrimento")}`}>QUERO ALÍVIO 🫶</CTAButton>
-                  <a className="btn" style={{ background: "#111" }} href="#conhecimento">Conhecimento</a>
-                </div>
-              </Reveal>
-            </div>
-          </section>
-        );
-      }
-
-      function KnowledgeCards() {
-        const KNOWLEDGE = [
-          { id: "cetamina",   title: "Cetamina",   text: "Alívio rápido em depressão resistente. Infusão/spray supervisionado." },
-          { id: "ibogaina",   title: "Ibogaína",   text: "Protocolos em dependência. Monitorização multiprofissional." },
-          { id: "psilocibina",title: "Psilocibina",text: "Pesquisada em depressão/ansiedade. Sessões assistidas com integração." },
-          { id: "lsd",        title: "LSD",        text: "Investigada em contextos de pesquisa. Set & setting estruturados." },
-          { id: "ayahuasca",  title: "Ayahuasca",  text: "Uso religioso protegido no Brasil. Contextos ritualísticos." },
-          { id: "mdma",       title: "MDMA",       text: "Estudos em TEPT. Psicoterapia assistida." },
-        ];
-        const [q, setQ] = React.useState("");
-        const data = React.useMemo(
-          () => KNOWLEDGE.filter(k => !q || k.title.toLowerCase().includes(q.toLowerCase())),
-          [q]
-        );
-
-        return (
-          <div>
-            <input
-              value={q}
-              onChange={e => setQ(e.target.value)}
-              placeholder="Buscar psicodélico"
-              style={{ display:"block", width:"100%", maxWidth:420, margin:"0 auto 16px",
-                       padding:"10px 14px", border:"1px solid #cbd5e1", borderRadius:999 }}
-            />
-            <div style={{ display:"grid", gap:16, gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))" }}>
-              {data.map((k) => (
-                <Reveal key={k.id}>
-                  <article className="card">
-                    <h3 style={{ margin:"0 0 8px" }}>{k.title}</h3>
-                    <p style={{ margin:0, color:"#475569" }}>{k.text}</p>
-                  </article>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        );
-      }
-
-      function FAQ() {
-        const items = [
-          { q: "A NTO atende urgências?", a: "Fazemos avaliação rápida para avaliar risco e opções clínicas." },
-          { q: "Cetamina é para todo mundo?", a: "Não. Exige triagem médica e pode ter contraindicações." },
-          { q: "Como funcionam as sessões?", a: "Preparação, sessão monitorada e integração pós-sessão." },
-        ];
-        const [open, setOpen] = React.useState(0);
-        return (
-          <div className="container" style={{ maxWidth: 720 }}>
-            {items.map((it, i) => (
-              <Reveal key={it.q}>
-                <div style={{ borderBottom:"1px solid #e5e7eb" }}>
-                  <button
-                    onClick={() => setOpen(open === i ? null : i)}
-                    style={{ width:"100%", textAlign:"left", padding:"14px 0",
-                             display:"flex", justifyContent:"space-between", alignItems:"center",
-                             background:"none", border:0, cursor:"pointer" }}
-                  >
-                    <span style={{ fontWeight:600 }}>{it.q}</span>
-                    <span style={{ color:"#64748b" }}>{open === i ? "−" : "+"}</span>
-                  </button>
-                  {open === i && <p style={{ margin:"0 0 14px", color:"#475569" }}>{it.a}</p>}
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        );
-      }
-
-      function FloatingCTA() {
-        return (
-          <a
-            href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Quero aliviar meu sofrimento")}`}
-            style={{ position:"fixed", right:24, bottom:24, background:"#10b981", color:"#fff",
-                     borderRadius:999, padding:"12px 18px", textDecoration:"none", fontWeight:600,
-                     boxShadow:"0 8px 24px rgba(0,0,0,.18)" }}
-          >
-            🫶 Quero Alívio
-          </a>
-        );
-      }
-
-      function NTOBrasilSite() {
-        useSEO();
-        return (
-          <div>
-            <header>
-              <div className="container" style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"14px 0" }}>
-                <a href="#home" style={{ display:"flex", alignItems:"center", gap:12, textDecoration:"none", color:"inherit" }}>
-                  <img src={LOGO_URL} alt="Logo NTO" width="56" height="56" />
-                  <span style={{ fontSize:22, fontWeight:700 }}>BRASIL</span>
-                </a>
-                <nav style={{ display:"flex", gap:14, fontSize:14 }}>
-                  {["Home","Mensagem","Mapa","Posts","Conhecimento","Galeria","Sobre","FAQ","Contato"].map(label => (
-                    <a key={label} href={`#${label.toLowerCase()}`} style={{ color:"#334155", textDecoration:"none" }}>{label}</a>
-                  ))}
-                </nav>
-              </div>
-            </header>
-
-            <main>
-              <Hero />
-
-              <Section id="mensagem" title="Mensagem da NTO – Brasil" subtitle="Carinho, ciência e responsabilidade">
-                <div className="card" style={{ color:"#334155", lineHeight:1.55 }}>
-                  <p>
-                    A NTO acredita que psicodélicos, quando usados com ciência, ética e carinho, podem abrir uma janela real de alívio — especialmente para quem já tentou “de tudo”.
-                    <strong> Não é fuga. É cuidado.</strong>
-                  </p>
-                  <h3>Por que considerar agora</h3>
-                  <p>Quando a dor aperta, esperar semanas por resposta é cruel. A cetamina pode funcionar como “bote salva-vidas”.</p>
-                </div>
-              </Section>
-
-              <Section id="mapa" title="Mapa Psicodélico" subtitle="Pontos públicos em Google My Maps">
-                <div className="card">
-                  <iframe
-                    src="https://www.google.com/maps/d/embed?mid=1KD5QHhxyVWlFX7BDM0aoNufixLILENU&usp=sharing"
-                    loading="lazy"
-                    style={{ width:"100%", height:420, border:0, borderRadius:16 }}
-                  />
-                </div>
-              </Section>
-
-              <Section id="posts" title="Redes da NTO" subtitle="Atualizações do Instagram e YouTube">
-                <div className="card">
-                  <div style={{ display:"grid", gap:16, gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))" }}>
-                    <iframe title="Instagram" src="https://www.instagram.com/p/Ck000000000/embed"
-                            loading="lazy"
-                            style={{ width:"100%", height:360, border:"1px solid #e5e7eb", borderRadius:12 }} />
-                    <iframe title="YouTube" src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                            loading="lazy"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                            style={{ width:"100%", height:360, border:"1px solid #e5e7eb", borderRadius:12 }} />
-                  </div>
-                </div>
-              </Section>
-
-              <Section id="conhecimento" title="Conhecimento" subtitle="Resumo responsável + links de referência">
-                <KnowledgeCards />
-              </Section>
-
-              <Section id="faq" title="Perguntas Frequentes" subtitle="As dúvidas mais comuns, respondidas de forma direta">
-                <FAQ />
-              </Section>
-
-              <Section id="contato" title="Contato">
-                <div className="card">
-                  <p style={{ fontSize:18 }}>Email: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></p>
-                </div>
-              </Section>
-            </main>
-
-            <FloatingCTA />
-          </div>
-        );
-      }
-
-      const root = ReactDOM.createRoot(document.getElementById("root"));
-      root.render(<NTOBrasilSite />);
-    </script>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TESTE GITHUB PAGES ✅</title>
+  <style>
+    body { margin:0; font-family:system-ui,Segoe UI,Roboto,sans-serif; background:#0ea5e9; color:white; }
+    main { min-height:100dvh; display:grid; place-items:center; text-align:center; padding:24px; }
+    .tag { font-size:14px; opacity:.85; margin-top:12px }
+    .box { background:rgba(255,255,255,.12); padding:20px 28px; border-radius:16px; backdrop-filter:saturate(1.2) blur(2px); }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="box">
+      <h1>🚀 GitHub Pages: FUNCIONANDO</h1>
+      <p>Se você está vendo esta tela azul, deu bom.</p>
+      <div class="tag" id="build"></div>
+    </div>
+  </main>
+  <script>
+    // Mostra data/hora de build para você saber se atualizou
+    document.getElementById('build').textContent =
+      'Build: ' + new Date().toLocaleString();
+  </script>
+</body>
 </html>
+
 
 
 

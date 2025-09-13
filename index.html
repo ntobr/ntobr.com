@@ -749,27 +749,12 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
 <script>
 
 /* === Paisagens super-realistas (sua foto + sugestões) === */
-/* === Paisagens brasileiras === */
 const LANDSCAPE_URLS = [
-  // Chapada dos Veadeiros
-  "https://images.unsplash.com/photo-1508780709619-79562169bc64?q=80&w=1800&auto=format&fit=crop",
-  // Amazônia (rio + floresta)
-  "https://images.unsplash.com/photo-1508780709619-79d99c7b6c2e?q=80&w=1800&auto=format&fit=crop",
-  // Litoral nordeste
-  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1800&auto=format&fit=crop",
-  // Cataratas do Iguaçu
-  "https://images.unsplash.com/photo-1589047133183-ff56ad1d3a24?q=80&w=1800&auto=format&fit=crop",
-  // Montanhas de Minas Gerais
-  "https://images.unsplash.com/photo-1626197140255-7a30d89a123f?q=80&w=1800&auto=format&fit=crop",
-  // Pôr do sol no Pantanal
-  "https://images.unsplash.com/photo-1625870160463-1e2c58e445b3?q=80&w=1800&auto=format&fit=crop",
-  // Lençóis Maranhenses
-  "https://images.unsplash.com/photo-1625155696010-3eec19f3af87?q=80&w=1800&auto=format&fit=crop",
-  // Pedra do Baú (SP)
-  "https://images.unsplash.com/photo-1613666750790-9b21e8a4a6f7?q=80&w=1800&auto=format&fit=crop"
+  "./paisagem-hero.jpg", // sua imagem local (mesma pasta do index.html)
+  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1800&auto=format&fit=crop", // amanhecer nas montanhas
+  "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1800&auto=format&fit=crop", // céu dourado e picos
+  "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?q=80&w=1800&auto=format&fit=crop"  // vale com neblina ao pôr do sol
 ];
-
-
 
 // Verifica se a imagem carrega
 function probeImage(url){
@@ -1276,25 +1261,17 @@ async function renderHome(){
   document.querySelector('meta[name="twitter:title"]').content = DEFAULT_OG_TITLE;
   document.querySelector('meta[name="twitter:description"]').content = DEFAULT_OG_DESC;
 
-  // 🌄 insere interlúdios com paisagens entre todas as seções
-  sprinkleInterludes(app);
+// Aplica paisagem inspiradora no interlúdio
+await setHeroInterludeImage();
 
-  // Animações de revelação
-  applyReveal(app);
+// Animações de revelação
+applyReveal(app);
 
   // CTAs “Quero Alívio” → popup
   ["ctaHeader","ctaFloat","ctaHero","ctaMensagem"].forEach(id=>{
     const el = document.getElementById(id);
     if(el){ el.onclick = (e)=>{ e.preventDefault(); openLeadModal(); trackEvent('alivio_popup_open'); }; }
   });
-
-  // Reduced motion telemetry
-  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    trackEvent('reduced_motion_active');
-  }
-}
-
-
 
   // Reduced motion telemetry
   if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
@@ -1886,5 +1863,1882 @@ function sprinkleInterludes(container=document){
 
 </body>
 </html>
+
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NTO – Brasil — Psicodélicos com ciência, ética e cuidado (V7)</title>
+<meta name="description" content="NTO Brasil — Alívio com dignidade para quem carrega um peso insuportável: ciência, ética e cuidado incluindo cetamina em contexto clínico." />
+<meta property="og:title" content="NTO – Brasil (V7)" />
+<meta property="og:description" content="Ciência, ética e cuidado." />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="NTO – Brasil (V7)" />
+<meta name="twitter:description" content="Ciência, ética e cuidado." />
+<meta name="theme-color" content="#000000" />
+<link rel="canonical" id="canonical" href="https://ntobr.com/" />
+<link rel="preload" as="image" href="./logo.png" />
+<link rel="icon" href="./logo.png" />
+
+<style>
+/* =========================================================
+   NTO V7 — Dark Psy Continuum
+   - Preserva 100% do conteúdo/rotas do V6 + amplia seções
+   - Correções P0 (Home; Guia rápido sem cobrir texto no mobile)
+   - Visual psicodélico elegante + acessibilidade AA
+========================================================= */
+
+/* ========== Design tokens (dark) ========== */
+:root{
+  --ink: #e5e7eb;          /* texto principal */
+  --muted: #9aa4b2;        /* texto secundário */
+  --bg: #090b12;           /* fundo base escuro */
+  --card: #0f1420;         /* fundos de cartões */
+  --line: #1c2433;         /* linhas/bordas */
+  --brand: #10b981;        /* verde NTO */
+  --ok: #10b981;
+  --danger: #ef4444;
+  --ring: #22d3ee;
+  --grad: conic-gradient(from 0deg at 50% 50%,
+      #08f7fe, #09fbd3, #f5d300, #ff5714, #ff00e4, #08f7fe);
+  --haloA: radial-gradient(1200px 650px at 10% -10%, rgba(88,101,242,.28) 0%, transparent 60%);
+  --haloB: radial-gradient(900px 520px at 120% 30%, rgba(16,185,129,.25) 0%, transparent 55%);
+  --haloC: radial-gradient(650px 420px at 50% 120%, rgba(56,189,248,.20) 0%, transparent 60%);
+  --haloD: radial-gradient(1000px 1000px at 50% 50%, rgba(0,0,0,.6) 0%, transparent 60%);
+}
+*{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+  .reveal, .toast{ transition: none !important; }
+  .halo, .fancy{ animation: none !important; }
+}
+body{
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, sans-serif;
+  background:
+    radial-gradient(1200px 800px at 20% -10%, #0d1220 0%, transparent 55%),
+    radial-gradient(1000px 700px at 120% 30%, #0b1020 0%, transparent 50%),
+    var(--bg);
+  color: var(--ink);
+}
+a{ color: inherit; }
+img{ max-width: 100%; display: block; }
+:focus-visible{ outline: 3px solid var(--ring); outline-offset: 2px; border-radius: 6px; }
+.visually-hidden{
+  position: absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+.visually-hidden:focus{
+  position: static; width:auto; height:auto; margin:0; clip:auto; white-space:normal; background:#1e293b; padding:8px; border-radius:4px;
+}
+
+/* Layout base */
+.container{ max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.section{ padding: 72px 0; }
+.center{ text-align: center; }
+.muted{ color: var(--muted); }
+
+/* Cards/Buttons */
+.card{
+  background: #0f1420e6;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.03);
+}
+.btn{
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0.85rem 1.35rem; border-radius: 999px; font-weight: 700;
+  text-decoration: none; color: #0a0a0a; background: #fff;
+  border: 0; cursor: pointer;
+}
+.btn.primary{
+  color:#fff; 
+  background: linear-gradient(90deg, #6a5acd, #1e90ff);
+  border: none;
+}
+@keyframes swipe{ 0%{background-position:0% 0} 100%{background-position:200% 0} }
+.btn.ghost{ background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.btn.small{ padding: 0.55rem 1rem; font-size: 0.95rem; }
+
+/* Chips/Tags */
+.chip, .pill{
+  display: inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
+  border:1px solid var(--line); background:#0b1020; font-size:12px; color:var(--muted);
+}
+.tag{
+  display:inline-flex; padding:4px 8px; border-radius:999px; border:1px solid var(--line);
+  background:#0b1020; color:#9ad0ff; font-size:12px;
+}
+.tag.research{ color:#ffd28a; border-color:#3a2a10; background:#1b1406; }
+
+/* Header sticky escuro */
+header{
+  position: sticky; top: 0; z-index: 70;
+  background: rgba(7,10,18,0.72);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: saturate(1.3) blur(10px);
+}
+.nav{
+  display: flex; align-items: center; justify-content: space-between; padding: 14px 0;
+}
+.brand{ display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit; }
+.brand span{ letter-spacing: .06em; font-weight:700; }
+.nav-links{ display:flex; gap:14px; font-size:14px; flex-wrap:wrap; }
+.nav-links a{
+  text-decoration:none; color:#cbd5e1; padding:6px 8px; border-radius:10px;
+}
+.nav-links a.active{ background:#182033; color:#fff; }
+.hamb{ display:none; }
+@media (max-width: 980px){
+  .nav-links{ display:none; }
+  .hamb{
+    display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line);
+    border-radius:10px; padding:8px 10px; background:#0f1420; color:#e5e7eb;
+  }
+  #mobile{ display:none; }
+  #mobile.open{ display:flex; flex-direction:column; gap:10px; padding:14px 0; }
+  #mobile a{ padding:10px; border-radius:10px; text-decoration:none; color:#cbd5e1; background:#0f1420; }
+}
+
+/* Hero psicodélico */
+.hero{
+  padding: 96px 0 24px; text-align:center; position:relative; overflow:hidden;
+}
+.hero::before{
+  content:""; position:absolute; inset:-20% -10%; z-index:-1;
+  background: var(--haloA), var(--haloB), var(--haloC), var(--haloD);
+  filter: saturate(1.2);
+}
+.hero .halo{
+  position:absolute; inset:-40% -10%; z-index:-2; opacity:.25;
+  background: var(--grad);
+  animation: spin 16s linear infinite;
+}
+@keyframes spin{ to{ transform: rotate(360deg);} }
+
+/* Grids utilitários */
+.grid{ display:grid; gap:16px; }
+@media(min-width:768px){ .cols-2{ grid-template-columns:repeat(2,1fr);} }
+@media(min-width:1024px){ .cols-3{ grid-template-columns:repeat(3,1fr);} }
+
+/* Reveal */
+.reveal{ opacity:0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.is-visible{ opacity:1; transform:none; }
+
+/* FAQ */
+.faq-item{ border-bottom:1px solid var(--line); }
+.faq-btn{
+  width:100%; text-align:left; padding:14px 0; display:flex; justify-content:space-between; align-items:center;
+  background:none; border:0; cursor:pointer; font-weight:700; color:#e2e8f0;
+}
+.faq-ans{ margin:0 0 14px; color:var(--muted); display:none; }
+.faq-ans.open{ display:block; }
+
+/* Inputs */
+.input{
+  display:block; width:100%; max-width:640px; margin:0 auto 16px; padding:12px 16px;
+  border:1px solid #22304a; border-radius:999px; color:#fff; background:#0b1020;
+}
+
+/* Skeleton */
+.skeleton{ position:relative; overflow:hidden; background:#0d1322; border-radius:16px; border:1px solid var(--line); }
+.skeleton::after{
+  content:""; position:absolute; inset:0; transform: translateX(-100%);
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100%);
+  animation: shimmer 1.6s infinite;
+}
+@keyframes shimmer{ 100%{ transform: translateX(100%);} }
+
+/* Toast */
+.toast{
+  position:fixed; left:50%; bottom:24px; transform: translateX(-50%) translateY(20px); opacity:0;
+  background:#0f1420; color:#fff; border:1px solid var(--line); border-radius:14px;
+  padding:10px 14px; z-index:90; box-shadow:0 16px 40px rgba(0,0,0,.45); transition:.35s;
+}
+.toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
+
+/* Back to top + help bar + float CTA */
+#toTop{ position:fixed; right:24px; bottom:88px; z-index:75; display:none; }
+#toTop.show{ display:inline-flex; }
+.help-bar{
+  display:none; position:fixed; left:24px; right:24px; bottom:24px; padding:10px; font-size:14px; text-align:center;
+  background:#3a0d0d; color:#fecaca; border:1px solid #7f1d1d; border-radius:8px; z-index:70;
+}
+.help-bar a{ color:#fecaca; font-weight:700; text-decoration:underline; }
+#ctaFloat{ position:fixed; right:24px; bottom:24px; z-index:74; }
+@media(max-width:600px){ .help-bar{ display:block; } #ctaFloat{ bottom:88px; }}
+
+/* Footer */
+footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
+
+/* Subpáginas & TOC */
+.page{ display:none; }
+.page.active{ display:block; }
+.subgrid{ display:grid; gap:20px; grid-template-columns: 280px 1fr; }
+@media(max-width:980px){ .subgrid{ grid-template-columns:1fr; } }
+.toc{ position: sticky; top: 84px; }
+@media(max-width:980px){ .toc{ position:static !important; } }
+.toc a, .toc button{
+  display:block; width:100%; text-align:left; padding:8px 10px; border-radius:10px;
+  text-decoration:none; color:#cbd5e1; background:transparent; border:0; cursor:pointer;
+}
+.toc a:hover, .toc button:hover{ background:#111a2b; }
+
+/* Conhecimento: layout com guia rápido lateral */
+#knowledgeLayout{ display:grid; gap:20px; grid-template-columns: 260px 1fr; align-items:start; }
+@media(max-width:980px){
+  #knowledgeLayout{ grid-template-columns:1fr; }
+  #quickGuide{ position:static; top:auto; }
+}
+
+/* Interlúdios full-bleed */
+.interlude{
+  position:relative; min-height:40vh; display:block; overflow:hidden;
+  background-size:cover; background-position:center center; background-attachment:fixed;
+  border-top:1px solid #0b0b0b; border-bottom:1px solid #0b0b0b;
+  box-shadow: inset 0 -80px 120px rgba(0,0,0,.45), inset 0 80px 120px rgba(0,0,0,.45);
+}
+.interlude .veil{
+  position:absolute; inset:0; background: radial-gradient(800px 400px at 10% 10%, rgba(0,0,0,.3), transparent 60%),
+                                 radial-gradient(800px 400px at 90% 80%, rgba(0,0,0,.25), transparent 60%);
+}
+
+/* Fancy gradient border */
+.fancy{
+  position:relative; border-radius:24px; padding:1px; background: var(--grad); background-size: 200% 200%;
+  animation: swipe 10s linear infinite;
+}
+.fancy > .inner{ background:#0f1420; border-radius:22px; padding:20px; }
+
+/* Header logo text hide on small */
+@media(max-width:520px){ .brand span{ display:none; } }
+
+/* Small utilities */
+.toolbar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.breadcrumb{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; font-size:14px; color:#a7b0bd; }
+
+/* Tables (glossário/recomendações) */
+.table{ width:100%; border-collapse: collapse; }
+.table th, .table td{ border-bottom:1px solid var(--line); padding:10px; text-align:left; }
+.table th{ color:#cbd5e1; }
+
+/* === V7 tweak: logo grande na primeira vista + header responsivo === */
+#heroLogo{
+  height: clamp(293px, 69vh, 960px) !important;
+  width: auto;
+  max-width: 92vw;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,.6));
+}
+
+#logo{
+  width: clamp(28px, 4vw, 56px);
+  height: auto !important;
+  object-fit: contain;
+}
+
+/* Segurança: caso o markup do botão permaneça, esconda-o */
+#ctaHeader{ display: none !important; }
+
+/* ——— Colar a paisagem logo sob os cards (sem “buraco preto”) ——— */
+.hero { padding-bottom: 24px; }
+.hero + .interlude { margin-top: 0; }
+
+/* ——— Veil mais suave pra foto brilhar ——— */
+.interlude .veil{
+  background:
+    radial-gradient(900px 420px at 10% 10%, rgba(0,0,0,.25), transparent 60%),
+    radial-gradient(900px 420px at 90% 80%, rgba(0,0,0,.20), transparent 60%);
+}
+
+/* ——— Fade sutil entre hero e interlude ——— */
+.hero::after{
+  content:"";
+  display:block;
+  height: 24px;
+  background: linear-gradient(to bottom, rgba(9,11,18,0) 0%, rgba(9,11,18,.35) 100%);
+}
+
+/* ——— Garantias de cobertura da imagem ——— */
+.interlude{
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+
+</style>
+   <link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin=""
+/>
+</head>
+
+<body>
+<a href="#hero" class="visually-hidden">Pular para conteúdo</a>
+
+<header>
+  <div class="container nav">
+    <a href="#/" class="brand" data-link data-event="nav_home_click">
+      <img id="logo" alt="Logo NTO" width="56" height="56" style="object-fit:contain" />
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#/" data-link>Home</a>
+      <a href="#/mensagem" data-link>Mensagem</a>
+      <a href="#/mapa" data-link>Mapa</a>
+      <a href="#/posts" data-link>Posts</a>
+      <a href="#/conhecimento" data-link>Conhecimento</a>
+      <a href="#/projetos" data-link>Projetos</a>
+      <a href="#/observatorio" data-link>Observatório</a>
+      <a href="#/sobre" data-link>Sobre</a>
+      <a href="#/faq" data-link>FAQ</a>
+      <a href="#/legal" data-link>Legal</a>
+      <a href="#/contato" data-link>Contato</a>
+    </nav>
+    <button class="hamb" id="hamb" aria-controls="mobile" aria-expanded="false">☰ Menu</button>
+    <!-- REMOVIDO: botão duplicado ao lado da logo no topo
+    <a id="ctaHeader" class="btn small primary" href="#/mapa" data-link data-event="cta_click">QUERO ALÍVIO 🫶</a>
+    -->
+  </div>
+  <div class="container" id="mobile" aria-hidden="true"></div>
+</header>
+
+<main id="app" tabindex="-1" aria-live="polite"></main>
+
+<!-- CTA flutuante + topo + barra de ajuda -->
+<a id="ctaFloat" class="btn small primary" href="#/mapa" data-link data-event="cta_click">🫶 Quero Alívio</a>
+<div class="help-bar" id="helpBar">Em crise suicida ou perigo imediato? <a href="tel:188">Ligue 188 (CVV)</a> ou <a href="tel:192">192 (SAMU)</a>.</div>
+<button id="toTop" class="btn small ghost" aria-label="Voltar ao topo">↑ Topo</button>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<footer>
+  <div class="container footer-cols" style="display:grid;gap:16px;grid-template-columns:2fr 1fr 1fr">
+    <div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <img src="./logo.png" alt="" width="40" height="40" />
+        <strong>NTO — Brasil</strong>
+      </div>
+      <p class="muted" style="margin:8px 0 0">© <span id="year"></span> NTO. Todos os direitos reservados.</p>
+    </div>
+    <div>
+      <strong>Mapa do site</strong>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+        <a href="#/mensagem" data-link>Mensagem</a>
+        <a href="#/mapa" data-link>Mapa</a>
+        <a href="#/conhecimento" data-link>Conhecimento</a>
+        <a href="#/faq" data-link>FAQ</a>
+        <a href="#/contato" data-link>Contato</a>
+      </div>
+    </div>
+    <div>
+      <strong>Contato</strong>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+        <a id="footerMail" href="#">Email</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ========================= TEMPLATES ========================= -->
+<template id="tpl-home">
+  <section class="hero" id="hero">
+    <div class="halo"></div>
+    <div class="container">
+      <div class="reveal center">
+        <img id="heroLogo" alt="NTO Brasil" style="height:160px;width:auto;margin:0 auto 24px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.6))" />
+        <h1 style="font-size:36px;margin:0 0 12px">Ciência, ética e cuidado</h1>
+        <p class="muted" style="max-width:780px;margin:0 auto 20px;font-size:18px;line-height:1.7">
+          Se você está carregando um peso que parece impossível, <strong>você não está só</strong>. Aqui, acolhemos a sua dor
+          com respeito e ciência. Nosso compromisso é <strong>reduzir o sofrimento rapidamente</strong>, com segurança clínica e
+          responsabilidade, para que você recupere o fôlego e a esperança. Estamos com você — no seu ritmo, no seu tempo.
+        </p>
+        <div class="toolbar" style="gap:10px;justify-content:center">
+          <button id="ctaHero" class="btn primary" data-event="cta_click">QUERO ALÍVIO 🫶</button>
+          <a class="btn ghost" href="#/conhecimento" data-link>Conhecimento</a>
+          <a class="btn ghost" href="#/faq" data-link>FAQ</a>
+        </div>
+      </div>
+      <div class="grid cols-2" style="margin-top:28px">
+        <div class="card reveal fancy"><div class="inner">
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <span class="chip">Triagem clínica séria</span>
+            <span class="chip">Ambiente seguro</span>
+            <span class="chip">Integração pós-sessão</span>
+            <span class="chip">Transparência</span>
+          </div>
+          <h3 style="margin:14px 0 6px">Como podemos ajudar agora</h3>
+          <p class="muted" style="margin:0 0 12px">
+            Em momentos de crise, <strong>esperar semanas</strong> é cruel. A cetamina, quando indicada, pode oferecer
+            redução de sintomas em horas/dias. Não prometemos milagres — prometemos <strong>cuidado responsável</strong>.
+          </p>
+          <div class="toolbar" style="margin-top:8px; flex-wrap:wrap">
+            <span class="pill">Depressão resistente</span>
+            <span class="pill">Urgência suicida</span>
+            <span class="pill">TEPT</span>
+            <span class="pill">Ansiedade grave</span>
+            <span class="pill">Uso problemático de substâncias</span>
+          </div>
+        </div></div>
+        <div class="card reveal">
+          <h3 style="margin:6px 0 6px">Primeiro passo</h3>
+          <ol class="muted" style="margin:0;padding-left:20px;line-height:1.7">
+            <li>Escreva um email curto com sua necessidade atual.</li>
+            <li>Agendamos triagem para entender histórico e segurança.</li>
+            <li>Se indicado, combinamos sessões + integração terapêutica.</li>
+          </ol>
+          <div class="toolbar" style="margin-top:12px">
+            <a class="btn primary" id="ctaHomeStart" href="#">Começar agora</a>
+            <button class="btn ghost" id="copyEmail">Copiar email</button>
+          </div>
+          <p class="muted" style="margin-top:8px;font-size:12px">Evite dados sensíveis fora de canais seguros.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- Interlúdio inspirador (imagem definida via JS) -->
+<section id="interlude-hero" class="interlude">
+  <span class="veil" aria-hidden="true"></span>
+</section>
+
+  <section id="mensagem" class="section page active">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Mensagem da NTO – Brasil</h2>
+        <p class="muted" style="margin:0">Carinho, ciência e responsabilidade</p>
+      </div>
+      <div class="card reveal" style="color:#cbd5e1;line-height:1.78">
+        <p>
+          A NTO acredita que psicodélicos, quando usados com ciência, ética e carinho, podem abrir uma janela real de alívio — especialmente para quem já tentou “de tudo” e continua carregando um peso insuportável.
+          <strong> Não é fuga. É cuidado.</strong>
+        </p>
+        <p>
+          Psicodélicos são ferramentas terapêuticas que, em ambiente clínico supervisionado, favorecem neuroplasticidade e flexibilizam padrões rígidos de pensamento ligados à depressão, à urgência suicida e a certos quadros de dependência. No Brasil, a cetamina (e o spray de esketamina) já está disponível legalmente em contexto médico e pode oferecer alívio em horas ou poucos dias, enquanto o tratamento de base continua a agir.
+        </p>
+        <h3>Por que considerar agora</h3>
+        <p>Quando a dor aperta, esperar semanas por resposta é cruel. A cetamina pode funcionar como “bote salva-vidas”: reduz a intensidade do sofrimento e devolve fôlego para retomar o plano terapêutico.</p>
+        <h3>Como cuidamos de você</h3>
+        <ul>
+          <li><strong>Avaliação médica rigorosa</strong> para entender história, riscos e objetivos.</li>
+          <li><strong>Sessões seguras (infusão/spray)</strong> com monitorização e conforto.</li>
+          <li><strong>Integração pós-sessão</strong> para transformar a experiência em mudança de vida.</li>
+          <li><strong>Plano personalizado</strong>, combinando psicoterapia e ajustes quando indicado.</li>
+        </ul>
+        <div class="toolbar">
+          <button id="ctaMensagem" class="btn primary" data-event="cta_click">QUERO ALÍVIO 🫶</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+/* Interlúdios automáticos entre seções */
+.interlude.auto {
+  position: relative;
+  min-height: 42vh;                 /* altura agradável */
+  display: block;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-top: 1px solid #0b0b0b;
+  border-bottom: 1px solid #0b0b0b;
+  box-shadow:
+    inset 0 -80px 120px rgba(0,0,0,.45),
+    inset 0  80px 120px rgba(0,0,0,.45);
+}
+
+/* véu suave pra manter elegância/legibilidade */
+.interlude.auto::after {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(900px 420px at 10% 10%, rgba(0,0,0,.22), transparent 60%),
+    radial-gradient(900px 420px at 90% 80%, rgba(0,0,0,.18), transparent 60%);
+}
+
+/* Transição suave quando a imagem carrega */
+.interlude.auto[data-ready="1"] {
+  transition: background-image .6s ease, opacity .6s ease;
+  opacity: 1;
+}
+.interlude.auto { opacity: 0.001; }  /* evita “flash” até carregar */
+
+/* Desktop: efeito parallax leve; Mobile: desliga por performance */
+@media (min-width: 861px) {
+  .interlude.auto { background-attachment: fixed; }
+}
+@media (max-width: 860px) {
+  .interlude.auto { background-attachment: scroll; }
+}
+
+/* Reduz altura se preferir mais discreto em telas pequenas */
+@media (max-width: 600px) {
+  .interlude.auto { min-height: 36vh; }
+}
+
+
+
+<section id="mapa" class="section">
+  <div class="container">
+    <div class="reveal center" style="margin-bottom:20px">
+      <h2 style="font-size:28px;margin:0 0 8px">Mapa Psicodélico</h2>
+      <p class="muted" style="margin:0">Clínicas (Leaflet + OpenStreetMap)</p>
+    </div>
+    <div class="card reveal">
+      <div id="mapbr" style="width:100%;height:420px;border-radius:16px;overflow:hidden"></div>
+    </div>
+  </div>
+</section>
+
+  <!-- Interlúdio -->
+  <section class="interlude" style="background-image:url('https://images.unsplash.com/photo-1520975922284-9f786f2de3aa?q=80&w=1800&auto=format&fit=crop');">
+    <span class="veil" aria-hidden="true"></span>
+  </section>
+
+/* Interlúdios automáticos entre seções */
+.interlude.auto {
+  position: relative;
+  min-height: 42vh;                 /* altura agradável */
+  display: block;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-top: 1px solid #0b0b0b;
+  border-bottom: 1px solid #0b0b0b;
+  box-shadow:
+    inset 0 -80px 120px rgba(0,0,0,.45),
+    inset 0  80px 120px rgba(0,0,0,.45);
+}
+
+/* véu suave pra manter elegância/legibilidade */
+.interlude.auto::after {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(900px 420px at 10% 10%, rgba(0,0,0,.22), transparent 60%),
+    radial-gradient(900px 420px at 90% 80%, rgba(0,0,0,.18), transparent 60%);
+}
+
+/* Transição suave quando a imagem carrega */
+.interlude.auto[data-ready="1"] {
+  transition: background-image .6s ease, opacity .6s ease;
+  opacity: 1;
+}
+.interlude.auto { opacity: 0.001; }  /* evita “flash” até carregar */
+
+/* Desktop: efeito parallax leve; Mobile: desliga por performance */
+@media (min-width: 861px) {
+  .interlude.auto { background-attachment: fixed; }
+}
+@media (max-width: 860px) {
+  .interlude.auto { background-attachment: scroll; }
+}
+
+/* Reduz altura se preferir mais discreto em telas pequenas */
+@media (max-width: 600px) {
+  .interlude.auto { min-height: 36vh; }
+}
+
+
+
+  <section id="posts" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Redes da NTO</h2>
+        <p class="muted" style="margin:0">Instagram e YouTube</p>
+      </div>
+      <div class="card reveal">
+        <div class="grid cols-2">
+          <div class="skeleton" style="height:360px">
+            <iframe id="igEmbed" title="Instagram" loading="lazy" style="width:100%;height:360px;border:0;border-radius:12px;opacity:0"></iframe>
+          </div>
+          <div class="skeleton" style="height:360px">
+            <iframe id="ytEmbed" title="YouTube" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;height:360px;border:0;border-radius:12px;opacity:0"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="conhecimento" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Conhecimento</h2>
+        <p class="muted" style="margin:0">Resumo responsável + links — escolha uma substância para saber mais</p>
+      </div>
+
+      <!-- Layout com guia rápido (sem redirecionamento de rota; mobile inline) -->
+      <div id="knowledgeLayout">
+        <aside id="quickGuide" class="toc card reveal" aria-label="Guia rápido de filtros">
+          <strong style="display:block;margin-bottom:8px">Filtrar</strong>
+          <button type="button" data-filter="all">Todas</button>
+          <button type="button" data-filter="clinico">Uso clínico</button>
+          <button type="button" data-filter="pesquisa">Em pesquisa</button>
+          <div style="margin-top:16px"><strong style="display:block;margin-bottom:6px">Atalhos</strong>
+            <button type="button" data-jump="cetamina">Cetamina</button>
+            <button type="button" data-jump="ayahuasca">Ayahuasca</button>
+            <button type="button" data-jump="ibogaina">Ibogaína</button>
+          </div>
+        </aside>
+
+        <div>
+          <input id="searchInp" class="input" placeholder="Buscar psicodélico (ex: Cetamina)" aria-label="Buscar psicodélico" data-event="knowledge_search" />
+          <div id="cards" class="grid cols-3"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interlúdio -->
+  <section class="interlude" style="background-image:url('https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1800&auto=format&fit=crop');">
+    <span class="veil" aria-hidden="true"></span>
+  </section>
+
+  <section id="projetos" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Projetos NTO</h2>
+        <p class="muted" style="margin:0">Expansões e iniciativas</p>
+      </div>
+      <div class="grid cols-3">
+        <article class="card reveal">
+          <h3>Observatório dos Enteógenos</h3>
+          <p class="muted">NTO Brasil — Chapada dos Veadeiros, Alto Paraíso de Goiás. Centro de dados, relatos e pesquisa de campo.</p>
+          <a class="btn small ghost" href="#/observatorio" data-link>Saiba mais</a>
+        </article>
+        <article class="card reveal">
+          <h3>Cartilhas oficiais</h3>
+          <p class="muted">Materiais práticos em saúde mental, com linguagem clara e responsabilidade clínica.</p>
+        </article>
+        <article class="card reveal">
+          <h3>Livros e E-books</h3>
+          <p class="muted">Coleções educativas da NTO em saúde mental. <em>(Em breve)</em></p>
+        </article>
+        <article class="card reveal">
+          <h3>Pós-graduação</h3>
+          <p class="muted">Psicofarmacoterapia dos Psicodélicos para profissionais de saúde. <em>(Em breve)</em></p>
+        </article>
+        <article class="card reveal">
+          <h3>Centro de Pesquisas</h3>
+          <p class="muted">Serviços de pesquisa em enteógenos com rigor ético e metodológico.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+/* Interlúdios automáticos entre seções */
+.interlude.auto {
+  position: relative;
+  min-height: 42vh;                 /* altura agradável */
+  display: block;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-top: 1px solid #0b0b0b;
+  border-bottom: 1px solid #0b0b0b;
+  box-shadow:
+    inset 0 -80px 120px rgba(0,0,0,.45),
+    inset 0  80px 120px rgba(0,0,0,.45);
+}
+
+/* véu suave pra manter elegância/legibilidade */
+.interlude.auto::after {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(900px 420px at 10% 10%, rgba(0,0,0,.22), transparent 60%),
+    radial-gradient(900px 420px at 90% 80%, rgba(0,0,0,.18), transparent 60%);
+}
+
+/* Transição suave quando a imagem carrega */
+.interlude.auto[data-ready="1"] {
+  transition: background-image .6s ease, opacity .6s ease;
+  opacity: 1;
+}
+.interlude.auto { opacity: 0.001; }  /* evita “flash” até carregar */
+
+/* Desktop: efeito parallax leve; Mobile: desliga por performance */
+@media (min-width: 861px) {
+  .interlude.auto { background-attachment: fixed; }
+}
+@media (max-width: 860px) {
+  .interlude.auto { background-attachment: scroll; }
+}
+
+/* Reduz altura se preferir mais discreto em telas pequenas */
+@media (max-width: 600px) {
+  .interlude.auto { min-height: 36vh; }
+}
+
+
+
+  <section id="observatorio" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Observatório dos Enteógenos — NTO Brasil</h2>
+        <p class="muted" style="margin:0">Chapada dos Veadeiros — Educação, Pesquisa e Cultura</p>
+      </div>
+      <div class="card reveal" style="line-height:1.78;color:#cbd5e1">
+        <p><strong>Missão:</strong> produzir, sistematizar e divulgar conhecimento confiável sobre enteógenos no Brasil, com foco em redução de danos, proteção à vida e diálogo intercultural.</p>
+        <p><strong>Princípios éticos:</strong> respeito às tradições, consentimento informado, transparência metodológica, privacidade e segurança.</p>
+        <ul>
+          <li><strong>Educação:</strong> cartilhas, cursos breves e rodas de conversa.</li>
+          <li><strong>Pesquisa:</strong> registros de campo, observacionais e colaborativos.</li>
+          <li><strong>Cultura:</strong> acervo de relatos, canções, arte e memória.</li>
+        </ul>
+        <div class="toolbar">
+          <a class="btn primary" href="#/contato" data-link data-event="observatorio_interesse">Receber novidades</a>
+          <a class="btn ghost" href="#/projetos" data-link>Voltar a Projetos</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sobre" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Sobre</h2>
+      </div>
+      <div class="card reveal" style="color:#cbd5e1">
+        <p><strong>Somos Produtora, Editora, Tradutora.</strong> Instituto médico e multidisciplinar de pesquisa, estudo e promoção de enteógenos para fins de proteção à vida.</p>
+        <ul>
+          <li><strong>Valores</strong>: Ciência, Espiritualidade, Sabedoria, Transcendência.</li>
+          <li><strong>Missão</strong>: Aliviar o sofrimento humano através dos enteógenos.</li>
+          <li><strong>Visão</strong>: Ser peça fundamental para a revolução psicodélica do século XXI no Brasil.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Perguntas Frequentes</h2>
+      </div>
+      <div class="card reveal" style="max-width:880px;margin:0 auto" id="faqWrap">
+        <!-- FAQ global renderizada via JS (inclui deep-links) -->
+      </div>
+    </div>
+  </section>
+
+  <section id="legal" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Avisos legais</h2>
+      </div>
+      <div class="card reveal" style="line-height:1.78;color:#cbd5e1;max-width:980px;margin:0 auto">
+        <p><strong>Educacional</strong>: O conteúdo deste site é informativo e não substitui avaliação médica. Não recomendamos iniciar, suspender ou modificar tratamentos sem orientação profissional.</p>
+        <p><strong>LGPD</strong>: Dados fornecidos no formulário “Quero Alívio” são usados exclusivamente para contato e triagem inicial. Você pode solicitar exclusão a qualquer momento via <a href="mailto:admn@ntobr.com">admn@ntobr.com</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contato" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Contato</h2>
+      </div>
+      <div class="card reveal center">
+        <p style="font-size:18px">Email: <a id="emailLink" href="#">admn@ntobr.com</a></p>
+        <p class="muted" style="font-size:14px">Preferimos comunicação assíncrona, curta e objetiva. Para assuntos clínicos, evite dados sensíveis sem canal seguro.</p>
+      </div>
+    </div>
+  </section>
+</template>
+
+<template id="tpl-drug-page">
+  <section class="section">
+    <div class="container">
+      <nav class="breadcrumb">
+        <a href="#/" data-link>Início</a> <span>›</span>
+        <a href="#/conhecimento" data-link>Conhecimento</a> <span>›</span>
+        <span id="crumbDrug"></span>
+      </nav>
+      <div class="subgrid" style="margin-top:16px">
+        <aside class="toc card reveal" id="drugToc">
+          <strong style="display:block;margin-bottom:8px">Conteúdo</strong>
+          <div id="tocLinks"></div>
+          <div style="margin-top:16px">
+            <strong style="display:block;margin-bottom:6px">Navegação</strong>
+            <div class="toolbar" id="neighborLinks"></div>
+          </div>
+        </aside>
+        <article class="card reveal" id="drugArticle" style="line-height:1.78;color:#cbd5e1"></article>
+      </div>
+    </div>
+  </section>
+</template>
+
+<!-- Popup “Quero Alívio” — V7 (LGPD + campos extras) -->
+<div id="leadModal" style="position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:95;">
+  <div class="card" style="width:min(560px,92vw);position:relative">
+    <button id="leadClose" class="btn ghost" style="position:absolute;right:12px;top:12px">×</button>
+    <h3 style="margin-top:0">Antes de prosseguir</h3>
+    <p class="muted" style="margin-top:-8px">Conte rapidamente quem é você e qual a sua necessidade. Vamos te responder.</p>
+    <form id="leadForm" class="grid" style="gap:12px">
+      <input class="input" id="leadNome" name="nome" placeholder="Nome completo (opcional)" />
+      <input class="input" id="leadEmail" name="email" placeholder="Email" type="email" required />
+      <input class="input" id="leadCidade" name="cidade" placeholder="Cidade/UF" required />
+      <input class="input" id="leadWhats" name="whats" placeholder="WhatsApp (opcional)" />
+      <select class="input" id="leadAssunto" name="assunto" required>
+        <option value="">Selecione um assunto…</option>
+        <option>Depressão resistente</option>
+        <option>Urgência suicida</option>
+        <option>TEPT</option>
+        <option>Ansiedade grave</option>
+        <option>Uso problemático de substâncias</option>
+        <option>Outros</option>
+      </select>
+      <label style="display:flex;gap:8px;align-items:flex-start">
+        <input type="checkbox" id="leadLGPD" required />
+        <span class="muted" style="font-size:12px">Li e concordo com a <a href="#/legal" data-link>Política de Privacidade</a> (LGPD).</span>
+      </label>
+      <button class="btn primary" type="submit" data-event="alivio_form_submit">Enviar e abrir o mapa</button>
+    </form>
+    <p class="muted" style="font-size:12px;margin-top:8px">Se estiver em perigo imediato, procure o serviço de emergência local.</p>
+  </div>
+</div>
+
+<!-- ========================= SCRIPT ========================= -->
+<script>
+
+/* === Paisagens super-realistas (sua foto + sugestões) === */
+const LANDSCAPE_URLS = [
+  "./paisagem-hero.jpg", // sua imagem local (mesma pasta do index.html)
+  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1800&auto=format&fit=crop", // amanhecer nas montanhas
+  "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1800&auto=format&fit=crop", // céu dourado e picos
+  "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?q=80&w=1800&auto=format&fit=crop"  // vale com neblina ao pôr do sol
+];
+
+// Verifica se a imagem carrega
+function probeImage(url){
+  return new Promise(res=>{
+    const img = new Image();
+    img.onload = () => res(true);
+    img.onerror = () => res(false);
+    img.src = url;
+  });
+}
+
+// Escolhe uma disponível; rotaciona por dia entre as URLs
+async function pickLandscape(){
+  const dayIndex = Math.floor(Date.now()/86400000) % LANDSCAPE_URLS.length;
+  const order = [...LANDSCAPE_URLS.slice(dayIndex), ...LANDSCAPE_URLS.slice(0, dayIndex)];
+  for(const url of order){
+    if(await probeImage(url)) return url;
+  }
+  return LANDSCAPE_URLS[LANDSCAPE_URLS.length - 1]; // fallback
+}
+
+// Aplica no interlúdio da Home
+async function setHeroInterludeImage(){
+  const el = document.getElementById("interlude-hero");
+  if(!el || el.dataset.bgApplied) return;
+  el.dataset.bgApplied = "1";
+  const url = await pickLandscape();
+  el.style.backgroundImage = `url('${url}')`;
+}
+
+
+
+
+/* ===== CONFIG ===== */
+const SITE_NAME = "NTO – Brasil";
+const DEFAULT_DESC = "NTO Brasil — Alívio com dignidade para quem carrega um peso insuportável: ciência, ética e cuidado incluindo cetamina em contexto clínico.";
+const DEFAULT_OG_TITLE = SITE_NAME;
+const DEFAULT_OG_DESC = "Ciência, ética e cuidado.";
+const LOGO_URL = "./logo.png";
+const CONTACT_EMAIL = "admin@ntobr.com";
+const SOCIAL = {
+  instagramEmbedUrl: "https://www.instagram.com/p/Ck000000000/embed", // substitua pelo embed real
+  youtubeEmbedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"      // substitua por vídeo/playlist real
+};
+const MAP_URL = "https://www.google.com/maps/d/embed?mid=1KD5QHhxyVWlFX7BDM0aoNufixLILENU&usp=sharing";
+
+
+/* ===== Base de conhecimento (ampliada V7) =====
+   status: 'clinico' → destaque; 'pesquisa' → “Em pesquisa”
+   Cada uma com seções extras + 12 FAQs (moléculas mais acessadas)
+*/
+const KNOWLEDGE = [
+  { id:"cetamina", status:"clinico", order:1, title:"Cetamina", short:"Alívio rápido em depressão resistente. Infusão/spray supervisionado.", aliases:["esketamina","ketamina"],
+    topics:{
+      resumo:`A cetamina é um anestésico dissociativo com propriedades antidepressivas rápidas em subdoses. Em
+      contexto clínico, pode reduzir ideação suicida e sintomas depressivos em horas ou poucos dias, funcionando como “janela de respiro”.`,
+      mecanismo:`Antagonismo NMDA → modulação glutamatérgica, ↑BDNF e plasticidade sináptica; pode facilitar reconsolidação de memórias.`,
+      evidencia:`Evidência robusta para depressão resistente; maior efeito no curto prazo; manutenção/integração são cruciais.`,
+      indicacoes:`TRD, urgência suicida, alguns casos de dor crônica refratária; avaliar comorbidades e metas.`,
+      contra:`Hipertensão não controlada, cardiopatia instável, psicose/mania ativas, gravidez; cautela em glaucoma descompensado.`,
+      doses:`Esquemas IV subanestésicos titulados por peso/resposta; esketamina intranasal conforme rotulagem; sempre em ambiente clínico.`,
+      interacoes:`Benzodiazepínicos podem atenuar efeito; monitorar com ISRS/tricíclicos; evitar álcool e sedativos no dia.`,
+      monitorizacao:`PA/FC, SatO₂ e estado mental durante e após; ambiente calmo, luz/sons controlados, retorno seguro.`,
+      manejo:`Náusea → antiemético; ansiedade aguda → contenção verbal/respiração; pico hipertensivo → protocolos médicos.`,
+      sensacoes:`Dissociação, alteração de tempo/corpo, náusea leve; ↑PA/FC transitórios (30–90 min).`,
+      legal:`Uso médico permitido no Brasil (anestesia; esketamina intranasal aprovada sob protocolos).`,
+      riscos:`Elevação transitória de PA/FC, náusea, cefaleia; potencial de uso problemático fora de contexto clínico.`,
+      preparacao:`Alinhar expectativas, intenção da sessão e apoio pós; jejum leve conforme orientação; transporte seguro.`,
+      integracao:`Sessão de integração para traduzir insights; monitorar bem-estar; ajustes com equipe.`,
+      referencias:[
+        "Diretrizes clínicas internacionais (cetamina/esketamina) para depressão resistente",
+        "Revisões sobre antagonismo NMDA e neuroplasticidade"
+      ],
+      mitos:[
+        { myth:"É só 'tranquilizante de cavalo'.", truth:"Em doses subanestésicas, mostrou eficácia antidepressiva rápida sob supervisão." },
+        { myth:"Vicia facilmente em contexto clínico.", truth:"Com uso protocolar e monitorado, o risco de dependência é baixo." }
+      ],
+      perguntas:[
+        "Quais efeitos vou sentir e quanto duram?",
+        "Preciso ajustar meus medicamentos atuais?",
+        "Quantas sessões são esperadas para depressão resistente?",
+        "Como é feita a monitorização de segurança?"
+      ],
+      checkPrep:[
+        "Reveja todas as medicações em uso (ex.: benzos).",
+        "Evite álcool/cafeína no dia.",
+        "Organize retorno seguro (não dirija).",
+        "Separe itens de conforto (opcionais)."
+      ],
+      checkIntegracao:[
+        "Descanse após a sessão.",
+        "Anote sentimentos e pensamentos nas 24h.",
+        "Participe da integração terapêutica.",
+        "Mantenha rede de apoio."
+      ],
+      faqs: [
+        {q:"Quanto tempo leva para começar a agir?", a:"Em geral, horas ou poucos dias após a sessão, com pico de alívio nas primeiras 24–72h."},
+        {q:"Vou “apagar” durante a sessão?", a:"Não. A dose é subanestésica. Você permanece responsivo, embora possa sentir dissociação."},
+        {q:"Posso trabalhar no mesmo dia?", a:"Evite dirigir/operar máquinas. Planeje descanso após a sessão e retome atividades leves no dia seguinte."},
+        {q:"Interage com ISRS?", a:"Pode coexistir, mas alguns fármacos modulam efeitos subjetivos. Ajustes são individualizados com seu médico."},
+        {q:"Quantas sessões preciso?", a:"Protocolos variam; comumente séries iniciais (ex.: 6–8) e espaçamento de manutenção conforme resposta."},
+        {q:"E se eu ficar ansioso?", a:"A equipe guia respiração/âncoras sensoriais; ambiente e preparo reduzem a chance."},
+        {q:"Tem risco de dependência?", a:"Risco baixo em contexto clínico com espaçamento e critérios claros; uso recreativo é outra realidade."},
+        {q:"Eleva a pressão arterial?", a:"Pode elevar transitoriamente. Monitorizamos PA/FC e tratamos conforme protocolo."},
+        {q:"Pode piorar a depressão depois?", a:"Rebotes são incomuns; por isso há integração, seguimento e plano terapêutico."},
+        {q:"Funciona para ansiedade grave?", a:"Pode reduzir sintomas em casos selecionados; avaliação individual é essencial."},
+        {q:"É caro? Planos cobrem?", a:"Cobertura varia. Exige justificativa robusta e auditoria. Consulte sua operadora."},
+        {q:"Preciso suspender benzodiazepínicos?", a:"Alguns reduzem efeitos; o time clínico orienta caso a caso."}
+      ]
+    }
+  },
+  { id:"ayahuasca", status:"clinico", order:2, title:"Ayahuasca (contexto religioso/tradicional)", short:"Uso religioso protegido no Brasil; requer respeito cultural e segurança.", aliases:["daime","vegetal"],
+    topics:{
+      resumo:`Decocção amazônica (B. caapi + P. viridis). Uso religioso protegido no Brasil, com lideranças e rituais próprios.`,
+      mecanismo:`Harmalinas (IMAO reversível) + DMT (agonismo serotoninérgico) → vivências de significado e coesão.`,
+      evidencia:`Observacionais sugerem benefícios em bem-estar e redução de uso de substâncias em grupos específicos.`,
+      indicacoes:`Busca espiritual/ritual; alguns relatos de melhora de humor e hábitos em contextos específicos.`,
+      contra:`Histórico de psicose/mania; interações perigosas com ISRS/tricíclicos/IMAO. Avaliação cuidadosa.`,
+      doses:`Preparação variável entre casas; sempre seguir orientação da liderança e comunicar medicações.`,
+      interacoes:`IMAO + antidepressivos tricíclicos/ISRS podem ser perigosos; evitar estimulantes/serotoninérgicos.`,
+      monitorizacao:`Atenção à hidratação, suporte emocional e supervisão de lideranças experientes.`,
+      manejo:`Náusea/purga esperada; se angústia, suporte de voz/música/respiração; respeitar pausas e limites pessoais.`,
+      sensacoes:`Purga (náusea/vômitos), visões, músicas/rezas; ~4h de duração.`,
+      legal:`Uso religioso regulamentado; fora desse contexto exige atenção legal/ética.`,
+      riscos:`Interações medicamentosas, desidratação, vulnerabilidade emocional.`,
+      preparacao:`Dieta orientada e abstinência de certas substâncias dias antes/depois.`,
+      integracao:`Rodas de conversa, diário, apoio comunitário e/ou psicoterapia.`,
+      referencias:[
+        "Resoluções CONAD (uso religioso da ayahuasca)",
+        "Estudos brasileiros observacionais"
+      ],
+      mitos:[
+        { myth:"Sempre causa dano psiquiátrico permanente.", truth:"Casos prolongados são raros e geralmente ligados à predisposição; contexto adequado reduz riscos." },
+        { myth:"Todo mundo passa mal inevitavelmente.", truth:"A purgação é variável; preparo influencia." }
+      ],
+      perguntas:[
+        "Posso usar tomando antidepressivos?",
+        "Como identificar um grupo seguro?",
+        "O que fazer se ficar angustiado durante o ritual?",
+        "Qual dieta seguir na véspera?"
+      ],
+      checkPrep:[
+        "Respeite a dieta recomendada.",
+        "Converse sobre medicações com seu médico.",
+        "Fale com lideranças sobre expectativas/medos.",
+        "Vá com espírito de aprendizado."
+      ],
+      checkIntegracao:[
+        "Participe das conversas pós-ritual.",
+        "Mantenha hábitos saudáveis.",
+        "Registre sonhos/insights.",
+        "Implemente mudanças de forma gradual."
+      ],
+      faqs: [
+        {q:"Qual a duração típica?", a:"Em torno de 4 horas, com variações entre pessoas e preparos."},
+        {q:"Posso levar acompanhante?", a:"Siga as normas da casa; muitas incentivam participação comunitária."},
+        {q:"E se eu estiver em uso de ISRS?", a:"Risco de interação. Converse com seu médico e com a liderança antes de qualquer decisão."},
+        {q:"Por que a purga acontece?", a:"Fatores fisiológicos e simbólicos; é esperada e nem sempre obrigatória."},
+        {q:"Há riscos cardiovasculares?", a:"Pessoas com condições instáveis devem avaliar cuidadosamente e informar a liderança."},
+        {q:"Pode ajudar na dependência?", a:"Relatos e estudos observacionais sugerem benefícios em alguns casos, sem substituir tratamento."},
+        {q:"Há idade mínima?", a:"Normas variam por tradição; siga as regras locais e a legislação."},
+        {q:"Como é o pós-rito?", a:"Integração com conversas, descanso e alimentação leve."},
+        {q:"Preciso jejuar?", a:"Siga a dieta recomendada pela casa; costuma ser leve e sem estimulantes."},
+        {q:"Tem risco com anticoncepcional?", a:"Sem evidências de interação direta, mas informe quaisquer medicamentos à liderança."},
+        {q:"É permitido gravar?", a:"Respeite a política do grupo; muitos proíbem gravações."},
+        {q:"É terapia médica?", a:"Não; é uso religioso regulamentado, distinto de tratamento médico."}
+      ]
+    }
+  },
+  { id:"ibogaina", status:"clinico", order:3, title:"Ibogaína", short:"Investigada em dependência; exige monitorização multiprofissional intensa.", aliases:["tabernanthe iboga","TA"],
+    topics:{
+      resumo:`Alcaloide da raiz da iboga. Relatos indicam interrupção de abstinência e redução de craving, com riscos cardiológicos relevantes.`,
+      mecanismo:`Interação com receptores opioides, NMDA, sigma e nicotínicos; possível “reinício” de padrões neuroquímicos.`,
+      evidencia:`Maior parte observacional; ensaios controlados escassos por questões de segurança.`,
+      indicacoes:`Dependência de opioides/estimulantes em protocolos hospitalares específicos.`,
+      contra:`Cardiopatias, QT longo, distúrbios eletrolíticos, hepatopatias; polifarmácia de risco.`,
+      doses:`Protocolo médico com dose teste + dose(s) plena(s), sempre em internação com telemetria.`,
+      interacoes:`Muitos fármacos prolongam QT (ex.: alguns antipsicóticos/macrólidos). Revisão farmacológica extensa é obrigatória.`,
+      monitorizacao:`ECG seriados, eletrólitos corrigidos, função hepática, telemetria 24–48h; suporte avançado disponível.`,
+      manejo:`Arritmia → ACLS/antiarrítmicos conforme protocolo; convulsão rara → suporte avançado.`,
+      sensacoes:`Ataxia, náuseas/vômitos (purga), visões oníricas prolongadas; fadiga no pós-pico.`,
+      legal:`Não aprovada como tratamento médico no Brasil; apenas pesquisa aprovada.`,
+      riscos:`Arritmias (torsades), convulsões raras, interações perigosas; observação prolongada necessária.`,
+      preparacao:`Correção de eletrólitos; redução segura de opioides; consentimento detalhado; jejum controlado.`,
+      integracao:`Psicoterapia motivacional, reabilitação, NA, prevenção de recaídas, seguimento cardio/hepático.`,
+      referencias:[
+        "Segurança cardiológica (prolongamento de QT) na ibogaína",
+        "Relatos clínicos em dependência de opioides"
+      ],
+      mitos:[
+        { myth:"Cura a dependência em uma dose para todos.", truth:"Pode ajudar no início; manutenção depende de suporte contínuo." },
+        { myth:"É segura para qualquer pessoa com dependência.", truth:"Riscos são significativos e requerem protocolos hospitalares." }
+      ],
+      perguntas:[
+        "Quais exames são obrigatórios antes?",
+        "Como é tratada uma arritmia se ocorrer?",
+        "Tempo total de internação?",
+        "Como é o plano de prevenção de recaída?"
+      ],
+      checkPrep:[
+        "Faça os exames solicitados (ECG e sangue).",
+        "Siga orientações de reduzir/suspender substâncias.",
+        "Prepare-se para internação e comunique família.",
+        "Pratique técnicas de relaxamento previamente."
+      ],
+      checkIntegracao:[
+        "Envolva familiares de confiança.",
+        "Faça terapia especializada nas semanas seguintes.",
+        "Participe de grupos de apoio.",
+        "Evite gatilhos de recaída no início."
+      ],
+      faqs: [
+        {q:"Por que é feita em internação?", a:"Devido aos riscos cardiológicos e necessidade de telemetria contínua."},
+        {q:"Quanto tempo dura o efeito agudo?", a:"Fase intensa de 12–24h, com rescaldo por mais tempo."},
+        {q:"Pode parar abstinência de opioides?", a:"Relatos indicam sim, mas exige plano de manutenção robusto."},
+        {q:"Quais exames preciso?", a:"ECG, eletrólitos, função hepática/renal e revisão de fármacos."},
+        {q:"É legal no Brasil?", a:"Apenas em pesquisa aprovada; não há aprovação ampla como tratamento."},
+        {q:"Posso ter arritmia?", a:"Sim; por isso o protocolo inclui prevenção e tratamento em hospital."},
+        {q:"E se eu desmaiar?", a:"Equipe monitora continuamente e intervém conforme protocolo."},
+        {q:"Dá para fazer ambulatorial?", a:"Não recomendado devido aos riscos; protocolos são hospitalares."},
+        {q:"Interage com antidepressivos?", a:"Vários podem prolongar QT; revisão detalhada é necessária."},
+        {q:"Terei acompanhamento depois?", a:"Sim; psicoterapia e reabilitação são essenciais."},
+        {q:"Há risco de convulsão?", a:"Raro, mas possível; o hospital tem manejo imediato."},
+        {q:"É uma cura definitiva?", a:"Não. É um início possível, com suporte contínuo."}
+      ]
+    }
+  },
+  /* Em pesquisa */
+  { id:"psilocibina", status:"pesquisa", order:4, title:"Psilocibina", short:"Investigada em depressão/ansiedade e fim de vida; sessões assistidas + integração.", aliases:["cogumelos mágicos","psilocybe"],
+    topics:{
+      resumo:`Triptamina presente em fungos Psilocybe; estudos de fase 2 mostram redução de sintomas depressivos/ansiosos em ambiente controlado.`,
+      mecanismo:`Agonismo parcial 5-HT2A → ↑entropia cortical e flexibilidade de redes; experiências de pico com potencial terapêutico.`,
+      evidencia:`Sinais promissores em depressão resistente/ansiedade de fim de vida/uso de álcool; ainda não aprovado fora de pesquisa no Brasil.`,
+      protocolo:`Triagem rigorosa; preparação; 1–3 sessões com 2 profissionais; ambiente seguro; integração por semanas.`,
+      sensacoes:`Alterações perceptuais/emocionais intensas; ansiedade possível em picos; 4–6h de duração.`,
+      seguranca:`Evitar em risco de psicose/mania; equipe treinada minimiza ansiedade aguda.`,
+      legal:`Ilegal fora de pesquisa no Brasil.`,
+      riscos:`Ansiedade aguda, náusea inicial, cefaleia pós.`,
+      preparacao:`Intenção clara; apoio pós; agenda livre no dia seguinte.`,
+      integracao:`Diário, psicoterapia de suporte, hábitos saudáveis.`
+    }
+  },
+  { id:"mdma", status:"pesquisa", order:5, title:"MDMA (terapia assistida)", short:"Estudada para TEPT; psicoterapia focada + sessões assistidas.", aliases:["ecstasy (contexto clínico)"],
+    topics:{
+      resumo:`Empatógeno/entactógeno; reduz medo/hipervigilância e facilita processamento de memórias traumáticas.`,
+      mecanismo:`↑Serotonina/NA/DA; ↑oxitocina; ↓atividade da amígdala; facilita extinção de medo com psicoterapia.`,
+      evidencia:`Resultados promissores em TEPT (MAPS). Aprovação varia por país; no Brasil, restrita a pesquisa.`,
+      protocolo:`Triagem cardio/psiquiátrica; várias sessões preparatórias; 2–3 sessões assistidas (6–8h cada) + integração.`,
+      sensacoes:`Empatia/conexão; calor, sudorese, bruxismo; ↑FC/PA; náusea ocasional.`,
+      seguranca:`Cuidado com interações serotoninérgicas (ISRS/IMAO); evitar em cardiopatia/gravidez/glaucoma ângulo fechado.`,
+      legal:`Não aprovado para uso clínico amplo no Brasil.`,
+      riscos:`Hipertermia/hiponatremia (se manejo inadequado), “comedown”, insônia.`,
+      preparacao:`Dormir bem; alimentação leve; hidratação moderada; definir foco terapêutico.`,
+      integracao:`Terapia de integração; higiene do sono; rotinas saudáveis.`
+    }
+  },
+  { id:"lsd", status:"pesquisa", order:6, title:"LSD", short:"Pesquisa em ansiedade/cefaleia em salvas; set & setting estruturados.", aliases:["ácido lisérgico"],
+    topics:{
+      resumo:`Psicodélico clássico potente; duração longa (8–12h) exige preparação e suporte.`,
+      mecanismo:`Agonismo 5-HT2A; ↑entropia neural; estados intensos com potencial de insight.`,
+      evidencia:`Evidência emergente; protocolos priorizam segurança/integração.`,
+      protocolo:`Triagem ampla; sessão longa com equipe e música; integração posterior.`,
+      sensacoes:`Visuais marcantes, sinestesia, distorção temporal, emoções amplificadas.`,
+      seguranca:`Evitar em risco de psicose; atenção a hipertensão grave; interações com antidepressivos variam.`,
+      legal:`Proibido para uso não científico no Brasil; apenas estudos aprovados.`,
+      riscos:`Ansiedade/pânico agudo; gatilho de psicose em vulneráveis; raros flashbacks.`,
+      preparacao:`Intenção clara; evitar cafeína; descanso adequado; dia seguinte livre.`,
+      integracao:`Sessões de acompanhamento; higiene do sono; expressão criativa.`
+    }
+  }
+].sort((a,b)=>a.order-b.order);
+
+/* Índices */
+const DRUG_INDEX = KNOWLEDGE.reduce((acc, d, i) => (acc[d.id]=i, acc), {});
+const DRUG_IDS   = KNOWLEDGE.map(d=>d.id);
+
+/* ===== SPA Router ===== */
+const app = document.getElementById("app");
+const routes = {
+  "/": renderHome,
+  "/mensagem": () => navigateTo("/#mensagem"),
+  "/mapa":      () => navigateTo("/#mapa"),
+  "/posts":     () => navigateTo("/#posts"),
+  "/conhecimento": () => navigateTo("/#conhecimento"),
+  "/projetos":  () => navigateTo("/#projetos"),
+  "/observatorio": () => navigateTo("/#observatorio"),
+  "/sobre":     () => navigateTo("/#sobre"),
+  "/faq":       () => navigateTo("/#faq"),
+  "/legal":     () => navigateTo("/#legal"),
+  "/contato":   () => navigateTo("/#contato"),
+  "/d/:id": renderDrugPage
+};
+function parseLocation(){
+  const hash = location.hash.replace(/^#/, "");
+  const parts = hash.split("/").filter(Boolean);
+  if(parts.length === 0) return { path: "/" };
+  if(parts[0] === "d" && parts[1]) return { path: "/d/:id", params: { id: parts[1] } };
+  const path = "/" + parts[0];
+  return { path };
+}
+async function router(){
+  const { path, params } = parseLocation();
+  const handler = routes[path] || renderHome;
+  await handler(params);
+  document.body.setAttribute("data-page", path);
+}
+window.addEventListener("hashchange", router);
+document.addEventListener("DOMContentLoaded", router);
+
+/* ===== Helpers ===== */
+function trackEvent(name, data={}){
+  try{ console.log("[analytics]", name, data); }catch{}
+}
+function navigateTo(anchor){
+  renderHome().then(() => {
+    const id = anchor.split("#")[1];
+    if(id){
+      const el = document.getElementById(id);
+      if(el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+}
+function htmlToEl(html){
+  const t = document.createElement("template");
+  t.innerHTML = html.trim();
+  return t.content;
+}
+function loadIframe(id, url){
+  const iframe = document.getElementById(id);
+  if(!iframe) return;
+  iframe.src = url;
+  iframe.addEventListener('load', () => {
+    iframe.style.opacity = 1;
+    iframe.parentElement.classList.remove('skeleton');
+  });
+  iframe.addEventListener('error', () => {
+    iframe.parentElement.innerHTML = `<p class="muted" style="padding:12px">Não foi possível carregar este conteúdo no momento.</p>`;
+  });
+}
+function toast(msg){
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2200);
+}
+function applyReveal(root = document){
+  const nodes = root.querySelectorAll(".reveal");
+  if(!("IntersectionObserver" in window)){
+    nodes.forEach(el => el.classList.add("is-visible"));
+    return;
+  }
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.classList.add("is-visible");
+        io.unobserve(e.target);
+      }
+    });
+  }, { rootMargin: "0px 0px -10% 0px", threshold: 0.05 });
+  nodes.forEach(el => {
+    const r = el.getBoundingClientRect(), vh = innerHeight || document.documentElement.clientHeight;
+    if(r.top < vh * 0.9 && r.bottom > 0){
+      el.classList.add("is-visible");
+    } else {
+      io.observe(el);
+    }
+  });
+  setTimeout(() => nodes.forEach(el => el.classList.add("is-visible")), 1500);
+}
+
+/* ===== Render: Home & seções ===== */
+async function renderHome(){
+  app.innerHTML = "";
+  const tpl = document.getElementById("tpl-home").content.cloneNode(true);
+  app.appendChild(tpl);
+
+  // Logos/CTAs
+  document.getElementById("logo").src = LOGO_URL;
+  const heroLogo = document.getElementById("heroLogo");
+  if(heroLogo) heroLogo.src = LOGO_URL;
+
+  const mailto = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Quero aliviar meu sofrimento")}`;
+  ["footerMail","ctaHomeStart"].forEach(id => {
+    const el = document.getElementById(id);
+    if(el){ el.href = mailto; el.setAttribute("data-event","cta_click"); }
+  });
+  const emailLink = document.getElementById("emailLink");
+  if(emailLink){ emailLink.href = `mailto:${CONTACT_EMAIL}`; emailLink.textContent = CONTACT_EMAIL; }
+
+  // Menu mobile
+  const hamb = document.getElementById("hamb");
+  const mobile = document.getElementById("mobile");
+  if(hamb && mobile){
+    hamb.onclick = () => {
+      const open = !mobile.classList.contains("open");
+      mobile.classList.toggle("open", open);
+      mobile.setAttribute("aria-hidden", String(!open));
+      hamb.setAttribute("aria-expanded", String(open));
+      if(open){ mobile.innerHTML = document.getElementById("navLinks").innerHTML; }
+    };
+  }
+
+  // Back to top
+  const toTopBtn = document.getElementById('toTop');
+  window.addEventListener('scroll', () => {
+    if(window.scrollY > 600) toTopBtn.classList.add('show'); else toTopBtn.classList.remove('show');
+  }, { passive:true });
+  toTopBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Copiar email
+  const copyEmailBtn = document.getElementById('copyEmail');
+  if(copyEmailBtn){
+    copyEmailBtn.onclick = async () => {
+      try{
+        await navigator.clipboard.writeText(CONTACT_EMAIL);
+        toast('Email copiado. Estamos aqui com você.');
+      }catch{ toast('Não foi possível copiar'); }
+    };
+  }
+
+  // Embeds
+  loadIframe('mapEmbed', MAP_URL);
+  loadIframe('igEmbed', SOCIAL.instagramEmbedUrl);
+  loadIframe('ytEmbed', SOCIAL.youtubeEmbedUrl);
+
+  // Render cartões de conhecimento
+  const cardsWrap = document.getElementById("cards");
+  function cardTag(d){
+    return d.status === "pesquisa" ? `<span class="tag research" title="Ainda em pesquisa">Em pesquisa</span>` : `<span class="tag" title="Uso atual">Uso atual</span>`;
+  }
+  function renderCards(list){
+    cardsWrap.innerHTML = "";
+    list.forEach((k, i) => {
+      const art = document.createElement("article");
+      art.className = "card reveal";
+      art.style.transitionDelay = (i * 35) + "ms";
+      art.id = "card-"+k.id;
+      art.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px">
+          <h3 style="margin:0">${k.title}</h3>
+          ${cardTag(k)}
+        </div>
+        <p class="muted" style="margin:0 0 10px">${k.short}</p>
+        <div class="toolbar" style="justify-content:space-between">
+          <span class="muted" style="font-size:12px">${(k.aliases || []).slice(0,2).join(" · ")}</span>
+          <a class="btn small primary" href="#/d/${k.id}" data-link>Saiba mais</a>
+        </div>
+      `;
+      cardsWrap.appendChild(art);
+    });
+    applyReveal(cardsWrap);
+  }
+  renderCards(KNOWLEDGE);
+
+  // Busca + Filtros (guia rápido sem mudar rota)
+  const searchInput = document.getElementById("searchInp");
+  const quick = document.getElementById("quickGuide");
+  let currentFilter = localStorage.getItem('knowledgeFilter') || "all";
+  function applyFilter(){
+    const q = (searchInput?.value || "").trim().toLowerCase();
+    let base = KNOWLEDGE.slice();
+    if(currentFilter !== "all") base = base.filter(k => k.status === currentFilter);
+    if(q){
+      base = base.filter(k => {
+        const all = [k.title,k.short,...(k.aliases||[]), JSON.stringify(k.topics||{})].join(" ").toLowerCase();
+        return all.includes(q);
+      });
+    }
+    renderCards(base);
+  }
+  if(searchInput){
+    const lastQuery = localStorage.getItem('lastSearch') || "";
+    if(lastQuery){ searchInput.value = lastQuery; }
+    let t; searchInput.oninput = (e)=>{ const v=e.target.value; localStorage.setItem('lastSearch', v); clearTimeout(t); t=setTimeout(applyFilter, 140); };
+  }
+  if(quick){
+    quick.addEventListener('click', (ev)=>{
+      const b = ev.target.closest('button');
+      if(!b) return;
+      if(b.dataset.filter){
+        currentFilter = b.dataset.filter;
+        localStorage.setItem('knowledgeFilter', currentFilter);
+        applyFilter();
+        trackEvent('quickguide_item_click', {filter: currentFilter});
+      }
+      if(b.dataset.jump){
+        const target = document.getElementById("card-"+b.dataset.jump);
+        if(target) target.scrollIntoView({behavior:"smooth", block:"center"});
+      }
+    });
+  }
+  applyFilter();
+
+  // FAQ global (resumo)
+  renderGlobalFAQ();
+
+  // SEO padrão
+  document.title = SITE_NAME + " — Psicodélicos com ciência, ética e cuidado";
+  const canonical = document.getElementById('canonical');
+  if(canonical) canonical.setAttribute('href', location.origin + location.pathname);
+  document.querySelector('meta[name="description"]').content = DEFAULT_DESC;
+  document.querySelector('meta[property="og:title"]').content = DEFAULT_OG_TITLE;
+  document.querySelector('meta[property="og:description"]').content = DEFAULT_OG_DESC;
+  document.querySelector('meta[name="twitter:title"]').content = DEFAULT_OG_TITLE;
+  document.querySelector('meta[name="twitter:description"]').content = DEFAULT_OG_DESC;
+
+// Aplica paisagem inspiradora no interlúdio
+await setHeroInterludeImage();
+
+// Animações de revelação
+applyReveal(app);
+
+  // CTAs “Quero Alívio” → popup
+  ["ctaHeader","ctaFloat","ctaHero","ctaMensagem"].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el){ el.onclick = (e)=>{ e.preventDefault(); openLeadModal(); trackEvent('alivio_popup_open'); }; }
+  });
+
+  // Reduced motion telemetry
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    trackEvent('reduced_motion_active');
+  }
+}
+
+/* ===== FAQ Global (mantém V6 + complementa) ===== */
+function renderGlobalFAQ(){
+  const wrap = document.getElementById('faqWrap');
+  if(!wrap) return;
+  const items = [
+    {q:"Quais tratamentos psicodélicos já estão disponíveis no Brasil?", a:"Atualmente, a cetamina (e a esketamina nasal) é utilizada em tratamentos médicos, principalmente para depressão resistente. A ayahuasca ocorre em contextos religiosos regulamentados (não é terapia médica formal)."},
+    {q:"Psilocibina, MDMA e LSD estão liberados clinicamente?", a:"Não. Essas substâncias permanecem restritas a pesquisas. Fora desses estudos, seu uso clínico não é permitido no Brasil por enquanto."},
+    {q:"Planos de saúde cobrem cetamina?", a:"A cobertura varia por operadora e indicação. Em geral, requer justificativa clínica robusta, protocolos e auditoria. Oriente-se com seu médico e verifique diretamente com a operadora."},
+    {q:"Quem não deve fazer terapia com cetamina?", a:"Pessoas com hipertensão grave não controlada, cardiopatia instável, psicose ativa, mania, gravidez, entre outras condições, geralmente não são candidatas. Avaliação médica é obrigatória."},
+    {q:"O que levar para a sessão?", a:"Roupas confortáveis, um agasalho leve, fones de ouvido (se a clínica permitir) e um contato para retorno seguro. Evite dirigir após a sessão."},
+    {q:"Efeitos colaterais comuns e duração?", a:"Dissociação, alteração de percepção, leve náusea e aumento transitório de pressão/FC. Em geral, passam entre 30–90 minutos após o fim da aplicação."},
+    {q:"O que é integração e por que importa?", a:"É o processo de transformar a experiência em mudanças concretas de vida (psicoterapia, hábitos, suporte). Sem integração, parte dos ganhos pode se perder."},
+    {q:"Diferença entre uso religioso (ayahuasca) e uso clínico?", a:"No Brasil, o uso religioso é regulamentado em tradições específicas e não equivale a terapia médica. O uso clínico exige protocolos, equipe de saúde e regulamentação própria."},
+    // Novas
+    {q:"Quanto tempo até a primeira resposta terapêutica?", a:"Para cetamina, horas/dias. Para psicodélicos clássicos em pesquisa, os efeitos são avaliados em semanas com integração."},
+    {q:"É possível fazer acompanhamento remoto?", a:"A triagem pode incluir etapas remotas, mas sessões e monitorização são presenciais quando há administração de fármacos."},
+    {q:"Como saber se sou elegível?", a:"Converse com seu médico; a NTO oferece orientação inicial e triagem baseada em critérios de segurança e necessidade."},
+    {q:"Posso combinar com psicoterapia?", a:"Sim. A integração psicoterapêutica é componente central de melhores desfechos."}
+  ];
+  wrap.innerHTML = items.map((it, i)=>`
+    <div class="faq-item" id="faq-${i+1}">
+      <button class="faq-btn" aria-expanded="false" data-event="faq_toggle">
+        <span>${it.q}</span>
+        <span class="muted">+</span>
+      </button>
+      <p class="faq-ans" role="region">${it.a}</p>
+    </div>`).join("");
+  wrap.querySelectorAll(".faq-item").forEach(row => {
+    const btn = row.querySelector(".faq-btn");
+    const ans = row.querySelector(".faq-ans");
+    btn.addEventListener("click", () => {
+      const open = ans.classList.toggle("open");
+      btn.setAttribute("aria-expanded", String(open));
+      btn.lastElementChild.textContent = open ? "−" : "+";
+      if(open) location.hash = "#/faq";
+    });
+  });
+}
+
+/* ===== Render: Página de substância ===== */
+async function renderDrugPage(params){
+  app.innerHTML = "";
+  const tpl = document.getElementById("tpl-drug-page").content.cloneNode(true);
+  app.appendChild(tpl);
+  const drug = KNOWLEDGE.find(d => d.id === params.id);
+  const titleEl = document.getElementById("crumbDrug");
+  const article = document.getElementById("drugArticle");
+  const tocLinks = document.getElementById("tocLinks");
+  const neighbor = document.getElementById("neighborLinks");
+  if(!drug){
+    article.innerHTML = `<h2>Não encontrado</h2><p class="muted">A substância solicitada não existe no catálogo.</p>`;
+    applyReveal(app); return;
+  }
+  titleEl.textContent = drug.title;
+
+  const sections = [
+    ["visao-geral","Visão geral",`
+      <p class="muted">${drug.topics.resumo}</p>
+      <div class="toolbar" style="gap:8px;flex-wrap:wrap">
+        ${(drug.aliases||[]).map(a=>`<span class="pill">${a}</span>`).join("")}
+        ${drug.status==="pesquisa" ? `<span class="tag research">Em pesquisa</span>` : `<span class="tag">Uso atual</span>`}
+      </div>
+      <p class="fancy" style="margin-top:12px"><span class="inner" style="display:block">
+        <strong>Empatia em primeiro lugar.</strong> Cada pessoa é única. Nosso papel é acolher, reduzir riscos e construir, junto com você, um caminho seguro.
+      </span></p>
+    `],
+    ["mecanismo","Mecanismo de ação",`<p>${drug.topics.mecanismo}</p>`],
+    ["evidencia","Evidência científica",`<p>${drug.topics.evidencia}</p>`],
+    ["indicacoes","Indicações",`<p>${drug.topics.indicacoes||"—"}</p>`],
+    ["contra","Contraindicações",`<p>${drug.topics.contra||"—"}</p>`],
+    ["doses","Doses e apresentações",`<p>${drug.topics.doses||"—"}</p>`],
+    ["interacoes","Interações relevantes",`<p>${drug.topics.interacoes||"—"}</p>`],
+    ["monitorizacao","Monitorização",`<p>${drug.topics.monitorizacao||"—"}</p>`],
+    ["manejo","Manejo de eventos adversos",`<p>${drug.topics.manejo||"—"}</p>`],
+    ["experiencia","Como pode ser a experiência",`<p>${drug.topics.sensacoes}</p>`],
+    ["seguranca","Segurança e triagem",`<p>${drug.topics.seguranca||drug.topics.seguranca||""}</p>`],
+    ["legal","Situação legal (Brasil)",`<p>${drug.topics.legal}</p>`],
+    ["riscos","Riscos e efeitos adversos",`<p class="fancy"><span class="inner">${drug.topics.riscos}</span></p>`],
+    ["preparacao","Preparação",`
+      <p>${drug.topics.preparacao}</p>
+      ${(drug.topics.checkPrep||[]).length?`<ul>${drug.topics.checkPrep.map(i=>`<li>${i}</li>`).join("")}</ul>`:""}
+    `],
+    ["integracao","Integração",`
+      <p>${drug.topics.integracao}</p>
+      ${(drug.topics.checkIntegracao||[]).length?`<ul>${drug.topics.checkIntegracao.map(i=>`<li>${i}</li>`).join("")}</ul>`:""}
+    `],
+    ["mitos","Mitos & Verdades",`
+      <ul>${(drug.topics.mitos||[]).map(m=>`<li><strong>Mito:</strong> ${m.myth}<br><strong>Verdade:</strong> ${m.truth}</li>`).join("")}</ul>
+    `],
+    ["perguntas","Perguntas para conversar com seu médico/terapeuta",`
+      <ul>${(drug.topics.perguntas||[]).map(q=>`<li>${q}</li>`).join("")}</ul>
+    `],
+    ["faqs","FAQ da substância",`
+      <div id="drugFaqs">${(drug.topics.faqs||[]).map((f,i)=>`
+        <div class="faq-item" id="faq-${drug.id}-${i+1}">
+          <button class="faq-btn" aria-expanded="false"><span>${f.q}</span><span class="muted">+</span></button>
+          <p class="faq-ans">${f.a}</p>
+        </div>`).join("")}</div>
+    `],
+    ["recursos","Leituras e recursos",`
+      <ul>${(drug.topics.referencias||[]).map(r=>`<li>${r}</li>`).join("")}</ul>
+      <div class="toolbar" style="margin-top:12px">
+        <a class="btn primary" href="mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Quero conversar sobre " + drug.title)}" data-event="cta_click">Falar por email</a>
+        <a class="btn ghost" href="#/conhecimento" data-link>Voltar ao catálogo</a>
+      </div>
+    `],
+    ["glossario","Glossário rápido",`
+      <ul>
+        <li><strong>Entropia cortical:</strong> desordem/variedade na atividade neural, ↑ com psicodélicos clássicos.</li>
+        <li><strong>Receptor 5-HT2A:</strong> alvo dos psicodélicos (LSD/psilocibina).</li>
+        <li><strong>BDNF:</strong> fator neurotrófico associado à plasticidade.</li>
+        <li><strong>Dissociação:</strong> desconexão transitória corpo/realidade (com cetamina).</li>
+        <li><strong>IMAO:</strong> inibidores da monoamina oxidase; atenção a interações.</li>
+        <li><strong>Oxitocina:</strong> hormônio pró-social elevado no MDMA.</li>
+      </ul>
+    `]
+  ];
+
+  tocLinks.innerHTML = sections.map(s=>`<a href="#sec-${s[0]}">${s[1]}</a>`).join("");
+  article.innerHTML = `
+    <header style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px">
+      <h1 style="margin:0">${drug.title}</h1>
+      <p class="muted" style="margin:0">${drug.short}</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+        <span class="tag">Conteúdo educativo</span>
+        <span class="tag">Triagem obrigatória</span>
+        <span class="tag">Integração</span>
+      </div>
+    </header>
+    ${sections.map(([id,label,html])=>`
+      <section id="sec-${id}" class="reveal" style="padding-top:10px;margin-top:10px;border-top:1px solid var(--line)">
+        <h2 style="margin:8px 0 6px">${label}</h2>
+        ${html}
+      </section>
+    `).join("")}
+    <p class="muted" style="font-size:13px;margin-top:16px">
+      Nota: Este material é informativo e não substitui consulta médica. Se estiver em crise ou em perigo imediato, procure ajuda emergencial.
+    </p>
+  `;
+
+  // Ativar acordeões das FAQs da droga
+  article.querySelectorAll('#drugFaqs .faq-item').forEach(row=>{
+    const btn=row.querySelector('.faq-btn'), ans=row.querySelector('.faq-ans');
+    btn.addEventListener('click',()=>{
+      const open = ans.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(open));
+      btn.lastElementChild.textContent = open ? "−" : "+";
+      location.hash = `#/d/${drug.id}`;
+    });
+  });
+
+  // Navegação vizinha
+  const idx = DRUG_INDEX[drug.id];
+  const prevId = DRUG_IDS[idx-1], nextId = DRUG_IDS[idx+1];
+  neighbor.innerHTML = `
+    ${prevId?`<a class="btn small ghost" href="#/d/${prevId}" data-link>← ${KNOWLEDGE[DRUG_INDEX[prevId]].title}</a>`:""}
+    <a class="btn small" href="#/conhecimento" data-link>Catálogo</a>
+    ${nextId?`<a class="btn small ghost" href="#/d/${nextId}" data-link>${KNOWLEDGE[DRUG_INDEX[nextId]].title} →</a>`:""}
+  `;
+
+  // Âncoras internas suaves
+  article.querySelectorAll('a[href^="#sec-"]').forEach(a=>{
+    a.addEventListener("click",(e)=>{ e.preventDefault(); const t=document.querySelector(a.getAttribute("href")); if(t) t.scrollIntoView({behavior:"smooth"}); });
+  });
+
+// Habilitar scroll suave também nos links do TOC (aside), sem quebrar a SPA
+if (tocLinks) {
+  tocLinks.querySelectorAll('a[href^="#sec-"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+}
+
+   
+  // SEO dinâmico
+  document.title = `${drug.title} — ${SITE_NAME}`;
+  const canonicalEl = document.getElementById('canonical');
+  if(canonicalEl) canonicalEl.setAttribute('href', location.origin + location.pathname + '#/d/' + drug.id);
+  document.querySelector('meta[name="description"]').content = `${drug.short} — ${SITE_NAME}`;
+  document.querySelector('meta[property="og:title"]').content = `${drug.title} — ${SITE_NAME}`;
+  document.querySelector('meta[property="og:description"]').content = drug.short || DEFAULT_OG_DESC;
+  document.querySelector('meta[name="twitter:title"]').content = `${drug.title} — ${SITE_NAME}`;
+  document.querySelector('meta[name="twitter:description"]').content = drug.short || DEFAULT_OG_DESC;
+
+  applyReveal(app);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* ===== Inicialização global ===== */
+document.getElementById("logo").src = LOGO_URL;
+document.getElementById("year").textContent = new Date().getFullYear();
+
+// Delegação de cliques (links internos '#/')
+document.addEventListener("click", (e) => {
+  const anchor = e.target.closest('a[data-link]');
+  if(anchor && anchor.getAttribute("href") && anchor.getAttribute("href").startsWith("#/")){
+    e.preventDefault();
+    location.hash = anchor.getAttribute("href").replace(/^#/, "");
+  }
+});
+
+// CTA popup “Quero Alívio”
+const leadModal = document.getElementById("leadModal");
+const leadForm  = document.getElementById("leadForm");
+const leadClose = document.getElementById("leadClose");
+function openLeadModal(){ leadModal.style.display = "flex"; }
+function closeLeadModal(){ leadModal.style.display = "none"; }
+leadClose.addEventListener("click", closeLeadModal);
+leadModal.addEventListener("click",(e)=>{ if(e.target===leadModal) closeLeadModal(); });
+leadForm.addEventListener("submit",(e)=>{
+  e.preventDefault();
+  const payload = {
+    nome: document.getElementById("leadNome").value.trim(),
+    email: document.getElementById("leadEmail").value.trim(),
+    cidade: document.getElementById("leadCidade").value.trim(),
+    whats: document.getElementById("leadWhats").value.trim(),
+    assunto: document.getElementById("leadAssunto").value,
+    lgpd: document.getElementById("leadLGPD").checked,
+    ts: new Date().toISOString()
+  };
+  if(!payload.email || !payload.cidade || !payload.assunto || !payload.lgpd){ toast("Preencha todos os campos obrigatórios."); return; }
+  try{
+    const arr = JSON.parse(localStorage.getItem("nto_leads")||"[]");
+    arr.push(payload);
+    localStorage.setItem("nto_leads", JSON.stringify(arr));
+  }catch{}
+  trackEvent('alivio_form_submit', { assunto: payload.assunto });
+  toast("Obrigado! Vamos te responder em breve.");
+  closeLeadModal();
+  // Abre mapa após coleta
+  location.hash = "/mapa";
+});
+
+// Header CTA (fallback)
+["ctaHeader","ctaFloat"].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el){ el.addEventListener("click",(e)=>{ e.preventDefault(); openLeadModal(); }); }
+});
+
+// Help: reduced motion telemetry already on renderHome
+
+// Ano e favicon
+(function(){
+  let l = document.querySelector("link[rel='icon']");
+  if(!l){ l = document.createElement("link"); l.rel = "icon"; document.head.appendChild(l); }
+  l.href = LOGO_URL;
+})();
+
+/* ===== Scrollspy do topo (Home nav highlight) ===== */
+function initScrollSpy(){
+  const spyLinks = Array.from(document.querySelectorAll('.nav-links a'));
+  const sectionIds = ["hero","mensagem","mapa","posts","conhecimento","galeria","projetos","observatorio","sobre","faq","recomendado","glossario","novidades","legal","contato"];
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+  function onScrollSpy(){
+    let activeLink = spyLinks.find(a=>a.getAttribute('href')==="#/") || spyLinks[0];
+    const y = window.scrollY + 120;
+    sections.forEach((sec) => { if(sec && sec.offsetTop <= y) {
+      const href = "#/"+sec.id;
+      const match = spyLinks.find(a => a.getAttribute('href')===href);
+      if(match) activeLink = match;
+    }});
+    spyLinks.forEach(a => a.classList.remove('active'));
+    activeLink && activeLink.classList.add('active');
+  }
+  window.addEventListener('scroll', onScrollSpy, { passive:true });
+  onScrollSpy();
+}
+document.addEventListener('DOMContentLoaded', initScrollSpy);
+</script>
+
+<!-- JSON-LD básico -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "MedicalOrganization",
+      "name": "NTO Brasil",
+      "url": "https://ntobr.com",
+      "logo": "https://ntobr.com/logo.png",
+      "address": { "@type": "PostalAddress", "addressCountry": "BR" },
+      "description": "Instituto clínico e multidisciplinar focado em terapias psicodélicas com ciência, ética e cuidado",
+      "sameAs": [
+        "https://www.instagram.com/nto_oficial",
+        "https://www.youtube.com/channel/NTObrasil"
+      ]
+    },
+    {
+      "@type": "ItemList",
+      "name": "Psicodélicos em estudo",
+      "itemListElement": [
+        { "@type": "Drug", "name": "Cetamina", "description": "Alívio rápido em depressão resistente com infusão/spray supervisionado." },
+        { "@type": "Drug", "name": "Ayahuasca", "description": "Decocção tradicional amazônica com uso ritual e potencial impacto em bem-estar." },
+        { "@type": "Drug", "name": "Ibogaína", "description": "Alcaloide africano em estudo para dependência química (desintoxicação assistida)." },
+        { "@type": "Drug", "name": "Psilocibina", "description": "Triptamina investigada para depressão/ansiedade." },
+        { "@type": "Drug", "name": "MDMA", "description": "Empatógeno estudado como coadjuvante em psicoterapia de TEPT." },
+        { "@type": "Drug", "name": "LSD", "description": "Clássico psicodélico investigado para ansiedade/cefaleia em salvas." }
+      ]
+    }
+  ]
+}
+</script>
+   <script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""
+></script>
+<script>
+/**
+ * === NTO MAPA DE CLÍNICAS (Leaflet) ===
+ * - Dados em JSON (CLINICAS)
+ * - Funções: addClinics, clearPins, fitToPins, filterClinics
+ * - Integra sem conflito com sua SPA (MutationObserver)
+ */
+
+(function(){
+  // --- DADOS: edite/adicione quantas clínicas quiser ---
+  // Campos: id, nome, categoria, uf, cidade, lat, lng, whats, site, obs
+  const CLINICAS = [
+    {
+      id: "sp_nto_jardins",
+      nome: "NTO • Unidade Jardins",
+      categoria: "Cetamina",
+      uf: "SP",
+      cidade: "São Paulo",
+      lat: -23.561414, lng: -46.662935,
+      whats: "55 11 90000-0000",
+      site: "https://ntobr.com",
+      obs: "Infusão e integração"
+    },
+    {
+      id: "rj_nto_botafogo",
+      nome: "NTO • Unidade Botafogo",
+      categoria: "Cetamina",
+      uf: "RJ",
+      cidade: "Rio de Janeiro",
+      lat: -22.949646, lng: -43.186901,
+      whats: "55 21 90000-0000",
+      site: "https://ntobr.com",
+      obs: "Spray intranasal / IV"
+    },
+    {
+      id: "df_nto_brasilia",
+      nome: "NTO • Unidade Brasília",
+      categoria: "Cetamina",
+      uf: "DF",
+      cidade: "Brasília",
+      lat: -15.794229, lng: -47.882166,
+      whats: "55 61 90000-0000",
+      site: "https://ntobr.com",
+      obs: "Triagem e integração"
+    },
+    {
+      id: "mg_parceiro_bh",
+      nome: "Parceiro BH",
+      categoria: "Parceiro",
+      uf: "MG",
+      cidade: "Belo Horizonte",
+      lat: -19.924501, lng: -43.935237,
+      whats: "",
+      site: "",
+      obs: "Rede de referência"
+    },
+    {
+      id: "rs_parceiro_poa",
+      nome: "Parceiro POA",
+      categoria: "Parceiro",
+      uf: "RS",
+      cidade: "Porto Alegre",
+      lat: -30.027704, lng: -51.228735,
+      whats: "",
+      site: "",
+      obs: ""
+    },
+    {
+      id: "ba_parceiro_salvador",
+      nome: "Parceiro Salvador",
+      categoria: "Parceiro",
+      uf: "BA",
+      cidade: "Salvador",
+      lat: -12.977749, lng: -38.501630,
+      whats: "",
+      site: "",
+      obs: ""
+    }
+  ];
+
+  // --- CONFIG MAPA ---
+  let map, markersLayer;
+  const BR_BOUNDS = L.latLngBounds(L.latLng(-33.75, -73.99), L.latLng(5.27, -32.39));
+
+  function ensureMap(){
+    const host = document.getElementById('mapbr');
+    if(!host || host.dataset.inited) return;
+    host.dataset.inited = "1";
+
+    map = L.map('mapbr', {
+      zoomControl: true,
+      minZoom: 3,
+      maxZoom: 19
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap',
+      maxZoom: 19
+    }).addTo(map);
+
+    markersLayer = L.layerGroup().addTo(map);
+    map.fitBounds(BR_BOUNDS, { padding: [20,20] });
+
+    // Render inicial (todas)
+    addClinics(CLINICAS);
+    fitToPins();
+
+    // Expor utilitários
+    window.NTO_MAP = {
+      addClinics,
+      clearPins,
+      fitToPins,
+      filterClinics, // { uf?: "SP", categoria?: "Cetamina" }
+      data: CLINICAS
+    };
+  }
+
+  // --- RENDERIZAÇÃO DE CLÍNICAS ---
+  function addClinics(list){
+    if(!markersLayer) return;
+    list.forEach(c => {
+      const marker = L.marker([c.lat, c.lng], { title: c.nome });
+      marker.bindPopup(popupHtml(c), { maxWidth: 320 });
+      marker.addTo(markersLayer);
+    });
+  }
+
+  function clearPins(){
+    if(markersLayer) markersLayer.clearLayers();
+  }
+
+  function fitToPins(){
+    if(!markersLayer) return;
+    const latlngs = [];
+    markersLayer.eachLayer(l => { if(l.getLatLng) latlngs.push(l.getLatLng()); });
+    if(latlngs.length) map.fitBounds(L.latLngBounds(latlngs), { padding:[30,30], maxZoom: 8 });
+    else map.fitBounds(BR_BOUNDS, { padding:[20,20] });
+  }
+
+  function popupHtml(c){
+    const wa = c.whats ? `<a class="btn small primary" target="_blank" rel="noopener" href="${whatsLink(c.whats)}">WhatsApp</a>` : "";
+    const site = c.site ? `<a class="btn small ghost" target="_blank" rel="noopener" href="${c.site}">Site</a>` : "";
+    const obs = c.obs ? `<p class="muted" style="margin:8px 0 0">${c.obs}</p>` : "";
+    return `
+      <div style="min-width:220px">
+        <strong>${c.nome}</strong><br/>
+        <span class="muted">${c.cidade} • ${c.uf} • ${c.categoria}</span>
+        ${obs}
+        <div class="toolbar" style="margin-top:10px;gap:8px;flex-wrap:wrap">
+          ${wa} ${site}
+        </div>
+      </div>
+    `;
+  }
+
+  function whatsLink(raw){
+    // Aceita "55 11 99999-0000" ou só "11999990000"
+    const digits = String(raw || "").replace(/\D+/g, "");
+    const phone = digits.length >= 10 ? digits : "";
+    return phone ? `https://wa.me/${phone}` : "#";
+  }
+
+  // --- FILTRO: por UF e/ou categoria ---
+  // Ex: window.NTO_MAP.filterClinics({ uf:"SP" })
+  //     window.NTO_MAP.filterClinics({ categoria:"Parceiro" })
+  //     window.NTO_MAP.filterClinics({ uf:"SP", categoria:"Cetamina" })
+  function filterClinics({ uf, categoria } = {}){
+    const list = CLINICAS.filter(c => {
+      const okUf = uf ? c.uf.toUpperCase() === uf.toUpperCase() : true;
+      const okCat = categoria ? c.categoria.toLowerCase() === categoria.toLowerCase() : true;
+      return okUf && okCat;
+    });
+    clearPins();
+    addClinics(list);
+    fitToPins();
+    return list;
+  }
+
+  // --- INICIALIZAÇÃO (SPA) ---
+  const mo = new MutationObserver(() => ensureMap());
+  mo.observe(document.body, { childList: true, subtree: true });
+  document.addEventListener('DOMContentLoaded', ensureMap);
+})();
+</script>
+
+</body>
+</html>
+
+
 
 

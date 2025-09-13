@@ -632,6 +632,53 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
     </div>
   </section>
 
+/* Interlúdios automáticos entre seções */
+.interlude.auto {
+  position: relative;
+  min-height: 42vh;                 /* altura agradável */
+  display: block;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-top: 1px solid #0b0b0b;
+  border-bottom: 1px solid #0b0b0b;
+  box-shadow:
+    inset 0 -80px 120px rgba(0,0,0,.45),
+    inset 0  80px 120px rgba(0,0,0,.45);
+}
+
+/* véu suave pra manter elegância/legibilidade */
+.interlude.auto::after {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(900px 420px at 10% 10%, rgba(0,0,0,.22), transparent 60%),
+    radial-gradient(900px 420px at 90% 80%, rgba(0,0,0,.18), transparent 60%);
+}
+
+/* Transição suave quando a imagem carrega */
+.interlude.auto[data-ready="1"] {
+  transition: background-image .6s ease, opacity .6s ease;
+  opacity: 1;
+}
+.interlude.auto { opacity: 0.001; }  /* evita “flash” até carregar */
+
+/* Desktop: efeito parallax leve; Mobile: desliga por performance */
+@media (min-width: 861px) {
+  .interlude.auto { background-attachment: fixed; }
+}
+@media (max-width: 860px) {
+  .interlude.auto { background-attachment: scroll; }
+}
+
+/* Reduz altura se preferir mais discreto em telas pequenas */
+@media (max-width: 600px) {
+  .interlude.auto { min-height: 36vh; }
+}
+
+
+
   <section id="contato" class="section">
     <div class="container">
       <div class="reveal center" style="margin-bottom:20px">
@@ -1214,17 +1261,25 @@ async function renderHome(){
   document.querySelector('meta[name="twitter:title"]').content = DEFAULT_OG_TITLE;
   document.querySelector('meta[name="twitter:description"]').content = DEFAULT_OG_DESC;
 
-// Aplica paisagem inspiradora no interlúdio
-await setHeroInterludeImage();
+  // 🌄 insere interlúdios com paisagens entre todas as seções
+  sprinkleInterludes(app);
 
-// Animações de revelação
-applyReveal(app);
+  // Animações de revelação
+  applyReveal(app);
 
   // CTAs “Quero Alívio” → popup
   ["ctaHeader","ctaFloat","ctaHero","ctaMensagem"].forEach(id=>{
     const el = document.getElementById(id);
     if(el){ el.onclick = (e)=>{ e.preventDefault(); openLeadModal(); trackEvent('alivio_popup_open'); }; }
   });
+
+  // Reduced motion telemetry
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    trackEvent('reduced_motion_active');
+  }
+}
+
+
 
   // Reduced motion telemetry
   if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
@@ -1543,6 +1598,93 @@ document.addEventListener('DOMContentLoaded', initScrollSpy);
   crossorigin=""
 ></script>
 <script>
+
+/* === Banco de paisagens maravilhosas ===
+ * 1) sua imagem local (mesma pasta do index.html)
+ * 2+) curadoria de paisagens realistas (Unsplash)
+ */
+const LANDSCAPE_URLS_ALL = [
+  "./paisagem-hero.jpg",
+  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?q=80&w=2000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=2000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1499346030926-9a72daac6c63?q=80&w=2000&auto=format&fit=crop"
+];
+
+// util: testa se imagem carrega
+function probe(url){ return new Promise(r=>{ const i=new Image(); i.onload=()=>r(true); i.onerror=()=>r(false); i.src=url; }); }
+
+// escolhe uma url “do dia”, começando pela sua local; cai para as próximas se der erro
+async function pickLandscapeByIndex(i){
+  // rotação por dia, mas variando com o índice da faixa p/ evitar repetição
+  const day = Math.floor(Date.now() / 86400000);
+  const base = (day + i) % LANDSCAPE_URLS_ALL.length;
+  const order = [...LANDSCAPE_URLS_ALL.slice(base), ...LANDSCAPE_URLS_ALL.slice(0, base)];
+  for(const url of order){ if(await probe(url)) return url; }
+  return LANDSCAPE_URLS_ALL[0];
+}
+
+// lazy-apply: só define o background quando a faixa entrar na viewport
+function lazyApplyBackground(el, idx){
+  const io = new IntersectionObserver(async (entries, obs)=>{
+    entries.forEach(async e=>{
+      if(!e.isIntersecting) return;
+      obs.unobserve(el);
+      try{
+        const url = await pickLandscapeByIndex(idx);
+        el.style.backgroundImage = `url('${url}')`;
+        el.dataset.ready = "1";
+      }catch{}
+    });
+  }, { rootMargin: "200px 0px" });
+  io.observe(el);
+}
+
+/* Insere interlúdios automáticos entre quaisquer duas .section consecutivas
+ * container: elemento dentro do qual iremos varrer (ex.: app ou tpl da Home já montado)
+ */
+function sprinkleInterludes(container=document){
+  const sections = Array.from(container.querySelectorAll('section.section'));
+  if(sections.length < 2) return;
+
+  // Evitar duplicatas: se já inserimos antes, não repete
+  if(container.dataset.interluded === "1") return;
+
+  const toInsert = [];
+  for(let i=0; i<sections.length-1; i++){
+    const curr = sections[i];
+    const next = sections[i+1];
+
+    // se já existe um interlude entre curr e next, pula
+    let between = [];
+    let n = curr.nextElementSibling;
+    while(n && n !== next){ between.push(n); n = n.nextElementSibling; }
+    const alreadyHas = between.some(el => el.classList && el.classList.contains('interlude'));
+
+    // regras para não colocar interlude em lugares indesejados
+    const skip = (curr.id === "hero") || (next.id === "contato") || (next.tagName === "FOOTER");
+
+    if(!alreadyHas && !skip){
+      const inter = document.createElement('section');
+      inter.className = 'interlude auto';
+      inter.setAttribute('aria-hidden','true');
+      // injeta depois da curr
+      toInsert.push([curr, inter, i]);
+    }
+  }
+
+  toInsert.forEach(([curr, inter, idx])=>{
+    curr.parentNode.insertBefore(inter, curr.nextElementSibling);
+    lazyApplyBackground(inter, idx);
+  });
+
+  container.dataset.interluded = "1";
+}
+
+
+
+
 /**
  * === NTO MAPA DE CLÍNICAS (Leaflet) ===
  * - Dados em JSON (CLINICAS)

@@ -82,6 +82,8 @@ img{ max-width: 100%; display: block; }
   padding: 24px;
   box-shadow: 0 10px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.03);
 }
+/* ALTERAÇÃO: bordas reforçadas nos cards de substâncias */
+.card{ border: 2px solid var(--brand); }
 .btn{
   display: inline-flex; align-items: center; justify-content: center;
   padding: 0.85rem 1.35rem; border-radius: 999px; font-weight: 700;
@@ -302,9 +304,53 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
   background-attachment: fixed;
 }
 
+/* Interlúdios automáticos entre seções */
+.interlude.auto {
+  position: relative;
+  min-height: 42vh;                 /* altura agradável */
+  display: block;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-top: 1px solid #0b0b0b;
+  border-bottom: 1px solid #0b0b0b;
+  box-shadow:
+    inset 0 -80px 120px rgba(0,0,0,.45),
+    inset 0  80px 120px rgba(0,0,0,.45);
+}
+
+/* véu suave pra manter elegância/legibilidade */
+.interlude.auto::after {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(900px 420px at 10% 10%, rgba(0,0,0,.22), transparent 60%),
+    radial-gradient(900px 420px at 90% 80%, rgba(0,0,0,.18), transparent 60%);
+}
+
+/* Transição suave quando a imagem carrega */
+.interlude.auto[data-ready="1"] {
+  transition: background-image .6s ease, opacity .6s ease;
+  opacity: 1;
+}
+.interlude.auto { opacity: 0.001; }  /* evita “flash” até carregar */
+
+/* Desktop: efeito parallax leve; Mobile: desliga por performance */
+@media (min-width: 861px) {
+  .interlude.auto { background-attachment: fixed; }
+}
+@media (max-width: 860px) {
+  .interlude.auto { background-attachment: scroll; }
+}
+
+/* Reduz altura se preferir mais discreto em telas pequenas */
+@media (max-width: 600px) {
+  .interlude.auto { min-height: 36vh; }
+}
 
 </style>
-   <link
+<link
   rel="stylesheet"
   href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
   integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
@@ -318,7 +364,9 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
 <header>
   <div class="container nav">
     <a href="#/" class="brand" data-link data-event="nav_home_click">
-      <img id="logo" alt="Logo NTO" width="56" height="56" style="object-fit:contain" />
+      <!-- ALTERAÇÃO: usar logo otimizado de menor tamanho -->
+      <!-- ORIGINAL: <img id="logo" alt="Logo NTO" width="56" height="56" style="object-fit:contain" /> -->
+      <img id="logo" alt="Logo NTO" width="32" height="32" style="object-fit:contain" />
     </a>
     <nav class="nav-links" id="navLinks">
       <a href="#/" data-link>Home</a>
@@ -327,6 +375,10 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
       <a href="#/posts" data-link>Posts</a>
       <a href="#/conhecimento" data-link>Conhecimento</a>
       <a href="#/projetos" data-link>Projetos</a>
+      <!-- ALTERAÇÃO: adicionar link Loja no menu -->
+      <a href="#/loja" data-link>Loja</a>
+      <!-- ALTERAÇÃO: adicionar link Doações no menu -->
+      <a href="#/doacoes" data-link>Doações</a>
       <a href="#/observatorio" data-link>Observatório</a>
       <a href="#/sobre" data-link>Sobre</a>
       <a href="#/faq" data-link>FAQ</a>
@@ -365,6 +417,10 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
         <a href="#/mapa" data-link>Mapa</a>
         <a href="#/conhecimento" data-link>Conhecimento</a>
         <a href="#/faq" data-link>FAQ</a>
+        <!-- ALTERAÇÃO: adicionar link Loja no mapa do site -->
+        <a href="#/loja" data-link>Loja</a>
+        <!-- ALTERAÇÃO: adicionar link Doações no mapa do site -->
+        <a href="#/doacoes" data-link>Doações</a>
         <a href="#/contato" data-link>Contato</a>
       </div>
     </div>
@@ -383,7 +439,9 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
     <div class="halo"></div>
     <div class="container">
       <div class="reveal center">
-        <img id="heroLogo" alt="NTO Brasil" style="height:160px;width:auto;margin:0 auto 24px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.6))" />
+        <!-- ALTERAÇÃO: reduzir tamanho do logo principal em 40% -->
+        <!-- ORIGINAL: <img id="heroLogo" alt="NTO Brasil" style="height:160px;width:auto;margin:0 auto 24px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.6))" /> -->
+        <img id="heroLogo" alt="NTO Brasil" style="height:96px;width:auto;margin:0 auto 24px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.6))" />
         <h1 style="font-size:36px;margin:0 0 12px">Ciência, ética e cuidado</h1>
         <p class="muted" style="max-width:780px;margin:0 auto 20px;font-size:18px;line-height:1.7">
           Se você está carregando um peso que parece impossível, <strong>você não está só</strong>. Aqui, acolhemos a sua dor
@@ -548,12 +606,24 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
       <div class="grid cols-3">
         <article class="card reveal">
           <h3>Observatório dos Enteógenos</h3>
-          <p class="muted">NTO Brasil — Chapada dos Veadeiros, Alto Paraíso de Goiás. Centro de dados, relatos e pesquisa de campo.</p>
+          <!-- ALTERAÇÃO: incluir Brasília/DF na descrição do Observatório -->
+          <!-- ORIGINAL: NTO Brasil — Chapada dos Veadeiros, Alto Paraíso de Goiás. Centro de dados, relatos e pesquisa de campo. -->
+          <p class="muted">NTO Brasil — Chapada dos Veadeiros, Alto Paraíso de Goiás e Brasília/DF. Centro de dados, relatos e pesquisa de campo.</p>
           <a class="btn small ghost" href="#/observatorio" data-link>Saiba mais</a>
         </article>
         <article class="card reveal">
           <h3>Cartilhas oficiais</h3>
           <p class="muted">Materiais práticos em saúde mental, com linguagem clara e responsabilidade clínica.</p>
+          <!-- ALTERAÇÃO: incluir lista de temas em cartilhas -->
+          <ul class="muted" style="margin-top:10px">
+            <li>Hipertensão</li>
+            <li>Alimentação</li>
+            <li>Atividade física</li>
+            <li>Meditação</li>
+            <li>Fumo</li>
+            <li>Colesterol</li>
+            <li>Glicemia</li>
+          </ul>
         </article>
         <article class="card reveal">
           <h3>Livros e E-books</h3>
@@ -609,6 +679,24 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
     </div>
   </section>
 
+  <!-- ALTERAÇÃO: criar seção Recomendações -->
+  <section id="recomendacoes" class="section">
+    <div class="container">
+      <div class="reveal center" style="margin-bottom:20px">
+        <h2 style="font-size:28px;margin:0 0 8px">Recomendações</h2>
+        <p class="muted" style="margin:0">Nossos livros e leituras sugeridas</p>
+      </div>
+      <div class="card reveal">
+        <h3>Como Mudar Sua Mente</h3>
+        <p class="muted" style="margin:0 0 12px">Michael Pollan</p>
+        <p>"How to Change Your Mind" explora os benefícios dos psicodélicos na terapia e conscientização.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interlúdios automáticos entre seções -->
+  <section class="interlude auto" aria-hidden="true"></section>
+
   <section id="faq" class="section">
     <div class="container">
       <div class="reveal center" style="margin-bottom:20px">
@@ -632,52 +720,8 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
     </div>
   </section>
 
-/* Interlúdios automáticos entre seções */
-.interlude.auto {
-  position: relative;
-  min-height: 42vh;                 /* altura agradável */
-  display: block;
-  overflow: hidden;
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  border-top: 1px solid #0b0b0b;
-  border-bottom: 1px solid #0b0b0b;
-  box-shadow:
-    inset 0 -80px 120px rgba(0,0,0,.45),
-    inset 0  80px 120px rgba(0,0,0,.45);
-}
-
-/* véu suave pra manter elegância/legibilidade */
-.interlude.auto::after {
-  content: "";
-  position: absolute; inset: 0;
-  background:
-    radial-gradient(900px 420px at 10% 10%, rgba(0,0,0,.22), transparent 60%),
-    radial-gradient(900px 420px at 90% 80%, rgba(0,0,0,.18), transparent 60%);
-}
-
-/* Transição suave quando a imagem carrega */
-.interlude.auto[data-ready="1"] {
-  transition: background-image .6s ease, opacity .6s ease;
-  opacity: 1;
-}
-.interlude.auto { opacity: 0.001; }  /* evita “flash” até carregar */
-
-/* Desktop: efeito parallax leve; Mobile: desliga por performance */
-@media (min-width: 861px) {
-  .interlude.auto { background-attachment: fixed; }
-}
-@media (max-width: 860px) {
-  .interlude.auto { background-attachment: scroll; }
-}
-
-/* Reduz altura se preferir mais discreto em telas pequenas */
-@media (max-width: 600px) {
-  .interlude.auto { min-height: 36vh; }
-}
-
-
+  <!-- Interlúdios automáticos entre seções -->
+  <section class="interlude auto" aria-hidden="true"></section>
 
   <section id="contato" class="section">
     <div class="container">
@@ -793,7 +837,9 @@ const SITE_NAME = "NTO – Brasil";
 const DEFAULT_DESC = "NTO Brasil — Alívio com dignidade para quem carrega um peso insuportável: ciência, ética e cuidado incluindo cetamina em contexto clínico.";
 const DEFAULT_OG_TITLE = SITE_NAME;
 const DEFAULT_OG_DESC = "Ciência, ética e cuidado.";
-const LOGO_URL = "./logo.png";
+// ALTERAÇÃO: usar logo otimizado (versão menor)
+ // ORIGINAL: const LOGO_URL = "./logo.png";
+const LOGO_URL = "./logo-small.png";
 const CONTACT_EMAIL = "admin@ntobr.com";
 const SOCIAL = {
   instagramEmbedUrl: "https://www.instagram.com/p/Ck000000000/embed", // substitua pelo embed real
@@ -1040,6 +1086,8 @@ const routes = {
   "/posts":     () => navigateTo("/#posts"),
   "/conhecimento": () => navigateTo("/#conhecimento"),
   "/projetos":  () => navigateTo("/#projetos"),
+  "/loja": renderLoja,   // ALTERAÇÃO: adicionar rota Loja
+  "/doacoes": renderDoacoes, // ALTERAÇÃO: adicionar rota Doações
   "/observatorio": () => navigateTo("/#observatorio"),
   "/sobre":     () => navigateTo("/#sobre"),
   "/faq":       () => navigateTo("/#faq"),
@@ -1194,7 +1242,9 @@ async function renderHome(){
       art.id = "card-"+k.id;
       art.innerHTML = `
         <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px">
-          <h3 style="margin:0">${k.title}</h3>
+          <!-- ALTERAÇÃO: adicionar ícone antes do título da droga -->
+          <!-- ORIGINAL:           <h3 style="margin:0">${k.title}</h3> -->
+          <h3 style="margin:0"><img src="./icons/${k.id}.svg" alt="${k.title} icon" style="width:24px;height:24px;vertical-align:middle;margin-right:6px;"/>${k.title}</h3>
           ${cardTag(k)}
         </div>
         <p class="muted" style="margin:0 0 10px">${k.short}</p>
@@ -1470,6 +1520,40 @@ if (tocLinks) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+/* ===== Página Loja ===== */
+function renderLoja(){
+  app.innerHTML = `
+    <section id="loja" class="section">
+      <div class="container">
+        <div class="reveal center" style="margin-bottom:20px">
+          <h2 style="font-size:28px;margin:0 0 8px">Loja</h2>
+        </div>
+        <div class="card reveal center" style="color:#cbd5e1">
+          <p>Ainda estamos configurando a loja. Em breve: livros e camisetas!</p>
+        </div>
+      </div>
+    </section>
+  `;
+  applyReveal(app);
+}
+
+/* ===== Página Doações ===== */
+function renderDoacoes(){
+  app.innerHTML = `
+    <section id="doacoes" class="section">
+      <div class="container">
+        <div class="reveal center" style="margin-bottom:20px">
+          <h2 style="font-size:28px;margin:0 0 8px">Doações</h2>
+        </div>
+        <div class="card reveal center" style="color:#cbd5e1">
+          <p>Apoie nosso trabalho! Você pode fazer uma doação via PIX (chave: 1234-5678-9101) ou cartão de crédito. Obrigado pelo apoio!</p>
+        </div>
+      </div>
+    </section>
+  `;
+  applyReveal(app);
+}
+
 /* ===== Inicialização global ===== */
 document.getElementById("logo").src = LOGO_URL;
 document.getElementById("year").textContent = new Date().getFullYear();
@@ -1533,7 +1617,7 @@ leadForm.addEventListener("submit",(e)=>{
 /* ===== Scrollspy do topo (Home nav highlight) ===== */
 function initScrollSpy(){
   const spyLinks = Array.from(document.querySelectorAll('.nav-links a'));
-  const sectionIds = ["hero","mensagem","mapa","posts","conhecimento","galeria","projetos","observatorio","sobre","faq","recomendado","glossario","novidades","legal","contato"];
+  const sectionIds = ["hero","mensagem","mapa","posts","conhecimento","galeria","projetos","observatorio","sobre","faq","legal","contato"];
   const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
   function onScrollSpy(){
     let activeLink = spyLinks.find(a=>a.getAttribute('href')==="#/") || spyLinks[0];
@@ -1552,7 +1636,6 @@ function initScrollSpy(){
 document.addEventListener('DOMContentLoaded', initScrollSpy);
 </script>
 
-<!-- JSON-LD básico -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -1584,7 +1667,7 @@ document.addEventListener('DOMContentLoaded', initScrollSpy);
   ]
 }
 </script>
-   <script
+<script
   src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
   integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
   crossorigin=""
@@ -1601,23 +1684,23 @@ const LANDSCAPE_URLS_ALL = [
   "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2000&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?q=80&w=2000&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=2000&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1499346030926-9a72daac6c63?q=80&w=2000&auto=format&fit=crop"
+  // ORIGINAL: "https://images.unsplash.com/photo-1499346030926-9a72daac6c63?q=80&w=2000&auto=format&fit=crop"
+  "https://images.unsplash.com/photo-1499346030926-9a72daac6c63?q=80&w=2000&auto=format&fit=crop",
+  // ALTERAÇÃO: adicionar 4 imagens de biomas brasileiros
+  "https://images.unsplash.com/photo-1502072510723-1aa3ff531572?q=80&w=2000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1564468781195-19d5c122fea7?q=80&w=2000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1559574930-5b1eecf52258?q=80&w=2000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1579027981768-393248f89865?q=80&w=2000&auto=format&fit=crop"
 ];
 
-// util: testa se imagem carrega
 function probe(url){ return new Promise(r=>{ const i=new Image(); i.onload=()=>r(true); i.onerror=()=>r(false); i.src=url; }); }
-
-// escolhe uma url “do dia”, começando pela sua local; cai para as próximas se der erro
 async function pickLandscapeByIndex(i){
-  // rotação por dia, mas variando com o índice da faixa p/ evitar repetição
   const day = Math.floor(Date.now() / 86400000);
   const base = (day + i) % LANDSCAPE_URLS_ALL.length;
   const order = [...LANDSCAPE_URLS_ALL.slice(base), ...LANDSCAPE_URLS_ALL.slice(0, base)];
   for(const url of order){ if(await probe(url)) return url; }
   return LANDSCAPE_URLS_ALL[0];
 }
-
-// lazy-apply: só define o background quando a faixa entrar na viewport
 function lazyApplyBackground(el, idx){
   const io = new IntersectionObserver(async (entries, obs)=>{
     entries.forEach(async e=>{
@@ -1632,56 +1715,36 @@ function lazyApplyBackground(el, idx){
   }, { rootMargin: "200px 0px" });
   io.observe(el);
 }
-
-/* Insere interlúdios automáticos entre quaisquer duas .section consecutivas
- * container: elemento dentro do qual iremos varrer (ex.: app ou tpl da Home já montado)
- */
 function sprinkleInterludes(container=document){
   const sections = Array.from(container.querySelectorAll('section.section'));
   if(sections.length < 2) return;
-
-  // Evitar duplicatas: se já inserimos antes, não repete
   if(container.dataset.interluded === "1") return;
-
   const toInsert = [];
   for(let i=0; i<sections.length-1; i++){
     const curr = sections[i];
     const next = sections[i+1];
-
-    // se já existe um interlude entre curr e next, pula
     let between = [];
     let n = curr.nextElementSibling;
     while(n && n !== next){ between.push(n); n = n.nextElementSibling; }
     const alreadyHas = between.some(el => el.classList && el.classList.contains('interlude'));
-
-    // regras para não colocar interlude em lugares indesejados
     const skip = (curr.id === "hero") || (next.id === "contato") || (next.tagName === "FOOTER");
-
     if(!alreadyHas && !skip){
       const inter = document.createElement('section');
       inter.className = 'interlude auto';
       inter.setAttribute('aria-hidden','true');
-      // injeta depois da curr
       toInsert.push([curr, inter, i]);
     }
   }
-
   toInsert.forEach(([curr, inter, idx])=>{
     curr.parentNode.insertBefore(inter, curr.nextElementSibling);
     lazyApplyBackground(inter, idx);
   });
-
   container.dataset.interluded = "1";
 }
 
-
-
-
-/**
- * === NTO MAPA DE CLÍNICAS (Leaflet) ===
+/* === NTO MAPA DE CLÍNICAS (Leaflet) ===
  * - Dados em JSON (CLINICAS)
  * - Funções: addClinics, clearPins, fitToPins, filterClinics
- * - Integra sem conflito com sua SPA (MutationObserver)
  */
 
 (function(){
@@ -1753,6 +1816,30 @@ function sprinkleInterludes(container=document){
       whats: "",
       site: "",
       obs: ""
+    },
+    // ALTERAÇÃO: adicionar clínica Ayahuasca em Belém (PA)
+    {
+      id: "pa_nto_belem",
+      nome: "NTO • Unidade Belém",
+      categoria: "Ayahuasca",
+      uf: "PA",
+      cidade: "Bel\u00e9m",
+      lat: -1.455833, lng: -48.503889,
+      whats: "55 91 90000-0000",
+      site: "https://ntobr.com",
+      obs: "Rituais tradicionais"
+    },
+    // ALTERAÇÃO: adicionar clínica Ibogaína em Manaus (AM)
+    {
+      id: "am_nto_manaus",
+      nome: "NTO • Unidade Manaus",
+      categoria: "Ibogaína",
+      uf: "AM",
+      cidade: "Manaus",
+      lat: -3.119028, lng: -60.021731,
+      whats: "55 92 90000-0000",
+      site: "https://ntobr.com",
+      obs: "Grupo de pesquisa"
     }
   ];
 
@@ -1793,7 +1880,6 @@ function sprinkleInterludes(container=document){
     };
   }
 
-  // --- RENDERIZAÇÃO DE CLÍNICAS ---
   function addClinics(list){
     if(!markersLayer) return;
     list.forEach(c => {
@@ -1832,16 +1918,11 @@ function sprinkleInterludes(container=document){
   }
 
   function whatsLink(raw){
-    // Aceita "55 11 99999-0000" ou só "11999990000"
     const digits = String(raw || "").replace(/\D+/g, "");
     const phone = digits.length >= 10 ? digits : "";
     return phone ? `https://wa.me/${phone}` : "#";
   }
 
-  // --- FILTRO: por UF e/ou categoria ---
-  // Ex: window.NTO_MAP.filterClinics({ uf:"SP" })
-  //     window.NTO_MAP.filterClinics({ categoria:"Parceiro" })
-  //     window.NTO_MAP.filterClinics({ uf:"SP", categoria:"Cetamina" })
   function filterClinics({ uf, categoria } = {}){
     const list = CLINICAS.filter(c => {
       const okUf = uf ? c.uf.toUpperCase() === uf.toUpperCase() : true;
@@ -1854,7 +1935,6 @@ function sprinkleInterludes(container=document){
     return list;
   }
 
-  // --- INICIALIZAÇÃO (SPA) ---
   const mo = new MutationObserver(() => ensureMap());
   mo.observe(document.body, { childList: true, subtree: true });
   document.addEventListener('DOMContentLoaded', ensureMap);
@@ -1863,4 +1943,5 @@ function sprinkleInterludes(container=document){
 
 </body>
 </html>
+
 

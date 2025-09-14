@@ -89,8 +89,9 @@ img{ max-width: 100%; display: block; }
   border: 0; cursor: pointer;
 }
 .btn.primary{
-  color:#fff; background: linear-gradient(90deg, #34d399, #06b6d4, #3b82f6, #8b5cf6, #ec4899);
-  background-size: 200% 100%; animation: swipe 6s linear infinite;
+  color:#fff; 
+  background: linear-gradient(90deg, #6a5acd, #1e90ff);
+  border: none;
 }
 @keyframes swipe{ 0%{background-position:0% 0} 100%{background-position:200% 0} }
 .btn.ghost{ background: transparent; color: var(--ink); border: 1px solid var(--line); }
@@ -257,7 +258,58 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
 .table{ width:100%; border-collapse: collapse; }
 .table th, .table td{ border-bottom:1px solid var(--line); padding:10px; text-align:left; }
 .table th{ color:#cbd5e1; }
+
+/* === V7 tweak: logo grande na primeira vista + header responsivo === */
+#heroLogo{
+  height: clamp(293px, 69vh, 960px) !important;
+  width: auto;
+  max-width: 92vw;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,.6));
+}
+
+#logo{
+  width: clamp(28px, 4vw, 56px);
+  height: auto !important;
+  object-fit: contain;
+}
+
+/* Segurança: caso o markup do botão permaneça, esconda-o */
+#ctaHeader{ display: none !important; }
+
+/* ——— Colar a paisagem logo sob os cards (sem “buraco preto”) ——— */
+.hero { padding-bottom: 24px; }
+.hero + .interlude { margin-top: 0; }
+
+/* ——— Veil mais suave pra foto brilhar ——— */
+.interlude .veil{
+  background:
+    radial-gradient(900px 420px at 10% 10%, rgba(0,0,0,.25), transparent 60%),
+    radial-gradient(900px 420px at 90% 80%, rgba(0,0,0,.20), transparent 60%);
+}
+
+/* ——— Fade sutil entre hero e interlude ——— */
+.hero::after{
+  content:"";
+  display:block;
+  height: 24px;
+  background: linear-gradient(to bottom, rgba(9,11,18,0) 0%, rgba(9,11,18,.35) 100%);
+}
+
+/* ——— Garantias de cobertura da imagem ——— */
+.interlude{
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+
 </style>
+   <link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin=""
+/>
 </head>
 
 <body>
@@ -267,7 +319,6 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
   <div class="container nav">
     <a href="#/" class="brand" data-link data-event="nav_home_click">
       <img id="logo" alt="Logo NTO" width="56" height="56" style="object-fit:contain" />
-      <span>NTO — Brasil</span>
     </a>
     <nav class="nav-links" id="navLinks">
       <a href="#/" data-link>Home</a>
@@ -275,19 +326,17 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
       <a href="#/mapa" data-link>Mapa</a>
       <a href="#/posts" data-link>Posts</a>
       <a href="#/conhecimento" data-link>Conhecimento</a>
-      <a href="#/galeria" data-link>Galeria</a>
       <a href="#/projetos" data-link>Projetos</a>
       <a href="#/observatorio" data-link>Observatório</a>
       <a href="#/sobre" data-link>Sobre</a>
       <a href="#/faq" data-link>FAQ</a>
-      <a href="#/recomendado" data-link>Recomendações</a>
-      <a href="#/glossario" data-link>Glossário</a>
-      <a href="#/novidades" data-link>Novidades V7</a>
       <a href="#/legal" data-link>Legal</a>
       <a href="#/contato" data-link>Contato</a>
     </nav>
     <button class="hamb" id="hamb" aria-controls="mobile" aria-expanded="false">☰ Menu</button>
+    <!-- REMOVIDO: botão duplicado ao lado da logo no topo
     <a id="ctaHeader" class="btn small primary" href="#/mapa" data-link data-event="cta_click">QUERO ALÍVIO 🫶</a>
+    -->
   </div>
   <div class="container" id="mobile" aria-hidden="true"></div>
 </header>
@@ -316,7 +365,6 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
         <a href="#/mapa" data-link>Mapa</a>
         <a href="#/conhecimento" data-link>Conhecimento</a>
         <a href="#/faq" data-link>FAQ</a>
-        <a href="#/recomendado" data-link>Recomendações</a>
         <a href="#/contato" data-link>Contato</a>
       </div>
     </div>
@@ -386,10 +434,10 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
     </div>
   </section>
 
-  <!-- Interlúdio visual (full-bleed) -->
-  <section class="interlude" style="background-image:url('https://images.unsplash.com/photo-1495427513693-3f80f06a46b1?q=80&w=1800&auto=format&fit=crop');">
-    <span class="veil" aria-hidden="true"></span>
-  </section>
+<!-- Interlúdio inspirador (imagem definida via JS) -->
+<section id="interlude-hero" class="interlude">
+  <span class="veil" aria-hidden="true"></span>
+</section>
 
   <section id="mensagem" class="section page active">
     <div class="container">
@@ -421,19 +469,17 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
     </div>
   </section>
 
-  <section id="mapa" class="section">
-    <div class="container">
-      <div class="reveal center" style="margin-bottom:20px">
-        <h2 style="font-size:28px;margin:0 0 8px">Mapa Psicodélico</h2>
-        <p class="muted" style="margin:0">Pontos públicos em Google My Maps</p>
-      </div>
-      <div class="card reveal">
-        <div class="skeleton" style="height:420px">
-          <iframe id="mapEmbed" loading="lazy" style="width:100%;height:420px;border:0;border-radius:16px;opacity:0"></iframe>
-        </div>
-      </div>
+<section id="mapa" class="section">
+  <div class="container">
+    <div class="reveal center" style="margin-bottom:20px">
+      <h2 style="font-size:28px;margin:0 0 8px">Mapa Psicodélico</h2>
+      <p class="muted" style="margin:0">Clínicas (Leaflet + OpenStreetMap)</p>
     </div>
-  </section>
+    <div class="card reveal">
+      <div id="mapbr" style="width:100%;height:420px;border-radius:16px;overflow:hidden"></div>
+    </div>
+  </div>
+</section>
 
   <!-- Interlúdio -->
   <section class="interlude" style="background-image:url('https://images.unsplash.com/photo-1520975922284-9f786f2de3aa?q=80&w=1800&auto=format&fit=crop');">
@@ -491,26 +537,6 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
   <!-- Interlúdio -->
   <section class="interlude" style="background-image:url('https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1800&auto=format&fit=crop');">
     <span class="veil" aria-hidden="true"></span>
-  </section>
-
-  <section id="galeria" class="section">
-    <div class="container">
-      <div class="reveal center" style="margin-bottom:20px">
-        <h2 style="font-size:28px;margin:0 0 8px">Imagens</h2>
-        <p class="muted" style="margin:0">Planos de fundo imersivos (sem moldura rígida)</p>
-      </div>
-      <div class="grid cols-3">
-        <div class="card reveal fancy"><div class="inner" style="padding:0;overflow:hidden">
-          <img loading="lazy" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1400&auto=format&fit=crop" alt="Montanhas" style="width:100%;height:256px;object-fit:cover" />
-        </div></div>
-        <div class="card reveal fancy"><div class="inner" style="padding:0;overflow:hidden">
-          <img loading="lazy" src="https://images.unsplash.com/photo-1520975922284-9f786f2de3aa?q=80&w=1400&auto=format&fit=crop" alt="Floresta amazônica" style="width:100%;height:256px;object-fit:cover" />
-        </div></div>
-        <div class="card reveal fancy"><div class="inner" style="padding:0;overflow:hidden">
-          <img loading="lazy" src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1400&auto=format&fit=crop" alt="Céu estrelado" style="width:100%;height:256px;object-fit:cover" />
-        </div></div>
-      </div>
-    </div>
   </section>
 
   <section id="projetos" class="section">
@@ -594,56 +620,6 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
     </div>
   </section>
 
-  <section id="recomendado" class="section">
-    <div class="container">
-      <div class="reveal center" style="margin-bottom:20px">
-        <h2 style="font-size:28px;margin:0 0 8px">Conteúdo Recomendado</h2>
-        <p class="muted" style="margin:0">Documentários, leituras e podcasts — com sinopse</p>
-      </div>
-      <div class="card reveal" style="max-width:980px;margin:0 auto">
-        <table class="table">
-          <thead><tr><th>Título</th><th>Tipo</th><th>Sinopse</th></tr></thead>
-          <tbody id="recTable"></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <section id="glossario" class="section">
-    <div class="container">
-      <div class="reveal center" style="margin-bottom:20px">
-        <h2 style="font-size:28px;margin:0 0 8px">Glossário Técnico</h2>
-        <p class="muted" style="margin:0">Termos essenciais (educacional)</p>
-      </div>
-      <div class="card reveal" style="max-width:980px;margin:0 auto">
-        <table class="table">
-          <thead><tr><th>Termo</th><th>Definição</th></tr></thead>
-          <tbody id="glossTable"></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <section id="novidades" class="section">
-    <div class="container">
-      <div class="reveal center" style="margin-bottom:20px">
-        <h2 style="font-size:28px;margin:0 0 8px">O que há de novo na V7</h2>
-        <p class="muted" style="margin:0">Changelog resumido</p>
-      </div>
-      <div class="card reveal" style="line-height:1.78;color:#cbd5e1">
-        <ul>
-          <li>Home corrigida e navegação SPA mais suave.</li>
-          <li>Guia rápido em Conhecimento: <em>desktop</em> sem redirecionar; <em>mobile</em> não cobre o texto.</li>
-          <li>Fichas clínicas ampliadas (Cetamina, Ayahuasca, Ibogaína) com indicações, interações, monitorização e manejo.</li>
-          <li>FAQs expandidas por molécula (12+ entradas) com deep-link.</li>
-          <li>Observatório dos Enteógenos, Glossário 40+, Recomendações com sinopse.</li>
-          <li>Popup “Quero Alívio” com LGPD e redirecionamento ao mapa.</li>
-          <li>Transições psicodélicas mais suaves e acessíveis.</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
   <section id="legal" class="section">
     <div class="container">
       <div class="reveal center" style="margin-bottom:20px">
@@ -655,6 +631,53 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
       </div>
     </div>
   </section>
+
+/* Interlúdios automáticos entre seções */
+.interlude.auto {
+  position: relative;
+  min-height: 42vh;                 /* altura agradável */
+  display: block;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-top: 1px solid #0b0b0b;
+  border-bottom: 1px solid #0b0b0b;
+  box-shadow:
+    inset 0 -80px 120px rgba(0,0,0,.45),
+    inset 0  80px 120px rgba(0,0,0,.45);
+}
+
+/* véu suave pra manter elegância/legibilidade */
+.interlude.auto::after {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(900px 420px at 10% 10%, rgba(0,0,0,.22), transparent 60%),
+    radial-gradient(900px 420px at 90% 80%, rgba(0,0,0,.18), transparent 60%);
+}
+
+/* Transição suave quando a imagem carrega */
+.interlude.auto[data-ready="1"] {
+  transition: background-image .6s ease, opacity .6s ease;
+  opacity: 1;
+}
+.interlude.auto { opacity: 0.001; }  /* evita “flash” até carregar */
+
+/* Desktop: efeito parallax leve; Mobile: desliga por performance */
+@media (min-width: 861px) {
+  .interlude.auto { background-attachment: fixed; }
+}
+@media (max-width: 860px) {
+  .interlude.auto { background-attachment: scroll; }
+}
+
+/* Reduz altura se preferir mais discreto em telas pequenas */
+@media (max-width: 600px) {
+  .interlude.auto { min-height: 36vh; }
+}
+
+
 
   <section id="contato" class="section">
     <div class="container">
@@ -724,76 +747,60 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
 
 <!-- ========================= SCRIPT ========================= -->
 <script>
+
+/* === Paisagens super-realistas (sua foto + sugestões) === */
+const LANDSCAPE_URLS = [
+  "./paisagem-hero.jpg", // sua imagem local (mesma pasta do index.html)
+  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1800&auto=format&fit=crop", // amanhecer nas montanhas
+  "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1800&auto=format&fit=crop", // céu dourado e picos
+  "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?q=80&w=1800&auto=format&fit=crop"  // vale com neblina ao pôr do sol
+];
+
+// Verifica se a imagem carrega
+function probeImage(url){
+  return new Promise(res=>{
+    const img = new Image();
+    img.onload = () => res(true);
+    img.onerror = () => res(false);
+    img.src = url;
+  });
+}
+
+// Escolhe uma disponível; rotaciona por dia entre as URLs
+async function pickLandscape(){
+  const dayIndex = Math.floor(Date.now()/86400000) % LANDSCAPE_URLS.length;
+  const order = [...LANDSCAPE_URLS.slice(dayIndex), ...LANDSCAPE_URLS.slice(0, dayIndex)];
+  for(const url of order){
+    if(await probeImage(url)) return url;
+  }
+  return LANDSCAPE_URLS[LANDSCAPE_URLS.length - 1]; // fallback
+}
+
+// Aplica no interlúdio da Home
+async function setHeroInterludeImage(){
+  const el = document.getElementById("interlude-hero");
+  if(!el || el.dataset.bgApplied) return;
+  el.dataset.bgApplied = "1";
+  const url = await pickLandscape();
+  el.style.backgroundImage = `url('${url}')`;
+}
+
+
+
+
 /* ===== CONFIG ===== */
 const SITE_NAME = "NTO – Brasil";
 const DEFAULT_DESC = "NTO Brasil — Alívio com dignidade para quem carrega um peso insuportável: ciência, ética e cuidado incluindo cetamina em contexto clínico.";
 const DEFAULT_OG_TITLE = SITE_NAME;
 const DEFAULT_OG_DESC = "Ciência, ética e cuidado.";
 const LOGO_URL = "./logo.png";
-const CONTACT_EMAIL = "admn@ntobr.com";
+const CONTACT_EMAIL = "admin@ntobr.com";
 const SOCIAL = {
   instagramEmbedUrl: "https://www.instagram.com/p/Ck000000000/embed", // substitua pelo embed real
   youtubeEmbedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"      // substitua por vídeo/playlist real
 };
 const MAP_URL = "https://www.google.com/maps/d/embed?mid=1KD5QHhxyVWlFX7BDM0aoNufixLILENU&usp=sharing";
 
-/* ===== Recomendados (com sinopse) ===== */
-const RECOMENDADOS = [
-  { t:"Como Mudar sua Mente", tipo:"Série (Netflix, 2022)", link:"https://www.netflix.com/title/80229847", sin:"Percurso histórico e clínico dos psicodélicos com foco em segurança, ciência e experiências transformadoras." },
-  { t:"Fantastic Fungi", tipo:"Documentário", link:"https://fantasticfungi.com/", sin:"O mundo dos fungos e a psilocibina: ecologia, neurociência e potencial terapêutico." },
-  { t:"MAPS", tipo:"Organização/recursos", link:"https://maps.org/", sin:"Pesquisas e materiais educativos sobre MDMA-AT e psicoterapia assistida por psicodélicos." },
-  { t:"OMS / ICD-11", tipo:"Padrão clínico", link:"https://www.who.int/standards/classifications/frequently-asked-questions/icd-11", sin:"Classificação internacional de doenças e referências clínicas para diagnósticos e protocolos." },
-  { t:"The Psychedelic Renaissance", tipo:"Livro", link:"#", sin:"Panorama contemporâneo da ciência psicodélica; debate ético e regulatório." },
-  { t:"How to Change Your Mind", tipo:"Livro", link:"#", sin:"Narrativa acessível sobre história, usos e cautelas, com relatos e entrevistas." }
-];
-
-/* ===== Glossário (40+) ===== */
-const GLOSS = {
-  "Neuroplasticidade":"Capacidade do cérebro de formar/ajustar conexões sinápticas.",
-  "BDNF":"Fator neurotrófico associado à plasticidade e aprendizado.",
-  "5-HT2A":"Receptor serotoninérgico alvo dos psicodélicos clássicos.",
-  "NMDA":"Receptor glutamatérgico modulado por cetamina.",
-  "Dissociação":"Desconexão transitória de corpo/tempo/ambiente.",
-  "Set & Setting":"Estado interno e contexto externo que influenciam a experiência.",
-  "Integração":"Processo de traduzir vivências em mudanças concretas.",
-  "IMAO":"Inibidores de monoamina oxidase (atenção a interações).",
-  "Oxitocina":"Hormônio pró-social, elevado no MDMA.",
-  "TEPT":"Transtorno de estresse pós-traumático.",
-  "TRD":"Depressão resistente ao tratamento.",
-  "Cefaleia em salvas":"Cefaleia rara e intensa; há pesquisas com psicodélicos.",
-  "Entropia cortical":"Aumento de variabilidade neural sob psicodélicos.",
-  "Flashback/HPPD":"Persistência de alterações perceptivas em raros casos.",
-  "QT longo":"Prolongamento do intervalo QT (risco arrítmico).",
-  "Torsades de pointes":"Taquicardia ventricular polimórfica associada a QT longo.",
-  "Telemetria":"Monitorização contínua do ritmo cardíaco.",
-  "SatO₂":"Saturação periférica de oxigênio (oximetria).",
-  "PA/FC":"Pressão arterial / Frequência cardíaca.",
-  "ISRS":"Inibidores seletivos de recaptação de serotonina.",
-  "Tricíclicos":"Classe de antidepressivos com múltiplas interações.",
-  "Hipertermia":"Elevação de temperatura corporal.",
-  "Hiponatremia":"Sódio baixo; risco com hidratação inadequada.",
-  "Farmacêutico grau clínico":"Padrão de pureza para uso médico.",
-  "Anamnese":"Coleta de histórico clínico detalhado.",
-  "Consentimento informado":"Explicação de riscos/benefícios antes do cuidado.",
-  "Psicose":"Perda de contato com a realidade; contraindicação relativa.",
-  "Mania":"Fase de humor elevado/irritável (transtorno bipolar).",
-  "Titulação de dose":"Ajuste progressivo da dose conforme resposta.",
-  "Reconsolidação":"Atualização de memórias com novas informações.",
-  "Craving":"Fissura forte por substância.",
-  "Purgação":"Náusea/vômito em rituais (ex.: ayahuasca).",
-  "Higiene do sono":"Hábitos saudáveis para dormir melhor.",
-  "Apoio social":"Rede de cuidado (familiares, amigos, grupos).",
-  "Acessibilidade AA":"Critério de contraste/legibilidade (WCAG).",
-  "CLS":"Cumulative Layout Shift (estabilidade visual).",
-  "LCP":"Largest Contentful Paint (desempenho).",
-  "Parallax":"Efeito visual de profundidade com movimento sutil.",
-  "Drawer":"Painel deslizante; aqui evitamos cobrir o texto no mobile.",
-  "Scroll spy":"Destaque do item ativo conforme rolagem.",
-  "Deep-link":"Link direto para seção/pergunta específica.",
-  "LGPD":"Lei Geral de Proteção de Dados (Brasil).",
-  "Redução de danos":"Conjunto de estratégias para reduzir riscos.",
-  "Back to top":"Ação para voltar ao topo da página."
-};
 
 /* ===== Base de conhecimento (ampliada V7) =====
    status: 'clinico' → destaque; 'pesquisa' → “Em pesquisa”
@@ -1032,14 +1039,10 @@ const routes = {
   "/mapa":      () => navigateTo("/#mapa"),
   "/posts":     () => navigateTo("/#posts"),
   "/conhecimento": () => navigateTo("/#conhecimento"),
-  "/galeria":   () => navigateTo("/#galeria"),
   "/projetos":  () => navigateTo("/#projetos"),
   "/observatorio": () => navigateTo("/#observatorio"),
   "/sobre":     () => navigateTo("/#sobre"),
   "/faq":       () => navigateTo("/#faq"),
-  "/recomendado": () => navigateTo("/#recomendado"),
-  "/glossario": () => navigateTo("/#glossario"),
-  "/novidades": () => navigateTo("/#novidades"),
   "/legal":     () => navigateTo("/#legal"),
   "/contato":   () => navigateTo("/#contato"),
   "/d/:id": renderDrugPage
@@ -1248,23 +1251,6 @@ async function renderHome(){
   // FAQ global (resumo)
   renderGlobalFAQ();
 
-  // Recomendações
-  const recTbody = document.getElementById('recTable');
-  if(recTbody){
-    recTbody.innerHTML = RECOMENDADOS.map(r => `
-      <tr>
-        <td><a href="${r.link}" target="_blank" rel="noopener noreferrer" data-event="recommended_content_click">${r.t}</a></td>
-        <td>${r.tipo}</td>
-        <td class="muted">${r.sin}</td>
-      </tr>`).join("");
-  }
-
-  // Glossário
-  const glTbody = document.getElementById('glossTable');
-  if(glTbody){
-    glTbody.innerHTML = Object.entries(GLOSS).map(([k,v]) => `<tr><td><strong>${k}</strong></td><td class="muted">${v}</td></tr>`).join("");
-  }
-
   // SEO padrão
   document.title = SITE_NAME + " — Psicodélicos com ciência, ética e cuidado";
   const canonical = document.getElementById('canonical');
@@ -1275,8 +1261,11 @@ async function renderHome(){
   document.querySelector('meta[name="twitter:title"]').content = DEFAULT_OG_TITLE;
   document.querySelector('meta[name="twitter:description"]').content = DEFAULT_OG_DESC;
 
-  // Animações de revelação
-  applyReveal(app);
+// Aplica paisagem inspiradora no interlúdio
+await setHeroInterludeImage();
+
+// Animações de revelação
+applyReveal(app);
 
   // CTAs “Quero Alívio” → popup
   ["ctaHeader","ctaFloat","ctaHero","ctaMensagem"].forEach(id=>{
@@ -1455,6 +1444,18 @@ async function renderDrugPage(params){
     a.addEventListener("click",(e)=>{ e.preventDefault(); const t=document.querySelector(a.getAttribute("href")); if(t) t.scrollIntoView({behavior:"smooth"}); });
   });
 
+// Habilitar scroll suave também nos links do TOC (aside), sem quebrar a SPA
+if (tocLinks) {
+  tocLinks.querySelectorAll('a[href^="#sec-"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+}
+
+   
   // SEO dinâmico
   document.title = `${drug.title} — ${SITE_NAME}`;
   const canonicalEl = document.getElementById('canonical');
@@ -1583,12 +1584,283 @@ document.addEventListener('DOMContentLoaded', initScrollSpy);
   ]
 }
 </script>
+   <script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""
+></script>
+<script>
+
+/* === Banco de paisagens maravilhosas ===
+ * 1) sua imagem local (mesma pasta do index.html)
+ * 2+) curadoria de paisagens realistas (Unsplash)
+ */
+const LANDSCAPE_URLS_ALL = [
+  "./paisagem-hero.jpg",
+  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?q=80&w=2000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=2000&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1499346030926-9a72daac6c63?q=80&w=2000&auto=format&fit=crop"
+];
+
+// util: testa se imagem carrega
+function probe(url){ return new Promise(r=>{ const i=new Image(); i.onload=()=>r(true); i.onerror=()=>r(false); i.src=url; }); }
+
+// escolhe uma url “do dia”, começando pela sua local; cai para as próximas se der erro
+async function pickLandscapeByIndex(i){
+  // rotação por dia, mas variando com o índice da faixa p/ evitar repetição
+  const day = Math.floor(Date.now() / 86400000);
+  const base = (day + i) % LANDSCAPE_URLS_ALL.length;
+  const order = [...LANDSCAPE_URLS_ALL.slice(base), ...LANDSCAPE_URLS_ALL.slice(0, base)];
+  for(const url of order){ if(await probe(url)) return url; }
+  return LANDSCAPE_URLS_ALL[0];
+}
+
+// lazy-apply: só define o background quando a faixa entrar na viewport
+function lazyApplyBackground(el, idx){
+  const io = new IntersectionObserver(async (entries, obs)=>{
+    entries.forEach(async e=>{
+      if(!e.isIntersecting) return;
+      obs.unobserve(el);
+      try{
+        const url = await pickLandscapeByIndex(idx);
+        el.style.backgroundImage = `url('${url}')`;
+        el.dataset.ready = "1";
+      }catch{}
+    });
+  }, { rootMargin: "200px 0px" });
+  io.observe(el);
+}
+
+/* Insere interlúdios automáticos entre quaisquer duas .section consecutivas
+ * container: elemento dentro do qual iremos varrer (ex.: app ou tpl da Home já montado)
+ */
+function sprinkleInterludes(container=document){
+  const sections = Array.from(container.querySelectorAll('section.section'));
+  if(sections.length < 2) return;
+
+  // Evitar duplicatas: se já inserimos antes, não repete
+  if(container.dataset.interluded === "1") return;
+
+  const toInsert = [];
+  for(let i=0; i<sections.length-1; i++){
+    const curr = sections[i];
+    const next = sections[i+1];
+
+    // se já existe um interlude entre curr e next, pula
+    let between = [];
+    let n = curr.nextElementSibling;
+    while(n && n !== next){ between.push(n); n = n.nextElementSibling; }
+    const alreadyHas = between.some(el => el.classList && el.classList.contains('interlude'));
+
+    // regras para não colocar interlude em lugares indesejados
+    const skip = (curr.id === "hero") || (next.id === "contato") || (next.tagName === "FOOTER");
+
+    if(!alreadyHas && !skip){
+      const inter = document.createElement('section');
+      inter.className = 'interlude auto';
+      inter.setAttribute('aria-hidden','true');
+      // injeta depois da curr
+      toInsert.push([curr, inter, i]);
+    }
+  }
+
+  toInsert.forEach(([curr, inter, idx])=>{
+    curr.parentNode.insertBefore(inter, curr.nextElementSibling);
+    lazyApplyBackground(inter, idx);
+  });
+
+  container.dataset.interluded = "1";
+}
+
+
+
+
+/**
+ * === NTO MAPA DE CLÍNICAS (Leaflet) ===
+ * - Dados em JSON (CLINICAS)
+ * - Funções: addClinics, clearPins, fitToPins, filterClinics
+ * - Integra sem conflito com sua SPA (MutationObserver)
+ */
+
+(function(){
+  // --- DADOS: edite/adicione quantas clínicas quiser ---
+  // Campos: id, nome, categoria, uf, cidade, lat, lng, whats, site, obs
+  const CLINICAS = [
+    {
+      id: "sp_nto_jardins",
+      nome: "NTO • Unidade Jardins",
+      categoria: "Cetamina",
+      uf: "SP",
+      cidade: "São Paulo",
+      lat: -23.561414, lng: -46.662935,
+      whats: "55 11 90000-0000",
+      site: "https://ntobr.com",
+      obs: "Infusão e integração"
+    },
+    {
+      id: "rj_nto_botafogo",
+      nome: "NTO • Unidade Botafogo",
+      categoria: "Cetamina",
+      uf: "RJ",
+      cidade: "Rio de Janeiro",
+      lat: -22.949646, lng: -43.186901,
+      whats: "55 21 90000-0000",
+      site: "https://ntobr.com",
+      obs: "Spray intranasal / IV"
+    },
+    {
+      id: "df_nto_brasilia",
+      nome: "NTO • Unidade Brasília",
+      categoria: "Cetamina",
+      uf: "DF",
+      cidade: "Brasília",
+      lat: -15.794229, lng: -47.882166,
+      whats: "55 61 90000-0000",
+      site: "https://ntobr.com",
+      obs: "Triagem e integração"
+    },
+    {
+      id: "mg_parceiro_bh",
+      nome: "Parceiro BH",
+      categoria: "Parceiro",
+      uf: "MG",
+      cidade: "Belo Horizonte",
+      lat: -19.924501, lng: -43.935237,
+      whats: "",
+      site: "",
+      obs: "Rede de referência"
+    },
+    {
+      id: "rs_parceiro_poa",
+      nome: "Parceiro POA",
+      categoria: "Parceiro",
+      uf: "RS",
+      cidade: "Porto Alegre",
+      lat: -30.027704, lng: -51.228735,
+      whats: "",
+      site: "",
+      obs: ""
+    },
+    {
+      id: "ba_parceiro_salvador",
+      nome: "Parceiro Salvador",
+      categoria: "Parceiro",
+      uf: "BA",
+      cidade: "Salvador",
+      lat: -12.977749, lng: -38.501630,
+      whats: "",
+      site: "",
+      obs: ""
+    }
+  ];
+
+  // --- CONFIG MAPA ---
+  let map, markersLayer;
+  const BR_BOUNDS = L.latLngBounds(L.latLng(-33.75, -73.99), L.latLng(5.27, -32.39));
+
+  function ensureMap(){
+    const host = document.getElementById('mapbr');
+    if(!host || host.dataset.inited) return;
+    host.dataset.inited = "1";
+
+    map = L.map('mapbr', {
+      zoomControl: true,
+      minZoom: 3,
+      maxZoom: 19
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap',
+      maxZoom: 19
+    }).addTo(map);
+
+    markersLayer = L.layerGroup().addTo(map);
+    map.fitBounds(BR_BOUNDS, { padding: [20,20] });
+
+    // Render inicial (todas)
+    addClinics(CLINICAS);
+    fitToPins();
+
+    // Expor utilitários
+    window.NTO_MAP = {
+      addClinics,
+      clearPins,
+      fitToPins,
+      filterClinics, // { uf?: "SP", categoria?: "Cetamina" }
+      data: CLINICAS
+    };
+  }
+
+  // --- RENDERIZAÇÃO DE CLÍNICAS ---
+  function addClinics(list){
+    if(!markersLayer) return;
+    list.forEach(c => {
+      const marker = L.marker([c.lat, c.lng], { title: c.nome });
+      marker.bindPopup(popupHtml(c), { maxWidth: 320 });
+      marker.addTo(markersLayer);
+    });
+  }
+
+  function clearPins(){
+    if(markersLayer) markersLayer.clearLayers();
+  }
+
+  function fitToPins(){
+    if(!markersLayer) return;
+    const latlngs = [];
+    markersLayer.eachLayer(l => { if(l.getLatLng) latlngs.push(l.getLatLng()); });
+    if(latlngs.length) map.fitBounds(L.latLngBounds(latlngs), { padding:[30,30], maxZoom: 8 });
+    else map.fitBounds(BR_BOUNDS, { padding:[20,20] });
+  }
+
+  function popupHtml(c){
+    const wa = c.whats ? `<a class="btn small primary" target="_blank" rel="noopener" href="${whatsLink(c.whats)}">WhatsApp</a>` : "";
+    const site = c.site ? `<a class="btn small ghost" target="_blank" rel="noopener" href="${c.site}">Site</a>` : "";
+    const obs = c.obs ? `<p class="muted" style="margin:8px 0 0">${c.obs}</p>` : "";
+    return `
+      <div style="min-width:220px">
+        <strong>${c.nome}</strong><br/>
+        <span class="muted">${c.cidade} • ${c.uf} • ${c.categoria}</span>
+        ${obs}
+        <div class="toolbar" style="margin-top:10px;gap:8px;flex-wrap:wrap">
+          ${wa} ${site}
+        </div>
+      </div>
+    `;
+  }
+
+  function whatsLink(raw){
+    // Aceita "55 11 99999-0000" ou só "11999990000"
+    const digits = String(raw || "").replace(/\D+/g, "");
+    const phone = digits.length >= 10 ? digits : "";
+    return phone ? `https://wa.me/${phone}` : "#";
+  }
+
+  // --- FILTRO: por UF e/ou categoria ---
+  // Ex: window.NTO_MAP.filterClinics({ uf:"SP" })
+  //     window.NTO_MAP.filterClinics({ categoria:"Parceiro" })
+  //     window.NTO_MAP.filterClinics({ uf:"SP", categoria:"Cetamina" })
+  function filterClinics({ uf, categoria } = {}){
+    const list = CLINICAS.filter(c => {
+      const okUf = uf ? c.uf.toUpperCase() === uf.toUpperCase() : true;
+      const okCat = categoria ? c.categoria.toLowerCase() === categoria.toLowerCase() : true;
+      return okUf && okCat;
+    });
+    clearPins();
+    addClinics(list);
+    fitToPins();
+    return list;
+  }
+
+  // --- INICIALIZAÇÃO (SPA) ---
+  const mo = new MutationObserver(() => ensureMap());
+  mo.observe(document.body, { childList: true, subtree: true });
+  document.addEventListener('DOMContentLoaded', ensureMap);
+})();
+</script>
+
 </body>
 </html>
-
-
-
-
-
-
 

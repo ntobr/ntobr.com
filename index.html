@@ -1708,72 +1708,183 @@ function sprinkleInterludes(container=document){
   // Campos: id, nome, categoria, uf, cidade, lat, lng, whats, site, obs
   const CLINICAS = [
     {
-      id: "sp_nto_jardins",
-      nome: "NTO • Unidade Jardins",
-      categoria: "Cetamina",
-      uf: "SP",
-      cidade: "São Paulo",
-      lat: -23.561414, lng: -46.662935,
-      whats: "55 11 90000-0000",
-      site: "https://ntobr.com",
-      obs: "Infusão e integração"
-    },
-    {
-      id: "rj_nto_botafogo",
-      nome: "NTO • Unidade Botafogo",
-      categoria: "Cetamina",
-      uf: "RJ",
-      cidade: "Rio de Janeiro",
-      lat: -22.949646, lng: -43.186901,
-      whats: "55 21 90000-0000",
-      site: "https://ntobr.com",
-      obs: "Spray intranasal / IV"
-    },
-    {
-      id: "df_nto_brasilia",
-      nome: "NTO • Unidade Brasília",
-      categoria: "Cetamina",
-      uf: "DF",
-      cidade: "Brasília",
-      lat: -15.794229, lng: -47.882166,
-      whats: "55 61 90000-0000",
-      site: "https://ntobr.com",
-      obs: "Triagem e integração"
-    },
-    {
-      id: "mg_parceiro_bh",
-      nome: "Parceiro BH",
-      categoria: "Parceiro",
-      uf: "MG",
-      cidade: "Belo Horizonte",
-      lat: -19.924501, lng: -43.935237,
-      whats: "",
-      site: "",
-      obs: "Rede de referência"
-    },
-    {
-      id: "rs_parceiro_poa",
-      nome: "Parceiro POA",
-      categoria: "Parceiro",
-      uf: "RS",
-      cidade: "Porto Alegre",
-      lat: -30.027704, lng: -51.228735,
-      whats: "",
-      site: "",
-      obs: ""
-    },
-    {
-      id: "ba_parceiro_salvador",
-      nome: "Parceiro Salvador",
-      categoria: "Parceiro",
-      uf: "BA",
-      cidade: "Salvador",
-      lat: -12.977749, lng: -38.501630,
-      whats: "",
-      site: "",
-      obs: ""
-    }
-  ];
+  id: "sp_são_paulo",
+  nome: "NTO • Unidade São Paulo",
+  categoria: "Cetamina",
+  uf: "SP",
+  cidade: "São Paulo",
+  lat: -23.5569, lng: -46.6612,
+  whats: "55 00 00000-0000",
+  site: "https://infusoespaulista.com.br",
+  obs: "Infusão e integração"
+},
+{
+  id: "sp_são_paulo_2",
+  nome: "NTO • Unidade São Paulo",
+  categoria: "Cetamina",
+  uf: "SP",
+  cidade: "São Paulo",
+  lat: -23.5615, lng: -46.6560,
+  whats: "55 00 00000-0000",
+  site: "https://clinicatrianon.com",
+  obs: "Infusão e integração"
+},
+{
+  id: "sp_são_paulo_3",
+  nome: "NTO • Unidade São Paulo",
+  categoria: "Cetamina",
+  uf: "SP",
+  cidade: "São Paulo",
+  lat: -23.5610, lng: -46.6805,
+  whats: "55 00 00000-0000",
+  site: "https://orpsiquiatria.com.br",
+  obs: "Infusão e integração"
+},
+{
+  id: "sp_são_paulo_4",
+  nome: "NTO • Unidade São Paulo",
+  categoria: "Cetamina",
+  uf: "SP",
+  cidade: "São Paulo",
+  lat: -23.5459, lng: -46.6581,
+  whats: "55 00 00000-0000",
+  site: "https://ltmentalhealth.com.br",
+  obs: "Infusão e integração"
+},
+{
+  id: "sp_são_paulo_5",
+  nome: "NTO • Unidade São Paulo",
+  categoria: "Cetamina",
+  uf: "SP",
+  cidade: "São Paulo",
+  lat: -23.5342, lng: -46.6618,
+  whats: "55 00 00000-0000",
+  site: "https://mindclin.com",
+  obs: "Infusão e integração"
+},
+{
+  id: "sp_são_paulo_6",
+  nome: "NTO • Unidade São Paulo",
+  categoria: "Cetamina",
+  uf: "SP",
+  cidade: "São Paulo",
+  lat: -23.589, lng: -46.6399,
+  whats: "55 00 00000-0000",
+  site: "https://clinicamedicaassis.com.br",
+  obs: "Infusão e integração"
+},
+{
+  id: "sp_são_paulo_7",
+  nome: "NTO • Unidade São Paulo",
+  categoria: "Cetamina",
+  uf: "SP",
+  cidade: "São Paulo",
+  lat: -23.565, lng: -46.695,
+  whats: "55 00 00000-0000",
+  site: "https://drtiagogil.com.br",
+  obs: "Infusão e integração"
+},
+{
+  id: "sp_são_paulo_8",
+  nome: "NTO • Unidade São Paulo",
+  categoria: "Cetamina",
+  uf: "SP",
+  cidade: "São Paulo",
+  lat: -23.5573, lng: -46.6804,
+  whats: "55 00 00000-0000",
+  site: "https://(11) 91168-1948 | site institucional",
+  obs: "Infusão e integração"
+},
+{
+  id: "sp_são_bernardo_do_campo",
+  nome: "NTO • Unidade São Bernardo do Campo",
+  categoria: "Cetamina",
+  uf: "SP",
+  cidade: "São Bernardo do Campo",
+  lat: -23.6915, lng: -46.5555,
+  whats: "55 00 00000-0000",
+  site: "https://clinicafacili.com.br | (11) 4103-8210",
+  obs: "Infusão e integração"
+},
+{
+  id: "sp_campinas",
+  nome: "NTO • Unidade Campinas",
+  categoria: "Cetamina",
+  uf: "SP",
+  cidade: "Campinas",
+  lat: -22.9009, lng: -47.0507,
+  whats: "55 00 00000-0000",
+  site: "https://ketacare.com.br | (19) 99930-7105",
+  obs: "Infusão e integração"
+},
+...
+{
+  id: "pe_recife",
+  nome: "NTO • Unidade Recife",
+  categoria: "Cetamina",
+  uf: "PE",
+  cidade: "Recife",
+  lat: -8.097, lng: -34.888,
+  whats: "55 00 00000-0000",
+  site: "https://(81) 9xxxx-xxxx | página institucional",
+  obs: "Infusão e integração"
+},
+{
+  id: "pe_recife_2",
+  nome: "NTO • Unidade Recife",
+  categoria: "Cetamina",
+  uf: "PE",
+  cidade: "Recife",
+  lat: -8.0915, lng: -34.8877,
+  whats: "55 00 00000-0000",
+  site: "https://Doctoralia / Instagram",
+  obs: "Infusão e integração"
+},
+{
+  id: "rn_natal",
+  nome: "NTO • Unidade Natal",
+  categoria: "Cetamina",
+  uf: "RN",
+  cidade: "Natal",
+  lat: -5.805, lng: -35.209,
+  whats: "55 00 00000-0000",
+  site: "https://instagram.com/hpsm.saudemental",
+  obs: "Infusão e integração"
+},
+{
+  id: "pb_joão_pessoa",
+  nome: "NTO • Unidade João Pessoa",
+  categoria: "Cetamina",
+  uf: "PB",
+  cidade: "João Pessoa",
+  lat: -7.1153, lng: -34.861,
+  whats: "55 00 00000-0000",
+  site: "https://institutovida.com.br",
+  obs: "Infusão e integração"
+},
+{
+  id: "ms_dourados",
+  nome: "NTO • Unidade Dourados",
+  categoria: "Cetamina",
+  uf: "MS",
+  cidade: "Dourados",
+  lat: -22.223, lng: -54.8057,
+  whats: "55 00 00000-0000",
+  site: "https://clinicawmc.com.br | (67) 3020-7775",
+  obs: "Infusão e integração"
+},
+{
+  id: "sp_mogi_das_cruzes",
+  nome: "NTO • Unidade Mogi das Cruzes",
+  categoria: "Cetamina",
+  uf: "SP",
+  cidade: "Mogi das Cruzes",
+  lat: -23.5203, lng: -46.1858,
+  whats: "55 00 00000-0000",
+  site: "https://clinicamedicaassis.com.br | (11) 4723-6565",
+  obs: "Infusão e integração"
+},
+
 
   // --- CONFIG MAPA ---
   let map, markersLayer;

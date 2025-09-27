@@ -304,13 +304,7 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
 
 
 </style>
-   <link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-  crossorigin=""
-/>
-</head>
+   </head>
 
 <body>
 <a href="#hero" class="visually-hidden">Pular para conteúdo</a>
@@ -1603,12 +1597,7 @@ document.addEventListener('DOMContentLoaded', initScrollSpy);
   ]
 }
 </script>
-   <script
-  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-  crossorigin=""
-></script>
-<script>
+   <script>
 
 /* === Banco de paisagens maravilhosas ===
  * 1) sua imagem local (mesma pasta do index.html)
@@ -1939,7 +1928,13 @@ function sprinkleInterludes(container=document){
 </script>
 
 
-<!-- Leaflet JS -->
+<!-- Leaflet CSS/JS -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin=""
+/>
 <script
   src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
   integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
@@ -1947,20 +1942,297 @@ function sprinkleInterludes(container=document){
 </script>
 
 <script>
-// Inicializa o mapa no elemento #mapbr
-document.addEventListener("DOMContentLoaded", () => {
-  const map = L.map("mapbr").setView([-15.77972, -47.92972], 12); // Brasília
+// === Mapa de clínicas (robusto a SPA/hashchange) ===
+(function() {
+  const CLINICAS = [
+  {
+    nome: `Instituto de Infusões Paulista – Centro de Cetamina`,
+    lat: -23.556900,
+    lng: -46.661200,
+    info: `São Paulo/SP — <a href='https://infusoespaulista.com.br' target='_blank' rel='noopener'>infusoespaulista.com.br</a>`
+  },
+  {
+    nome: `Clínica Trianon – Spravato®`,
+    lat: -23.561500,
+    lng: -46.656000,
+    info: `São Paulo/SP — <a href='https://clinicatrianon.com' target='_blank' rel='noopener'>clinicatrianon.com</a>`
+  },
+  {
+    nome: `Clínica OHR (Ór Psiquiatria)`,
+    lat: -23.561000,
+    lng: -46.680500,
+    info: `São Paulo/SP — <a href='https://orpsiquiatria.com.br' target='_blank' rel='noopener'>orpsiquiatria.com.br</a>`
+  },
+  {
+    nome: `L&T Mental Health`,
+    lat: -23.545900,
+    lng: -46.658100,
+    info: `São Paulo/SP — <a href='https://ltmentalhealth.com.br' target='_blank' rel='noopener'>ltmentalhealth.com.br</a>`
+  },
+  {
+    nome: `MindClin – Cetamina`,
+    lat: -23.534200,
+    lng: -46.661800,
+    info: `São Paulo/SP — <a href='https://mindclin.com' target='_blank' rel='noopener'>mindclin.com</a>`
+  },
+  {
+    nome: `Clínica Médica Assis – Vila Mariana`,
+    lat: -23.589000,
+    lng: -46.639900,
+    info: `São Paulo/SP — <a href='https://clinicamedicaassis.com.br' target='_blank' rel='noopener'>clinicamedicaassis.com.br</a>`
+  },
+  {
+    nome: `Centro de Cetamina – Dr. Tiago Gil`,
+    lat: -23.565000,
+    lng: -46.695000,
+    info: `São Paulo/SP — <a href='https://drtiagogil.com.br' target='_blank' rel='noopener'>drtiagogil.com.br</a>`
+  },
+  {
+    nome: `Genuine Mental Health (Psiquiatria)`,
+    lat: -23.557300,
+    lng: -46.680400,
+    info: `São Paulo/SP — <a href='https://(11) 91168‑1948 | site institucional' target='_blank' rel='noopener'>(11) 91168‑1948 | site institucional</a>`
+  },
+  {
+    nome: `Clínica Facili – Centro de Infusão (Spravato®)`,
+    lat: -23.691500,
+    lng: -46.555500,
+    info: `São Bernardo do Campo/SP — <a href='https://clinicafacili.com.br | (11) 4103-8210' target='_blank' rel='noopener'>clinicafacili.com.br | (11) 4103-8210</a>`
+  },
+  {
+    nome: `KetaCare – Campinas`,
+    lat: -22.900900,
+    lng: -47.050700,
+    info: `Campinas/SP — <a href='https://ketacare.com.br | (19) 99930‑7105' target='_blank' rel='noopener'>ketacare.com.br | (19) 99930‑7105</a>`
+  },
+  {
+    nome: `WMC+ – Campinas`,
+    lat: -22.909900,
+    lng: -47.062600,
+    info: `Campinas/SP — <a href='https://clinicawmc.com.br' target='_blank' rel='noopener'>clinicawmc.com.br</a>`
+  },
+  {
+    nome: `Clínica Jequitibá – Infusão de Cetamina`,
+    lat: -23.118300,
+    lng: -46.550900,
+    info: `Atibaia/SP — <a href='https://jequitibareabilitacao.com.br' target='_blank' rel='noopener'>jequitibareabilitacao.com.br</a>`
+  },
+  {
+    nome: `Clínica Navega – Psiquiatria Intervencionista`,
+    lat: -22.984500,
+    lng: -43.204300,
+    info: `Rio de Janeiro/RJ — <a href='https://clinicanavega.com.br | (21) 97392‑7826' target='_blank' rel='noopener'>clinicanavega.com.br | (21) 97392‑7826</a>`
+  },
+  {
+    nome: `VTM Neurodiagnóstico – Psiquiatria Intervencionista`,
+    lat: -22.999700,
+    lng: -43.365400,
+    info: `Rio de Janeiro/RJ — <a href='https://vtmneurodiagnostico.com.br' target='_blank' rel='noopener'>vtmneurodiagnostico.com.br</a>`
+  },
+  {
+    nome: `Clínica Monnfrei – Escetamina`,
+    lat: -22.288900,
+    lng: -42.537000,
+    info: `Nova Friburgo/RJ — <a href='https://clinicamonnfrei.com.br' target='_blank' rel='noopener'>clinicamonnfrei.com.br</a>`
+  },
+  {
+    nome: `WMC+ – Belo Horizonte`,
+    lat: -19.924000,
+    lng: -43.938000,
+    info: `Belo Horizonte/MG — <a href='https://clinicawmc.com.br' target='_blank' rel='noopener'>clinicawmc.com.br</a>`
+  },
+  {
+    nome: `Clínica Iátrica – Infusão de Cetamina`,
+    lat: -25.404700,
+    lng: -49.270900,
+    info: `Curitiba/PR — <a href='https://clinicaiatrica.com.br | (41) 3254‑6131' target='_blank' rel='noopener'>clinicaiatrica.com.br | (41) 3254‑6131</a>`
+  },
+  {
+    nome: `WMC+ – Curitiba (Centro)`,
+    lat: -25.429000,
+    lng: -49.273000,
+    info: `Curitiba/PR — <a href='https://clinicawmc.com.br | (41) 3384‑1614' target='_blank' rel='noopener'>clinicawmc.com.br | (41) 3384‑1614</a>`
+  },
+  {
+    nome: `WMC+ – Curitiba (Batel)`,
+    lat: -25.441800,
+    lng: -49.290000,
+    info: `Curitiba/PR — <a href='https://clinicawmc.com.br | (41) 3384‑1614' target='_blank' rel='noopener'>clinicawmc.com.br | (41) 3384‑1614</a>`
+  },
+  {
+    nome: `CTB Dr. Luiz Ciulla – Escetamina (Maxplaza)`,
+    lat: -29.917300,
+    lng: -51.183600,
+    info: `Canoas/RS — <a href='https://escetamina.com | (51) 99226‑1582' target='_blank' rel='noopener'>escetamina.com | (51) 99226‑1582</a>`
+  },
+  {
+    nome: `Clínica Ancre – Escetamina`,
+    lat: -27.585200,
+    lng: -48.543600,
+    info: `Florianópolis/SC — <a href='https://clinicaancre.com.br | (48) 98833‑7883' target='_blank' rel='noopener'>clinicaancre.com.br | (48) 98833‑7883</a>`
+  },
+  {
+    nome: `Clínica Pacífico – Psiquiatria Intervencionista`,
+    lat: -15.810900,
+    lng: -47.910300,
+    info: `Brasília/DF — <a href='https://clinicapacifico.com.br | (61) 3225‑2020' target='_blank' rel='noopener'>clinicapacifico.com.br | (61) 3225‑2020</a>`
+  },
+  {
+    nome: `INSIGHTMED – Insight Psiquiatria`,
+    lat: -15.796000,
+    lng: -47.898000,
+    info: `Brasília/DF — <a href='https://insightmed.com.br' target='_blank' rel='noopener'>insightmed.com.br</a>`
+  },
+  {
+    nome: `Equilibrium Psiquiatria`,
+    lat: -15.760000,
+    lng: -47.886000,
+    info: `Brasília/DF — <a href='https://equilibriumpsiquiatria.com.br' target='_blank' rel='noopener'>equilibriumpsiquiatria.com.br</a>`
+  },
+  {
+    nome: `AME – Assistência Mental`,
+    lat: -15.838400,
+    lng: -47.910200,
+    info: `Brasília/DF — <a href='https://ameassistenciamental.com.br' target='_blank' rel='noopener'>ameassistenciamental.com.br</a>`
+  },
+  {
+    nome: `IPDF – Instituto de Psiquiatria do DF (privado)`,
+    lat: -15.828000,
+    lng: -48.060000,
+    info: `Taguatinga/DF — <a href='https://(61) 3352‑xxxx | site institucional' target='_blank' rel='noopener'>(61) 3352‑xxxx | site institucional</a>`
+  },
+  {
+    nome: `INPI – Instituto de Psiquiatria Intervencionista`,
+    lat: -16.704200,
+    lng: -49.259400,
+    info: `Goiânia/GO — <a href='https://inpigoiania.com.br | (62) 99100‑4554' target='_blank' rel='noopener'>inpigoiania.com.br | (62) 99100‑4554</a>`
+  },
+  {
+    nome: `Holiste Psiquiatria – Cetamina/ESC`,
+    lat: -12.950400,
+    lng: -38.401500,
+    info: `Salvador/BA — <a href='https://holiste.com.br | 0800 000 3611' target='_blank' rel='noopener'>holiste.com.br | 0800 000 3611</a>`
+  },
+  {
+    nome: `Clínica OMNI – Saúde Mental (Escetamina)`,
+    lat: -12.978700,
+    lng: -38.454500,
+    info: `Salvador/BA — <a href='https://omnihospital.com.br / omni saude mental' target='_blank' rel='noopener'>omnihospital.com.br / omni saude mental</a>`
+  },
+  {
+    nome: `Clínica Ápice (Apice In) – Saúde Mental`,
+    lat: -13.004900,
+    lng: -38.508500,
+    info: `Salvador/BA — <a href='https://apicein.com.br | (71) 3028‑8350' target='_blank' rel='noopener'>apicein.com.br | (71) 3028‑8350</a>`
+  },
+  {
+    nome: `CetaVie – Clínica de Cetamina`,
+    lat: -3.735300,
+    lng: -38.497500,
+    info: `Fortaleza/CE — <a href='https://cetavie.com.br' target='_blank' rel='noopener'>cetavie.com.br</a>`
+  },
+  {
+    nome: `HUWC adj. privado (serviço ambulatorial parceiro)`,
+    lat: -3.745000,
+    lng: -38.574000,
+    info: `Fortaleza/CE — <a href='https://rede privada parceira (contato via clínica)' target='_blank' rel='noopener'>rede privada parceira (contato via clínica)</a>`
+  },
+  {
+    nome: `IMONN – Instituto Monteiro de Neuromodulação`,
+    lat: -8.097000,
+    lng: -34.888000,
+    info: `Recife/PE — <a href='https://(81) 9xxxx‑xxxx | página institucional' target='_blank' rel='noopener'>(81) 9xxxx‑xxxx | página institucional</a>`
+  },
+  {
+    nome: `Elementar Psiquiatria e Neuromodulação (Riomar)`,
+    lat: -8.091500,
+    lng: -34.887700,
+    info: `Recife/PE — <a href='https://Doctoralia / Instagram' target='_blank' rel='noopener'>Doctoralia / Instagram</a>`
+  },
+  {
+    nome: `HPSM – Hospital Potiguar de Saúde Mental (privado)`,
+    lat: -5.805000,
+    lng: -35.209000,
+    info: `Natal/RN — <a href='https://instagram.com/hpsm.saudemental' target='_blank' rel='noopener'>instagram.com/hpsm.saudemental</a>`
+  },
+  {
+    nome: `Instituto Vida – Centro de Infusão (privado)`,
+    lat: -7.115300,
+    lng: -34.861000,
+    info: `João Pessoa/PB — <a href='https://institutovida.com.br' target='_blank' rel='noopener'>institutovida.com.br</a>`
+  },
+  {
+    nome: `WMC+ – Dourados (parceria Anescorp)`,
+    lat: -22.223000,
+    lng: -54.805700,
+    info: `Dourados/MS — <a href='https://clinicawmc.com.br | (67) 3020‑7775' target='_blank' rel='noopener'>clinicawmc.com.br | (67) 3020‑7775</a>`
+  },
+  {
+    nome: `Clínica Médica Assis – Mogi das Cruzes`,
+    lat: -23.520300,
+    lng: -46.185800,
+    info: `Mogi das Cruzes/SP — <a href='https://clinicamedicaassis.com.br | (11) 4723‑6565' target='_blank' rel='noopener'>clinicamedicaassis.com.br | (11) 4723‑6565</a>`
+  }
+];
 
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "&copy; OpenStreetMap contributors"
-  }).addTo(map);
+  let mapInstance = null;
 
-  // Exemplo: marcador no centro
-  L.marker([-15.77972, -47.92972])
-    .addTo(map)
-    .bindPopup("NTO Brasília")
-    .openPopup();
-});
+  function initMapIfNeeded() {
+    // Leaflet disponível?
+    if (typeof L === 'undefined') return false;
+
+    const el = document.getElementById('mapbr');
+    if (!el) return false;
+
+    // Já tem mapa?
+    if (mapInstance || el._leaflet_id) return true;
+
+    // Cria mapa
+    mapInstance = L.map(el);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(mapInstance);
+
+    const bounds = L.latLngBounds();
+    CLINICAS.forEach(c => {
+      if (Number.isFinite(c.lat) && Number.isFinite(c.lng)) {
+        const m = L.marker([c.lat, c.lng]).addTo(mapInstance);
+        const info = c.info ? `<br>${c.info}` : '';
+        m.bindPopup(`<b>${c.nome}</b>${info}`);
+        bounds.extend([c.lat, c.lng]);
+      }
+    });
+
+    if (bounds.isValid()) mapInstance.fitBounds(bounds.pad(0.15));
+    else mapInstance.setView([-14.2350, -51.9253], 4);
+    return true;
+  }
+
+  // Tenta agora e também quando hash mudar (SPA)
+  function tryInit() {
+    if (initMapIfNeeded()) return;
+    // agenda nova tentativa até existir #mapbr (quando o template for injetado)
+    let attempts = 0;
+    const maxAttempts = 40; // ~2s
+    const id = setInterval(() => {
+      attempts++;
+      if (initMapIfNeeded() || attempts >= maxAttempts) clearInterval(id);
+    }, 50);
+  }
+
+  // Quando a página estiver pronta
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    tryInit();
+  } else {
+    document.addEventListener('DOMContentLoaded', tryInit);
+  }
+
+  // Reage a mudanças de rota (ex.: #/mapa)
+  window.addEventListener('hashchange', () => {
+    // Espera o SPA renderizar a seção, então tenta novamente
+    setTimeout(tryInit, 0);
+  });
+})();
 </script>
 
 </body>

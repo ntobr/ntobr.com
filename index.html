@@ -1938,6 +1938,31 @@ function sprinkleInterludes(container=document){
 })();
 </script>
 
+
+<!-- Leaflet JS -->
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin="">
+</script>
+
+<script>
+// Inicializa o mapa no elemento #mapbr
+document.addEventListener("DOMContentLoaded", () => {
+  const map = L.map("mapbr").setView([-15.77972, -47.92972], 12); // Brasília
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "&copy; OpenStreetMap contributors"
+  }).addTo(map);
+
+  // Exemplo: marcador no centro
+  L.marker([-15.77972, -47.92972])
+    .addTo(map)
+    .bindPopup("NTO Brasília")
+    .openPopup();
+});
+</script>
+
 </body>
 </html>
 

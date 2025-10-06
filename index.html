@@ -481,6 +481,7 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
 </section>
 
 
+
   <section id="posts" class="section">
     <div class="container">
       <div class="reveal center" style="margin-bottom:20px">
@@ -489,12 +490,91 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
       </div>
       <div class="card reveal">
         <div class="grid cols-2">
-          <div class="skeleton" style="height:360px">
-            <iframe id="igEmbed" title="Instagram" loading="lazy" style="width:100%;height:360px;border:0;border-radius:12px;opacity:0"></iframe>
-          </div>
-          <div class="skeleton" style="height:360px">
-            <iframe id="ytEmbed" title="YouTube" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;height:360px;border:0;border-radius:12px;opacity:0"></iframe>
-          </div>
+          <!-- █ Instagram (dinâmico: último post se houver token/ID; fallback: perfil embed) █ -->
+<div class="skeleton" style="height:360px;position:relative">
+  <div id="igDynamic" style="width:100%;height:100%;border-radius:12px;overflow:hidden;position:relative"></div>
+  <script async src="https://www.instagram.com/embed.js"></script>
+  <script>
+    (function(){
+      const cfg = {
+        INSTAGRAM_USER_ID: "",   // <- coloque aqui (ex.: 17841400000000000) se tiver
+        INSTAGRAM_TOKEN:  "",    // <- coloque aqui (token de acesso de longa duração)
+        INSTAGRAM_FALLBACK_POST: "https://www.instagram.com/p/DPcY-nTEXc5/",
+        USERNAME: "eneteobr"
+      };
+
+      const mount = document.getElementById("igDynamic");
+      function showMsg(msg){
+        mount.innerHTML = '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#0f1420;color:#cbd5e1;border:1px solid #1c2433;border-radius:12px;padding:16px;text-align:center">'+msg+'</div>';
+      }
+      function renderEmbed(permalink){
+        mount.innerHTML = ''
+          + '<blockquote class="instagram-media" data-instgrm-permalink="'+permalink+'" data-instgrm-version="14" style="margin:auto;max-width:540px;width:100%;background:#121826;border:0;box-shadow:none;"></blockquote>';
+        if(window.instgrm && window.instgrm.Embeds){ window.instgrm.Embeds.process(); }
+        const parent = mount.closest('.skeleton'); if(parent) parent.classList.remove('skeleton');
+      }
+      // If opened via file://, Instagram often breaks; warn user
+      if(location.protocol === 'file:'){
+        showMsg('Para carregar o Instagram, abra este arquivo via <b>http(s)</b> (ex.: <code>http://localhost</code>). Exibindo fallback…');
+        renderEmbed(cfg.INSTAGRAM_FALLBACK_POST);
+        return;
+      }
+      // If user provided token+user, fetch latest
+      if(cfg.INSTAGRAM_USER_ID && cfg.INSTAGRAM_TOKEN){
+        const url = `https://graph.instagram.com/${cfg.INSTAGRAM_USER_ID}/media?fields=permalink,timestamp&access_token=${cfg.INSTAGRAM_TOKEN}`;
+        fetch(url).then(r=>r.json()).then(j=>{
+          const latest = (j && j.data && j.data[0]) ? j.data[0] : null;
+          if(latest && latest.permalink){ renderEmbed(latest.permalink); }
+          else{ renderEmbed(cfg.INSTAGRAM_FALLBACK_POST); }
+        }).catch(()=>renderEmbed(cfg.INSTAGRAM_FALLBACK_POST));
+      }else{
+        // No API credentials: show profile embed that updates over o tempo (não garante "o último post" isolado)
+        const profile = document.createElement('iframe');
+        profile.title = "Instagram @"+cfg.USERNAME;
+        profile.loading = "lazy";
+        profile.referrerPolicy = "strict-origin-when-cross-origin";
+        profile.style = "width:100%;height:100%;border:0;border-radius:12px";
+        profile.src = "https://www.instagram.com/"+cfg.USERNAME+"/embed";
+        mount.replaceWith(profile);
+        const parent = profile.closest('.skeleton'); if(parent) parent.classList.remove('skeleton');
+      }
+    })();
+  </script>
+</div>
+          <!-- █ YouTube (dinâmico: último upload se houver CHANNEL_ID; fallback: lista por busca @eneteobr) █ -->
+<div class="skeleton" style="height:360px;position:relative">
+  <iframe id="ytEmbed" title="YouTube @eneteobr" loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          style="width:100%;height:360px;border:0;border-radius:12px;opacity:0"></iframe>
+<script>(function(){try{var f=document.getElementById('ytEmbed');if(f&&!f.src){f.src='https://www.youtube-nocookie.com/embed/videoseries?rel=0&modestbranding=1&list=UUi553CSXrKGDFY4G8So7q0g';f.style.opacity=1;var p=f.closest('.skeleton');if(p)p.classList.remove('skeleton');}}catch(e){}})();</script>
+
+  <script>
+    (function(){
+      const cfg = {
+        YOUTUBE_CHANNEL_ID: "UCi553CSXrKGDFY4G8So7q0g",   // <- se souber o ID (UCxxxx), preencha aqui. Usaremos a playlist de uploads (UUxxxx).
+        USERNAME_OR_HANDLE: "eneteobr"
+      };
+      const iframe = document.getElementById('ytEmbed');
+      function setSrc(u){ iframe.src = u; iframe.style.opacity = 1; const p=iframe.closest('.skeleton'); if(p) p.classList.remove('skeleton'); }
+      if(location.protocol==='file:'){
+        // funciona mesmo em file://
+        const url = cfg.YOUTUBE_CHANNEL_ID
+          ? "https://www.youtube-nocookie.com/embed/videoseries?rel=0&modestbranding=1&list=UUi553CSXrKGDFY4G8So7q0g"
+          : "https://www.youtube-nocookie.com/embed/videoseries?rel=0&modestbranding=1&list=UUi553CSXrKGDFY4G8So7q0g"+encodeURIComponent(cfg.USERNAME_OR_HANDLE)+"&autoplay=0";
+        setSrc(url);
+        return;
+      }
+      // Prefer uploads playlist (garante sempre o último no topo)
+      if(cfg.YOUTUBE_CHANNEL_ID && cfg.YOUTUBE_CHANNEL_ID.startsWith('UC')){
+        setSrc("https://www.youtube-nocookie.com/embed/videoseries?rel=0&modestbranding=1&list=UUi553CSXrKGDFY4G8So7q0g");
+      }else{
+        // Sem ID do canal: usar lista por busca (pode não ser estritamente "o último", mas mostra conteúdo recente)
+        setSrc("https://www.youtube-nocookie.com/embed?rel=0&modestbranding=1&listType=search&list="+encodeURIComponent(cfg.USERNAME_OR_HANDLE));
+      }
+    })();
+  </script>
+</div>
         </div>
       </div>
     </div>

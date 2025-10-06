@@ -551,7 +551,7 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
 </div>
           <!-- █ YouTube (dinâmico: último upload se houver CHANNEL_ID; fallback: lista por busca @eneteobr) █ -->
 <div class="skeleton" style="height:100vh;position:relative;margin:0;padding:0">
-  <iframe id="ytEmbed" title="YouTube @eneteobr" loading="lazy"
+  <iframe referrerpolicy="no-referrer-when-downgrade" id="ytEmbed" title="YouTube @eneteobr" loading="lazy"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen
           style="width:100%;height:100vh;border:0;border-radius:12px;opacity:0"></iframe>
@@ -2324,7 +2324,15 @@ function sprinkleInterludes(container=document){
 })();
 </script>
 
+
+<!-- YouTube embed fix: enforce uploads playlist for @eneteobr -->
+<script>
+(function(){try{var url="https://www.youtube-nocookie.com/embed/videoseries?rel=0&modestbranding=1&list=UUi553CSXrKGDFY4G8So7q0g";var posts=document.querySelector('#posts');if(!posts) return;
+var iframes=posts.querySelectorAll('iframe');var applied=false;
+iframes.forEach(function(f){if(!applied && (f.src.indexOf('youtube')>-1 || f.src==='')){f.src=url;f.setAttribute('allow','accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');f.setAttribute('referrerpolicy','no-referrer-when-downgrade');f.style.border='0';f.style.width='100%';f.style.height=f.style.height||'100%';applied=true;}});
+if(!applied){var mount=posts.querySelector('#ytMount')||posts;var iframe=document.createElement('iframe');iframe.title='YouTube @eneteobr';iframe.loading='lazy';iframe.src=url;iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';iframe.referrerPolicy='no-referrer-when-downgrade';iframe.style.width='100%';iframe.style.height='100%';iframe.style.border='0';iframe.style.borderRadius='12px';mount.appendChild(iframe);}
+}catch(e){}})();
+</script>
+
 </body>
 </html>
-
-

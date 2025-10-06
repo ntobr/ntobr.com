@@ -304,7 +304,15 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
 
 
 </style>
-   </head>
+   <style>
+/* Center Instagram embed inside viewport */
+#igDynamic, #igDynamic * { box-sizing: border-box; }
+#igDynamic blockquote, #igDynamic .instagram-media, #igDynamic iframe {
+  margin: 0 auto !important;
+  max-width: 90vw !important;
+  max-height: 90vh !important;
+}
+</style></head>
 
 <body>
 <a href="#hero" class="visually-hidden">Pular para conteúdo</a>
@@ -390,7 +398,7 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
           <a class="btn ghost" href="#/faq" data-link>FAQ</a>
         </div>
       </div>
-      <div class="grid cols-2" style="margin-top:28px">
+      <div class="grid cols-2" style="margin-top:28px;display:block !important">
         <div class="card reveal fancy"><div class="inner">
           <div style="display:flex;gap:10px;flex-wrap:wrap">
             <span class="chip">Triagem clínica séria</span>
@@ -489,10 +497,10 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
         <p class="muted" style="margin:0">Instagram e YouTube</p>
       </div>
       <div class="card reveal">
-        <div class="grid cols-2">
+        <div class="grid cols-2" style="display:block !important;display:block !important">
           <!-- █ Instagram (dinâmico: último post se houver token/ID; fallback: perfil embed) █ -->
-<div class="skeleton" style="height:360px;position:relative">
-  <div id="igDynamic" style="width:100%;height:100%;border-radius:12px;overflow:hidden;position:relative"></div>
+<div class="skeleton" style="height:100vh;position:relative;margin:0;padding:0">
+  <div id="igDynamic" style="width:100%;height:100%;border-radius:12px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;gap:0;"></div>
   <script async src="https://www.instagram.com/embed.js"></script>
   <script>
     (function(){
@@ -542,11 +550,11 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
   </script>
 </div>
           <!-- █ YouTube (dinâmico: último upload se houver CHANNEL_ID; fallback: lista por busca @eneteobr) █ -->
-<div class="skeleton" style="height:360px;position:relative">
+<div class="skeleton" style="height:100vh;position:relative;margin:0;padding:0">
   <iframe id="ytEmbed" title="YouTube @eneteobr" loading="lazy"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen
-          style="width:100%;height:360px;border:0;border-radius:12px;opacity:0"></iframe>
+          style="width:100%;height:100vh;border:0;border-radius:12px;opacity:0"></iframe>
 <script>(function(){try{var f=document.getElementById('ytEmbed');if(f&&!f.src){f.src='https://www.youtube-nocookie.com/embed/videoseries?rel=0&modestbranding=1&list=UUi553CSXrKGDFY4G8So7q0g';f.style.opacity=1;var p=f.closest('.skeleton');if(p)p.classList.remove('skeleton');}}catch(e){}})();</script>
 
   <script>

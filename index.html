@@ -749,50 +749,6 @@ footer{ padding:32px 0; border-top:1px solid var(--line); background:#0b1020; }
     </div>
   </section>
 
-/* Interlúdios automáticos entre seções */
-.interlude.auto {
-  position: relative;
-  min-height: 42vh;                 /* altura agradável */
-  display: block;
-  overflow: hidden;
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  border-top: 1px solid #0b0b0b;
-  border-bottom: 1px solid #0b0b0b;
-  box-shadow:
-    inset 0 -80px 120px rgba(0,0,0,.45),
-    inset 0  80px 120px rgba(0,0,0,.45);
-}
-
-/* véu suave pra manter elegância/legibilidade */
-.interlude.auto::after {
-  content: "";
-  position: absolute; inset: 0;
-  background:
-    radial-gradient(900px 420px at 10% 10%, rgba(0,0,0,.22), transparent 60%),
-    radial-gradient(900px 420px at 90% 80%, rgba(0,0,0,.18), transparent 60%);
-}
-
-/* Transição suave quando a imagem carrega */
-.interlude.auto[data-ready="1"] {
-  transition: background-image .6s ease, opacity .6s ease;
-  opacity: 1;
-}
-.interlude.auto { opacity: 0.001; }  /* evita “flash” até carregar */
-
-/* Desktop: efeito parallax leve; Mobile: desliga por performance */
-@media (min-width: 861px) {
-  .interlude.auto { background-attachment: fixed; }
-}
-@media (max-width: 860px) {
-  .interlude.auto { background-attachment: scroll; }
-}
-
-/* Reduz altura se preferir mais discreto em telas pequenas */
-@media (max-width: 600px) {
-  .interlude.auto { min-height: 36vh; }
-}
 
 
 
